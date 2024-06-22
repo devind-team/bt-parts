@@ -1,7 +1,6 @@
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { defineNuxtConfig } from 'nuxt/config';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import { defineNuxtConfig } from 'nuxt/config'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   workspaceDir: '../../',
   srcDir: 'src',
@@ -13,7 +12,7 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true,
     tsConfig: {
-      extends: '../tsconfig.app.json', // Nuxt copies this string as-is to the `./.nuxt/tsconfig.json`, therefore it needs to be relative to that directory
+      extends: '../tsconfig.app.json',
     },
   },
   imports: {
@@ -25,5 +24,5 @@ export default defineNuxtConfig({
   vite: {
     plugins: [nxViteTsPaths()],
   },
-  modules: ['@pinia/nuxt', '@nuxtjs/i18n']
-});
+  modules: ['@pinia/nuxt', '@nuxtjs/i18n'],
+})
