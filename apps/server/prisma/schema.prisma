@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator nestgraphql {
+  provider = "prisma-nestjs-graphql"
+  output   = "../src/@generated"
+  reExport = Directories
+
+  fields_Validator_from  = "class-validator"
+  fields_Validator_input = true
+  fields_Scalars_from    = "graphql-scalars"
+  fields_Scalars_input   = true
+
+  decorate_1_type      = "@(Create|Update)@(One|Many)UserArgs"
+  decorate_1_field     = data
+  decorate_1_name      = ValidateNested
+  decorate_1_from      = "class-validator"
+  decorate_1_arguments = "[]"
+
+  decorate_2_type      = "@(User)Count"
+  decorate_2_field     = "_count"
+  decorate_2_name      = "HideField"
+  decorate_2_from      = "@nestjs/graphql"
+  decorate_2_arguments = "[]"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+// Model for users
+model User {
+  /// id
+  id         Int     @id @default(autoincrement())
+  /// Username
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(30)
+  username   String  @unique @db.VarChar(50)
+  /// Password
+  /// @HideField()
+  password   String  @db.VarChar(256)
+  /// Email
+  /// @FieldType('Scalars.GraphQLEmailAddress')
+  email      String  @unique @db.VarChar(50)
+  /// Avatar
+  /// @FieldType('Scalars.GraphQLURL')
+  avatar     String?
+  /// Last Name
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(50)
+  lastName   String  @map("last_name") @db.VarChar(50)
+  /// First Name
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(50)
+  firstName  String  @map("first_name") @db.VarChar(50)
+  /// Patronymic
+  /// @Validator.MaxLength(50)
+  patronymic String? @map("patronymic") @db.VarChar(50)
+  /// Active user
+  isActive   Boolean @default(true) @map("is_active")
+
+  /// Phone number
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(20)
+  phone    String?   @db.VarChar(20)
+  /// Birthday datetime
+  /// @Validator.IsDate()
+  birthday DateTime?
+  /// Role
+  role     Role      @default(USER)
+  /// Gender
+  gender   Gender    @default(UNKNOWN)
+
+  /// Register data
+  createdAt DateTime @default(now()) @map("created_at")
+  /// Дата обновления
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// My files
+  files File[]
+
+  @@index([username, email])
+  @@map("users")
+}
+
+enum Role {
+  USER
+  SELLER
+  BUYER
+  LOGIST
+  ADMIN
+}
+
+enum Gender {
+  UNKNOWN
+  MALE
+  FEMALE
+}
+
+// Save model for files
+model File {
+  /// ID
+  id        Int    @id @default(autoincrement())
+  /// Name
+  /// @Validator.MinLength(3)
+  name      String @db.VarChar(512)
+  /// Service url file
+  /// @FieldType('Scalars.GraphQLURL')
+  serverUrl String @map("server_url") @db.VarChar(64)
+  /// Bucket name
+  /// @Validator.MinLength(3)
+  bucket    String @db.VarChar(64)
+  /// Path file in bucket
+  /// @Validator.MinLength(3)
+  key       String @db.VarChar(512)
+
+  /// Created data
+  createdAt DateTime @default(now()) @map("created_at")
+  /// Updated data
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  /// User ID
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    Int?     @map("user_id")
+
+  @@map("files")
+}

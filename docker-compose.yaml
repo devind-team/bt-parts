@@ -1,0 +1,58 @@
+x-postgres-variables: &postgres-variables
+  POSTGRES_DB: 'parts'
+  POSTGRES_USER: 'postgres'
+  POSTGRES_PASSWORD: '12345678'
+
+x-minio-variables: &minio-variables
+  MINIO_ROOT_USER: 'admin'
+  MINIO_ROOT_PASSWORD: '12345678'
+  MINIO_END_POINT: 'localhost'
+  MINIO_PORT: '9000'
+  MINIO_BUCKET: 'storage'
+
+services:
+  postgres:
+    container_name: postgres-bt-parts
+    image: postgres:latest
+    restart: always
+    environment:
+      <<: *postgres-variables
+    ports:
+      - '5432:5432'
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test: 'pg_isready -U postges -d parts'
+      timeout: 2s
+
+  minio:
+    container_name: minio-bt-parts
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      <<: *minio-variables
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+
+  minio-client:
+    container_name: minio-client-bt-parts
+    image: minio/mc:latest
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        mc alias set local http://minio:9000 admin 12345678
+        mc admin update local
+        mc mb --ignore-existing local/storage
+        mc anonymous set download local/storage
+    depends_on:
+      - minio
+
+  redis:
+    container_name: redis-bt-parts
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']

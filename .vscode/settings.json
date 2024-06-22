@@ -12,5 +12,8 @@
     "Nuxt",
     "nuxtjs",
     "pinia"
-  ]
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
