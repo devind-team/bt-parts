@@ -7,7 +7,8 @@ RUN npm add -g pnpm
 COPY ["package.json", "pnpm-lock.yaml", "nx.json", "./"]
 RUN pnpm i
 COPY . .
-RUN pnpm exec nx run server:prisma-generate && pnpm exec nx run server:build
+RUN pnpm exec nx run server:prisma-generate && \
+  pnpm exec nx run server:build
 
 # ----------- application -----------
 FROM node:latest
