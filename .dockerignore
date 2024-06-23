@@ -1,0 +1,7 @@
+/.github
+/.nx
+/.vscode
+/.git
+/.husky
+/node_modules
+/dist

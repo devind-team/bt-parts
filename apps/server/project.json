@@ -58,9 +58,10 @@
     },
     "docker-build": {
       "dependsOn": [
+        "prisma-generate",
         "build"
       ],
-      "command": "docker build -f apps/server/Dockerfile . -t server"
+      "command": "docker build -f apps/server/Dockerfile . -t server:latest"
     }
   }
 }
