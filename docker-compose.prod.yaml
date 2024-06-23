@@ -1,0 +1,287 @@
+version: '3.9'
+
+x-secret-common-variables: &secret-common-variables
+  SECRET_KEY: '${SECRET_KEY}'
+  NC_AUTH_JWT_SECRET: '${SECRET_KEY}'
+
+x-client-environment: &client-environment
+  NUXT_API_URL: 'https://${SITE}/graphql/'
+  NUX_API_URL_BROWSER: 'http://server:8000/graphql/'
+  NUXT_WS_URL_BROWSER: 'wss://${SITE}/graphql/'
+  NUXT_MINIO_EXTERNAL: '${MINIO_EXTERNAL_URL}'
+
+x-postgres-variables: &postgres-variables
+  POSTGRES_DB: '${DB_NAME}'
+  POSTGRES_USER: '${DB_USER}'
+  POSTGRES_PASSWORD: '${DB_PASSWORD}'
+
+x-database-variables: &database-variables
+  DB_USER: '${DB_USER}'
+  DB_PASSWORD: '${DB_PASSWORD}'
+  DB_HOST: '${DB_HOST}'
+  DB_PORT: '${DB_PORT}'
+  DB_NAME: '${DB_NAME}'
+  DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}'
+
+x-nocodb-variables: &nocodb-variables
+  NC_ADMIN_EMAIL: '${NC_ADMIN_EMAIL}'
+  NC_ADMIN_PASSWORD: '${NC_ADMIN_PASSWORD}'
+  NC_DB: 'pg://${NC_DB_HOST}:${DB_PORT}?u=${NC_DB_USER}&p=${NC_DB_PASSWORD}&d=${NC_DB_NAME}'
+  NC_PUBLIC_URL: 'https://nocodb.${SITE}'
+  NC_DISABLE_TELE: true
+  NC_REDIS_URL: '${REDIS_URL}'
+  NC_SMTP_FROM: '${SMTP_FROM}'
+  NC_SMTP_HOST: '${SMTP_HOST}'
+  NC_SMTP_PORT: '${SMTP_PORT}'
+  NC_SMTP_USERNAME: '${SMTP_USERNAME}'
+  NC_SMTP_PASSWORD: '${SMTP_PASSWORD}'
+  NC_SMTP_SECURE: '${SMTP_SECURE}'
+  NC_SMTP_IGNORE_TLS: '${SMTP_IGNORE_TLS}'
+
+  # NC_S3_BUCKET_NAME: "${NC_S3_BUCKET_NAME}"
+  # NC_S3_REGION: "${NC_S3_REGION}" # default us-east-1.
+  # NC_S3_ACCESS_KEY: "${MINIO_ROOT_USER}"
+  # NC_S3_ACCESS_SECRET: "${MINIO_ROOT_PASSWORD}"
+
+x-nocodb-db-variables: &nocodb-db-variables
+  POSTGRES_DB: '${NC_DB_NAME}'
+  POSTGRES_USER: '${NC_DB_USER}'
+  POSTGRES_PASSWORD: '${NC_DB_PASSWORD}'
+
+x-minio-variables: &minio-variables
+  MINIO_SERVER_URL: '${MINIO_SERVER_URL}'
+  MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+  MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+  MINIO_END_POINT: '${MINIO_END_POINT}'
+  MINIO_PORT: '${MINIO_PORT}'
+  MINIO_BUCKET: '${MINIO_BUCKET}'
+
+x-server-environment: &server-environment
+  <<: [*secret-common-variables, *database-variables, *minio-variables]
+  MINIO_END_POINT: 'minio'
+  MINIO_USE_SSL: '${MINIO_USE_SSL}'
+  REDIS_URL: '${REDIS_URL}'
+
+services:
+  traefik:
+    container_name: traefik-bt-parts
+    image: traefik:v2.9
+    command:
+      - '--api.dashboard=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--providers.docker.network=traefik_proxy'
+
+      - '--entryPoints.http.address=:80'
+      - '--entryPoints.https.address=:443'
+
+      - '--entryPoints.https.http.tls.certresolver=letsencrypt'
+      - '--entryPoints.https.http.tls.domains[0].main=${SITE}'
+      - '--entryPoints.https.http.tls.domains[0].sans=*.${SITE}'
+      - '--entryPoints.http.http.redirections.entryPoint.to=https'
+      - '--entryPoints.http.http.redirections.entryPoint.scheme=https'
+      - '--certificatesResolvers.letsencrypt.acme.email=info@${SITE}'
+      - '--certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
+      - '--certificatesResolvers.letsencrypt.acme.certificatesDuration=2160'
+      - "--certificatesResolvers.letsencrypt.acme.preferredchain='ISRG Root X1'"
+      - '--certificatesResolvers.letsencrypt.acme.tlschallenge=true'
+      - '--certificatesResolvers.letsencrypt.acme.httpchallenge=true'
+      - '--certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=https'
+      - '--certificatesResolvers.letsencrypt.acme.dnschallenge=true'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean'
+      - '--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53'
+      - '--certificatesResolvers.letsencrypt.acme.dnsChallenge.delayBeforeCheck=1'
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - '443:443'
+      - '80:80'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'letsencrypt:/letsencrypt'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.traefik.entrypoints=https'
+      - 'traefik.http.routers.traefik.rule=Host(`traefik.${SITE}`)'
+      - 'traefik.http.routers.traefik.service=api@internal'
+      - 'traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIC_ADMIN}'
+      - 'traefik.http.routers.traefik.middlewares=traefik-auth'
+      - 'traefik.http.services.traefik-traefik.loadbalancer.server.port=8080'
+
+  client:
+    container_name: client-bt-parts
+    image: ghcr.io/devind-team/partsorder/partsorder-client:latest
+    restart: always
+    depends_on:
+      - server
+    environment:
+      <<: *client-environment
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.client.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.client.service=client'
+      - 'traefik.http.routers.client.rule=Host(`${SITE}`)'
+      - 'traefik.http.routers.client.entrypoints=https'
+      - 'traefik.http.routers.client.tls=true'
+      - 'traefik.http.routers.client.tls.certresolver=letsencrypt'
+      - 'com.centurylinklabs.watchtower.enable=true'
+
+  server:
+    container_name: server-bt-parts
+    image: ghcr.io/devind-team/partsorder/partsorder-server:latest
+    restart: always
+    depends_on:
+      - postgres
+      - server-migration
+    environment:
+      <<: *server-environment
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.server.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.server.service=server'
+      - 'traefik.http.routers.server.rule=Host(`${SITE}`) && Path(`/graphql`)'
+      - 'traefik.http.routers.server.entrypoints=https'
+      - 'traefik.http.routers.server.tls=true'
+      - 'traefik.http.routers.server.tls.certresolver=letsencrypt'
+
+  server-migration:
+    container_name: server-migration-bt-parts
+    image: ghcr.io/devind-team/partsorder/partsorder-server:latest
+    command: 'pnpm prisma migrate deploy'
+    depends_on:
+      - postgres
+    environment:
+      <<: *server-environment
+
+  nocodb:
+    container_name: nocodb-bt-parts
+    image: nocodb/nocodb:latest
+    restart: always
+    depends_on:
+      - nocodb-db
+    environment:
+      <<: [*nocodb-variables, *secret-common-variables]
+    volumes:
+      - 'nocodb-data:/usr/app/data'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.nocodb.loadbalancer.server.port=8080'
+      - 'traefik.http.routers.nocodb.service=nocodb'
+      - 'traefik.http.routers.nocodb.rule=Host(`nocodb.${SITE}`)'
+      - 'traefik.http.routers.nocodb.entrypoints=https'
+      - 'traefik.http.routers.nocodb.tls=true'
+      - 'traefik.http.routers.nocodb.tls.certresolver=letsencrypt'
+
+  nocodb-db:
+    container_name: nocodb-db-bt-parts
+    image: postgres:16
+    restart: always
+    environment:
+      <<: *nocodb-db-variables
+    ports:
+      - '${NC_DB_PORT}:5432'
+    volumes:
+      - 'nocodb-db:/var/lib/postgresql/data'
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test: 'pg_isready -U ${NC_DB_USER} -d ${NC_DB_NAME}'
+      timeout: 2s
+
+  postgres:
+    container_name: postgres-bt-parts
+    image: postgres:16
+    restart: always
+    environment:
+      <<: *postgres-variables
+    networks:
+      - default
+      - traefik_proxy
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - 'database:/var/lib/postgresql/data'
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test: 'pg_isready -U ${DB_USER} -d ${DB_NAME}'
+      timeout: 2s
+
+  minio:
+    container_name: minio-bt-parts
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      <<: *minio-variables
+    ports:
+      - '9000:9000'
+    networks:
+      - traefik_proxy
+    volumes:
+      - 'minio:/data'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.services.minio.loadbalancer.server.port=9000'
+      - 'traefik.http.routers.minio.service=minio'
+      - 'traefik.http.routers.minio.rule=Host(`s3.${SITE}`)'
+      - 'traefik.http.routers.minio.tls=true'
+      - 'traefik.http.routers.minio.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.minio.entrypoints=https'
+
+      - 'traefik.http.services.minio-console.loadbalancer.server.port=9001'
+      - 'traefik.http.routers.minio-console.service=minio-console'
+      - 'traefik.http.routers.minio-console.rule=Host(`minio.${SITE}`)'
+      - 'traefik.http.routers.minio-console.tls=true'
+      - 'traefik.http.routers.minio-console.entrypoints=https'
+      - 'traefik.http.routers.minio-console.tls.certresolver=letsencrypt'
+
+  minio-client:
+    container_name: minio-client-bt-parts
+    image: minio/mc
+    restart: unless-stopped
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        mc alias set local http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
+        mc mb --ignore-existing local/${MINIO_BUCKET}
+        mc anonymous set download local/${MINIO_BUCKET}
+    depends_on:
+      - minio
+
+  portainer:
+    container_name: portainer-bt-parts
+    image: portainer/portainer-ce:latest
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'portainer:/data'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.portainer.service=portainer'
+      - 'traefik.http.routers.portainer.rule=Host(`portainer.${SITE}`)'
+      - 'traefik.http.routers.portainer.entrypoints=https'
+      - 'traefik.http.services.portainer.loadbalancer.server.port=9000'
+      - 'traefik.http.routers.portainer.tls=true'
+      - 'traefik.http.routers.portainer.tls.certresolver=letsencrypt'
+
+  redis:
+    container_name: redis-bt-parts
+    image: redis:latest
+    restart: always
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+
+volumes:
+  minio:
+    name: minio
+  letsencrypt:
+    name: traefik-letsencrypt
+  database:
+    name: database
+  portainer:
+    name: portainer
+  nocodb-data:
+    name: nocodb-data
+  nocodb-db:
+    name: nocodb-db

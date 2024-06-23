@@ -5,3 +5,5 @@
 /.husky
 /node_modules
 /dist
+
+.env
