@@ -9,9 +9,11 @@
     "source.fixAll.eslint": "explicit"
   },
   "cSpell.words": [
+    "nestjs",
     "Nuxt",
     "nuxtjs",
-    "pinia"
+    "pinia",
+    "vuetify"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"

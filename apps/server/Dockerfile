@@ -1,23 +1,25 @@
-FROM node:22.3.0 as builder
+FROM node:latest as builder
+
 WORKDIR /build
 
-RUN apt-get update -y && apt-get upgrade -y && npm i -g npm pnpm --upgrade
+RUN apt-get update -y && apt-get upgrade -y && npm add -g pnpm
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY nx.json ./
+RUN pnpm i --ignore-scripts
 COPY . .
-RUN ls -la
-RUN pnpm install && \
-  pnpm exec nx run server:prisma-generate && \
-  pnpm exec nx server:build
+RUN pnpm exec nx run server:prisma-generate && pnpm exec nx run server:build
 
-FROM node:22.3.0
+FROM node:latest
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
 WORKDIR /app
 
-# RUN addgroup --system server && adduser --system --no-create-home --disabled-login --disabled-password server server
-
-COPY --from=builder /build/dist/server ./app
-RUN chown -R server:server .
+RUN apt-get update -y && apt-get upgrade -y
+COPY ["package.json", "pnpm-lock.yaml", "nx.json", "./"]
+COPY --from=builder /build/node_modules ./node_modules
+COPY --from=builder /build/dist/apps/server ./
 
 CMD [ "node", "main.js" ]
