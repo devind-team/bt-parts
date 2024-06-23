@@ -44,7 +44,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/bt-parts-client
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/client
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
@@ -73,7 +73,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/bt-parts-server
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/server
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
