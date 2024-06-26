@@ -16,3 +16,8 @@ build-server:
 
 .PHONY: build
 build: build-client build-server
+
+
+.PHONY: backup
+backup:
+	echo 'do backup'
