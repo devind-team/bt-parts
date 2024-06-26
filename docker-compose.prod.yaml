@@ -5,9 +5,9 @@ x-secret-common-variables: &secret-common-variables
   NC_AUTH_JWT_SECRET: '${SECRET_KEY}'
 
 x-client-environment: &client-environment
-  NUXT_API_URL: 'https://${SITE}/graphql/'
-  NUX_API_URL_BROWSER: 'http://server:8000/graphql/'
-  NUXT_WS_URL_BROWSER: 'wss://${SITE}/graphql/'
+  NUXT_API_URL: 'https://${SITE}/api/'
+  NUX_API_URL_BROWSER: 'http://server:8000/api/'
+  NUXT_WS_URL_BROWSER: 'wss://${SITE}/api/'
   NUXT_MINIO_EXTERNAL: '${MINIO_EXTERNAL_URL}'
 
 x-postgres-variables: &postgres-variables
@@ -107,11 +107,11 @@ services:
       - 'traefik.http.routers.traefik.service=api@internal'
       - 'traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIC_ADMIN}'
       - 'traefik.http.routers.traefik.middlewares=traefik-auth'
-      - 'traefik.http.services.traefik-traefik.loadbalancer.server.port=8080'
+      - 'traefik.http.services.traefik-traefik.loadbalancer.server.port=3000'
 
   client:
     container_name: client-bt-parts
-    image: ghcr.io/devind-team/partsorder/partsorder-client:latest
+    image: ghcr.io/devind-team/bt-parts/client:latest
     restart: always
     depends_on:
       - server
@@ -129,7 +129,7 @@ services:
 
   server:
     container_name: server-bt-parts
-    image: ghcr.io/devind-team/partsorder/partsorder-server:latest
+    image: ghcr.io/devind-team/bt-parts/server:latest
     restart: always
     depends_on:
       - postgres
@@ -140,14 +140,14 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.services.server.loadbalancer.server.port=3000'
       - 'traefik.http.routers.server.service=server'
-      - 'traefik.http.routers.server.rule=Host(`${SITE}`) && Path(`/graphql`)'
+      - 'traefik.http.routers.server.rule=Host(`${SITE}`) && Path(`/api`)'
       - 'traefik.http.routers.server.entrypoints=https'
       - 'traefik.http.routers.server.tls=true'
       - 'traefik.http.routers.server.tls.certresolver=letsencrypt'
 
   server-migration:
     container_name: server-migration-bt-parts
-    image: ghcr.io/devind-team/partsorder/partsorder-server:latest
+    image: ghcr.io/devind-team/bt-parts/server:latest
     command: 'pnpm prisma migrate deploy'
     depends_on:
       - postgres
