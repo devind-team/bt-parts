@@ -46,7 +46,7 @@
     "@nuxtjs/i18n": "^8.3.1",
     "@nx-tools/nx-prisma": "^6.0.1",
     "@nx/devkit": "^19.3.1",
-    "@nx/eslint": "^19.3.1",
+    "@nx/eslint": "^19.3.2",
     "@nx/eslint-plugin": "^19.3.1",
     "@nx/jest": "^19.3.1",
     "@nx/js": "^19.3.1",
