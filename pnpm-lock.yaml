@@ -24,8 +24,8 @@ importers:
         specifier: ^3.12.2
         version: 3.12.2(rollup@4.18.0)
       '@prisma/client':
-        specifier: ^5.15.1
-        version: 5.15.1(prisma@5.15.1)
+        specifier: ^5.16.1
+        version: 5.16.1(prisma@5.15.1)
       axios:
         specifier: ^1.7.2
         version: 1.7.2
@@ -76,7 +76,7 @@ importers:
         version: 1.0.0
       prisma-graphql-type-decimal:
         specifier: ^3.0.0
-        version: 3.0.0(@prisma/client@5.15.1(prisma@5.15.1))(graphql@16.9.0)
+        version: 3.0.0(@prisma/client@5.16.1(prisma@5.15.1))(graphql@16.9.0)
       reflect-metadata:
         specifier: ^0.1.14
         version: 0.1.14
@@ -2166,8 +2166,8 @@ packages:
   '@polka/url@1.0.0-next.25':
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
 
-  '@prisma/client@5.15.1':
-    resolution: {integrity: sha512-fmZRGmsUJ9+VwC/AvfP/PwdpD0xAEyPvNsD9/B3+GYpETq9VejVRT3PiqNvl76q1uYYzNZeo8u/LmzzTetHSEg==}
+  '@prisma/client@5.16.1':
+    resolution: {integrity: sha512-wM9SKQjF0qLxdnOZIVAIMKiz6Hu7vDt4FFAih85K1dk/Rr2mdahy6d3QP41K62N9O0DJJA//gUDA3Mp49xsKIg==}
     engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
@@ -11479,7 +11479,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.25': {}
 
-  '@prisma/client@5.15.1(prisma@5.15.1)':
+  '@prisma/client@5.16.1(prisma@5.15.1)':
     optionalDependencies:
       prisma: 5.15.1
 
@@ -17086,9 +17086,9 @@ snapshots:
       - encoding
       - supports-color
 
-  prisma-graphql-type-decimal@3.0.0(@prisma/client@5.15.1(prisma@5.15.1))(graphql@16.9.0):
+  prisma-graphql-type-decimal@3.0.0(@prisma/client@5.16.1(prisma@5.15.1))(graphql@16.9.0):
     dependencies:
-      '@prisma/client': 5.15.1(prisma@5.15.1)
+      '@prisma/client': 5.16.1(prisma@5.15.1)
       graphql: 16.9.0
 
   prisma-nestjs-graphql@20.0.3:
