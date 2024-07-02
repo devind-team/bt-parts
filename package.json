@@ -67,7 +67,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.8",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
+    "@typescript-eslint/parser": "^7.15.0",
     "@vitejs/plugin-vue": "^4.6.2",
     "@vitest/coverage-v8": "^1.6.0",
     "@vitest/ui": "^1.6.0",
