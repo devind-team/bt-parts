@@ -1,6 +1,5 @@
 import * as ExcelJS from 'exceljs'
 import { z } from 'zod'
-import { flatten } from 'flat'
 import { Readable as ReadableStream } from 'stream'
 import { Injectable, NotAcceptableException } from '@nestjs/common'
 import { PrismaService } from '@common/services/prisma.service'
@@ -119,7 +118,7 @@ export class FilesService {
     headers: Record<string, string>,
     values: Array<Record<string, unknown>>,
   ): Promise<ExcelJS.Workbook> {
-    const data: Array<Record<string, string>> = values.map((item) => flatten(item))
+    const data = values
     const wb = new ExcelJS.Workbook()
     const ws = wb.addWorksheet(sheetName)
     ws.columns = Object.entries(headers).map(([key, header]) => ({ header, key }))

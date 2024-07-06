@@ -1,0 +1,205 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type FileUploadType {
+  fileName: String!
+  bucket: String!
+  name: String!
+  presignedUrl: String!
+}
+
+type UserCountAggregate {
+  id: Int!
+  username: Int!
+  email: Int!
+  avatar: Int!
+  lastName: Int!
+  firstName: Int!
+  patronymic: Int!
+  isActive: Int!
+  tz: Int!
+  phone: Int!
+  birthday: Int!
+  role: Int!
+  gender: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  _all: Int!
+}
+
+type UserMinAggregate {
+  id: String
+  username: String
+  email: String
+  avatar: String
+  lastName: String
+  firstName: String
+  patronymic: String
+  isActive: Boolean
+  tz: String
+  phone: String
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Role {
+  USER
+  SELLER
+  BUYER
+  LOGIST
+  ADMIN
+}
+
+enum Gender {
+  UNKNOWN
+  MALE
+  FEMALE
+}
+
+type UserMaxAggregate {
+  id: String
+  username: String
+  email: String
+  avatar: String
+  lastName: String
+  firstName: String
+  patronymic: String
+  isActive: Boolean
+  tz: String
+  phone: String
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type File {
+  """ID"""
+  id: ID!
+
+  """Name"""
+  name: String!
+
+  """Service url file"""
+  serverUrl: String!
+
+  """Bucket name"""
+  bucket: String!
+
+  """Path file in bucket"""
+  key: String!
+
+  """Created data"""
+  createdAt: DateTime!
+
+  """Updated data"""
+  updatedAt: DateTime!
+  userId: String
+
+  """User ID"""
+  user: User
+}
+
+type User {
+  """ID"""
+  id: ID!
+
+  """Username"""
+  username: String!
+
+  """Email"""
+  email: String!
+
+  """Avatar"""
+  avatar: String
+
+  """Last Name"""
+  lastName: String!
+
+  """First Name"""
+  firstName: String!
+
+  """Patronymic"""
+  patronymic: String
+
+  """Active user"""
+  isActive: Boolean!
+
+  """TimeZone"""
+  tz: String!
+
+  """Phone number"""
+  phone: String
+
+  """Birthday datetime"""
+  birthday: DateTime
+
+  """Role"""
+  role: Role!
+
+  """Gender"""
+  gender: Gender!
+
+  """Register data"""
+  createdAt: DateTime!
+
+  """Дата обновления"""
+  updatedAt: DateTime!
+
+  """My files"""
+  files: [File!]
+}
+
+type UserLoginType {
+  accessToken: String!
+  user: User!
+}
+
+type Query {
+  me: User!
+  presignedPutUrl(fileName: String!): FileUploadType!
+}
+
+type Mutation {
+  login(userLoginInput: UserLoginInput!): UserLoginType!
+  register(userRegisterInput: UserRegisterInput!): UserLoginType
+  uploadAvatar(fileUpload: FileUploadInput!): User!
+}
+
+input UserLoginInput {
+  username: String!
+  password: String!
+}
+
+input UserRegisterInput {
+  username: String!
+  password: String!
+  email: EmailAddress!
+  lastName: String!
+  firstName: String!
+  patronymic: String
+
+  """Date of birthday """
+  birthday: DateTime
+}
+
+"""
+A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address.
+"""
+scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
+
+input FileUploadInput {
+  fileName: String!
+  bucket: String!
+  name: String!
+}
