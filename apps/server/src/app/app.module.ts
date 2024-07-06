@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
 import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs'
@@ -24,4 +24,8 @@ import { AppService } from './app.service'
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply().forRoutes('*')
+  }
+}
