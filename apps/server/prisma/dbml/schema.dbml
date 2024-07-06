@@ -3,7 +3,7 @@
 //// ------------------------------------------------------
 
 Table users {
-  id Int [pk, increment, note: 'id']
+  id String [pk, note: 'ID']
   username String [unique, not null, note: 'Username
 @Validator.MinLength(3)
 @Validator.MaxLength(30)']
@@ -22,6 +22,7 @@ Table users {
   patronymic String [note: 'Patronymic
 @Validator.MaxLength(50)']
   isActive Boolean [not null, default: true, note: 'Active user']
+  tz String [not null, default: 'Europe/Moscow', note: 'TimeZone']
   phone String [note: 'Phone number
 @Validator.MinLength(3)
 @Validator.MaxLength(20)']
@@ -35,7 +36,7 @@ Table users {
 }
 
 Table files {
-  id Int [pk, increment, note: 'ID']
+  id String [pk, note: 'ID']
   name String [not null, note: 'Name
 @Validator.MinLength(3)']
   serverUrl String [not null, note: 'Service url file
@@ -47,7 +48,7 @@ Table files {
   createdAt DateTime [default: `now()`, not null, note: 'Created data']
   updatedAt DateTime [default: `now()`, not null, note: 'Updated data']
   user users [note: 'User ID']
-  userId Int
+  userId String
 }
 
 Enum Role {

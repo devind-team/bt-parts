@@ -7,7 +7,27 @@
       "node"
     ],
     "emitDecoratorMetadata": true,
-    "target": "es2021"
+    "target": "es2021",
+    "paths": {
+      "@common/*": [
+        "apps/server/src/app/common/*"
+      ],
+      "@auth/*": [
+        "apps/server/src/app/auth/*"
+      ],
+      "@users/*": [
+        "apps/server/src/app/users/*"
+      ],
+      "@files/*": [
+        "apps/server/src/app/files/*"
+      ],
+      "@s3/*": [
+        "apps/server/src/app/s3/*"
+      ],
+      "@generated/*": [
+        "apps/server/src/@generated/*"
+      ]
+    }
   },
   "exclude": [
     "jest.config.ts",

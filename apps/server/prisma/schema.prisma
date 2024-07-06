@@ -36,8 +36,8 @@ generator dbml {
 
 // Model for users
 model User {
-  /// id
-  id         Int     @id @default(autoincrement())
+  /// ID
+  id         String  @id @default(uuid())
   /// Username
   /// @Validator.MinLength(3)
   /// @Validator.MaxLength(30)
@@ -64,6 +64,9 @@ model User {
   patronymic String? @map("patronymic") @db.VarChar(50)
   /// Active user
   isActive   Boolean @default(true) @map("is_active")
+
+  /// TimeZone
+  tz String @default("Europe/Moscow") @db.VarChar(30)
 
   /// Phone number
   /// @Validator.MinLength(3)
@@ -106,7 +109,7 @@ enum Gender {
 // Save model for files
 model File {
   /// ID
-  id        Int    @id @default(autoincrement())
+  id        String @id @default(uuid())
   /// Name
   /// @Validator.MinLength(3)
   name      String @db.VarChar(512)
@@ -126,7 +129,7 @@ model File {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   /// User ID
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId    Int?     @map("user_id")
+  userId    String?  @map("user_id")
 
   @@map("files")
 }

@@ -6,7 +6,7 @@ CREATE TYPE "Gender" AS ENUM ('UNKNOWN', 'MALE', 'FEMALE');
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "username" VARCHAR(50) NOT NULL,
     "password" VARCHAR(256) NOT NULL,
     "email" VARCHAR(50) NOT NULL,
@@ -27,14 +27,14 @@ CREATE TABLE "users" (
 
 -- CreateTable
 CREATE TABLE "files" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "name" VARCHAR(512) NOT NULL,
     "server_url" VARCHAR(64) NOT NULL,
     "bucket" VARCHAR(64) NOT NULL,
     "key" VARCHAR(512) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "user_id" INTEGER,
+    "user_id" TEXT,
 
     CONSTRAINT "files_pkey" PRIMARY KEY ("id")
 );

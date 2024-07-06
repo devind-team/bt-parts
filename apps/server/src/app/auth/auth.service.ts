@@ -1,0 +1,61 @@
+import { Inject, Injectable } from '@nestjs/common'
+import { PrismaService } from '@common/services/prisma.service'
+import { GraphQLError } from 'graphql'
+import { JwtService } from '@nestjs/jwt'
+import { UserLoginInput, UserLoginType, UserRegisterInput } from '@auth/dto'
+import { User } from '@generated/user'
+import type { Bcrypt } from '@auth/providers'
+import { BCRYPT } from '@auth/providers'
+import { JwtPayload } from '@auth/strategies'
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly jwtService: JwtService,
+    @Inject(BCRYPT) private readonly bcryptService: Bcrypt,
+  ) {}
+
+  async login({ username, password }: UserLoginInput): Promise<UserLoginType> {
+    const user = await this.validateUser(username, password)
+    if (!user) {
+      throw new GraphQLError('Неверный логин или пароль', {
+        extensions: { code: 'FORBIDDEN' },
+      })
+    }
+    const accessToken = await this.createJwtToken(user)
+    return { accessToken, user }
+  }
+
+  async register(userDto: UserRegisterInput): Promise<UserLoginType> {
+    const saltRounds = 10
+    const password = await this.bcryptService.hash(userDto.password, saltRounds)
+    const user = await this.prismaService.user.create({
+      data: {
+        ...userDto,
+        password,
+      },
+    })
+    const accessToken = await this.createJwtToken(user)
+    return { accessToken, user }
+  }
+
+  async createJwtToken(user: User): Promise<string> {
+    const payload: JwtPayload = {
+      username: user.username,
+      sub: user.id,
+    }
+    return await this.jwtService.signAsync(payload)
+  }
+
+  async validateUser(username: string, password: string): Promise<User | null> {
+    const user = await this.prismaService.user.findUnique({
+      where: { username },
+    })
+    if (!user) {
+      return null
+    }
+    const valid = await this.bcryptService.compare(password, user.password)
+    return valid ? user : null
+  }
+}
