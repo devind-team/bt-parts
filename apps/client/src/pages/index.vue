@@ -1,3 +1,3 @@
 <template>
-  <div>Hello, world!</div>
+  <NxWelcome title="client" />
 </template>

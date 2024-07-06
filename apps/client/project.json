@@ -5,7 +5,9 @@
   "sourceRoot": "apps/client/src",
   "targets": {
     "docker-build": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "command": "docker build -f apps/client/Dockerfile . -t client"
     }
   }

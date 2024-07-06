@@ -47,6 +47,7 @@ Thumbs.db
 .nuxt
 .nitro
 .cache
+.nx
 
 apps/server/src/@generated
 
