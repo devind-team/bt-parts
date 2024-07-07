@@ -9,6 +9,7 @@
     "source.fixAll.eslint": "explicit"
   },
   "cSpell.words": [
+    "codegen",
     "exceljs",
     "nestjs",
     "Nuxt",

@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: {
     host: 'localhost',
-    port: 4200,
+    port: 3000,
   },
   typescript: {
     strict: true,
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
   apollo: {
     clients: {
       default: {
-        httpEndpoint: process.env.NUXT_API_URL || 'http://localhost:3000/api/graphql',
+        httpEndpoint: process.env.NUXT_API_URL || 'http://localhost:4200/api/graphql',
         browserHttpEndpoint: process.env.NUX_API_URL_BROWSER,
         wsEndpoint: process.env.NUXT_WS_URL_BROWSER,
         connectToDevTools: true,

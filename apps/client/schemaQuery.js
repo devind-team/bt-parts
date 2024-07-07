@@ -2,9 +2,9 @@
 /* eslint no-console: "off" */
 'use strict'
 
-import { writeFileSync } from 'fs'
+const fs = require('fs')
 
-fetch('http://127.0.0.1:3000/api/graphql/', {
+fetch('http://127.0.0.1:4200/api/graphql/', {
   method: 'POST',
   headers: {
     Accept: 'application/json',
@@ -32,7 +32,7 @@ fetch('http://127.0.0.1:3000/api/graphql/', {
     // here we're filtering out any type information unrelated to unions or interfaces
     const filteredData = result.data.__schema.types.filter((type) => type.possibleTypes !== null)
     result.data.__schema.types = filteredData
-    writeFileSync('./schema.json', JSON.stringify(result.data), (err) => {
+    fs.writeFileSync('apps/client/schema.json', JSON.stringify(result.data), (err) => {
       if (err) {
         console.error('Error writing fragmentTypes file', err)
       } else {

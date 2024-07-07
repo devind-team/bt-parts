@@ -49,6 +49,8 @@ Thumbs.db
 .cache
 .nx
 
+apps/client/types/graphql.ts
 apps/server/src/@generated
+apps/server/prisma/dbml
 
 .env

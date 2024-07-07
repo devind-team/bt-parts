@@ -15,7 +15,7 @@ async function bootstrap() {
   await prismaService.enableShutdownHooks(app)
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:4200',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Accept,Authorization,Access-Control-Allow-Origin',
     credentials: true,
@@ -31,7 +31,7 @@ async function bootstrap() {
     }),
   )
 
-  const port = process.env.PORT || 3000
+  const port = process.env.PORT || 4200
   await app.listen(port)
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`)
 }
