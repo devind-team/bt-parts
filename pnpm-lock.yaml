@@ -358,11 +358,7 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(webpack@5.92.1)
 
-  packages/queries:
-    dependencies:
-      tslib:
-        specifier: ^2.6.3
-        version: 2.6.3
+  packages/queries: {}
 
 packages:
 
