@@ -204,7 +204,7 @@ export type UserMinAggregate = {
 };
 
 export type UserRegisterInput = {
-  /** Date of birthday */
+  /** Date of birthday  */
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
   email: Scalars['EmailAddress']['input'];
   firstName: Scalars['String']['input'];

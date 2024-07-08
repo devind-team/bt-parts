@@ -6,17 +6,7 @@ useHead({
 </script>
 
 <template>
-  <main>
-    <header>
-      <nav>
-        <NuxtLink to="/">
-          Home
-        </NuxtLink>
-        <NuxtLink to="/about">
-          About
-        </NuxtLink>
-      </nav>
-    </header>
+  <nuxt-layout>
     <nuxt-page />
-  </main>
+  </nuxt-layout>
 </template>

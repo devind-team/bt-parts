@@ -1,8 +1,8 @@
 overwrite: true
-schema: './apps/client/schema.graphql'
-documents: './apps/client/src/graphql/**/*.graphql'
+schema: './packages/queries/schema.graphql'
+documents: './packages/queries/src/graphql/**/*.graphql'
 generates:
-  ./apps/client/src/types/graphql.ts:
+  ./packages/queries/src/types/graphql.ts:
     hooks:
       afterOneFileWrite:
         - eslint --fix

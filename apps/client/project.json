@@ -9,12 +9,6 @@
         "build"
       ],
       "command": "docker build -f apps/client/Dockerfile . -t client"
-    },
-    "codegen-schema": {
-      "command": "pnpm graphql-codegen -c apps/client/codegen.yaml"
-    },
-    "update-schema": {
-      "command": "graphql-codegen -c apps/client/codegen.download.yaml && node apps/client/schemaQuery.js"
     }
   }
 }

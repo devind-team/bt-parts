@@ -1,0 +1,11 @@
+{
+  "name": "@repo/queries",
+  "description": "Module for query api",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "type": "module",
+  "private": true
+}

@@ -49,4 +49,7 @@ export default defineNuxtConfig({
       },
     },
   },
+  eslint: {
+    lintOnStart: false,
+  },
 })

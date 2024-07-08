@@ -32,7 +32,7 @@ fetch('http://127.0.0.1:4200/api/graphql/', {
     // here we're filtering out any type information unrelated to unions or interfaces
     const filteredData = result.data.__schema.types.filter((type) => type.possibleTypes !== null)
     result.data.__schema.types = filteredData
-    fs.writeFileSync('apps/client/schema.json', JSON.stringify(result.data), (err) => {
+    fs.writeFileSync('packages/queries/schema.json', JSON.stringify(result.data), (err) => {
       if (err) {
         console.error('Error writing fragmentTypes file', err)
       } else {

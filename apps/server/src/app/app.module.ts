@@ -16,7 +16,7 @@ import { AppService } from './app.service'
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<YogaDriverConfig>({
       driver: YogaDriver,
-      autoSchemaFile: join(process.cwd(), 'apps/client/schema.graphql'),
+      autoSchemaFile: join(process.cwd(), 'packages/queries/schema.graphql'),
       useGlobalPrefix: true,
       // resolvers: { JSON: GraphQLJSON },
     }),

@@ -1,0 +1,32 @@
+{
+  "name": "queries",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/queries/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/packages/queries",
+        "main": "packages/queries/src/index.ts",
+        "tsConfig": "packages/queries/tsconfig.lib.json",
+        "assets": [
+          "packages/queries/*.md"
+        ]
+      }
+    },
+    "serve": {
+      "command": "pnpm graphql-codegen -c packages/queries/codegen.yaml --watch"
+    },
+    "codegen-schema": {
+      "command": "pnpm graphql-codegen -c packages/queries/codegen.yaml"
+    },
+    "update-schema": {
+      "command": "graphql-codegen -c packages/queries/codegen.download.yaml && node packages/queries/schemaQuery.js"
+    }
+  }
+}
