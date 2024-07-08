@@ -7,8 +7,5 @@
     "./*": "./src/*"
   },
   "type": "module",
-  "private": true,
-  "dependencies": {
-    "tslib": "^2.6.3"
-  }
+  "private": true
 }
