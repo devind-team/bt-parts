@@ -10,6 +10,5 @@ fragment UserFields on User {
   role
   gender
   createdAt
-  tz
   __typename
 }

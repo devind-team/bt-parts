@@ -88,7 +88,7 @@ services:
       - '--certificatesResolvers.letsencrypt.acme.httpchallenge=true'
       - '--certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=https'
       - '--certificatesResolvers.letsencrypt.acme.dnschallenge=true'
-      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=selectel'
       - '--certificatesResolvers.letsencrypt.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53'
       - '--certificatesResolvers.letsencrypt.acme.dnsChallenge.delayBeforeCheck=1'
     restart: always
@@ -108,7 +108,8 @@ services:
       - 'traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIC_ADMIN}'
       - 'traefik.http.routers.traefik.middlewares=traefik-auth'
       - 'traefik.http.services.traefik-traefik.loadbalancer.server.port=3000'
-
+    environment:
+      - SELECTEL_API_TOKEN=${SELECTEL_API_TOKEN}
   client:
     container_name: client-bt-parts
     image: ghcr.io/devind-team/bt-parts/client:latest
@@ -197,7 +198,6 @@ services:
       <<: *postgres-variables
     networks:
       - default
-      - traefik_proxy
     ports:
       - '${DB_PORT}:5432'
     volumes:
@@ -217,7 +217,7 @@ services:
     ports:
       - '9000:9000'
     networks:
-      - traefik_proxy
+      - default
     volumes:
       - 'minio:/data'
     labels:
