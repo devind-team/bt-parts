@@ -130,7 +130,10 @@ model Companies {
   name     String   @db.VarChar(512)
   /// Location
   location Location @default(RUSSIA)
-  User     User[]
+  /// Address
+  address  String   @db.VarChar(512)
+
+  User User[]
 
   @@map("companies")
 }
@@ -182,10 +185,6 @@ model Product {
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(30)
   nameRu       String?          @db.VarChar(256)
-  /// Polish name
-  /// @Validator.MinLength(2)
-  /// @Validator.MaxLength(30)
-  namePl       String?          @db.VarChar(256)
   /// Manufacturer
   manufacturer String?          @map("manufacturer") @db.VarChar(256)
   /// Aliases separated by commas
@@ -246,11 +245,9 @@ model Price {
   validAt   DateTime? @map("valid_at")
 
   /// Product
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String   @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
   item      Item[]
-  /// Location
-  location  Location @default(CHINA)
 
   @@map("prices")
 }
@@ -381,17 +378,15 @@ model Comment {
 /// Item in order model
 model Item {
   /// ID of the order item
-  id           String        @id @default(uuid())
+  id          String  @id @default(uuid())
   /// Quantity
-  quantity     Int           @default(1)
+  quantity    Int     @default(1)
   /// Margin factor
-  coefficient  Float         @default(2)
+  coefficient Float   @default(2)
   /// Car number
-  carNo        String?       @map("car_no") @db.VarChar(50)
+  carNo       String? @map("car_no") @db.VarChar(50)
   /// Flight number
-  routeNo      String?       @map("route_no") @db.VarChar(50)
-  /// Type of delivery
-  deliveryType DeliveryType? @default(TURKIYE) @map("delivery_type")
+  routeNo     String? @map("route_no") @db.VarChar(50)
 
   /// Created date
   createdAt DateTime @default(now()) @map("created_at")
@@ -464,9 +459,11 @@ model StatusItem {
 enum ItemStatus {
   /// The Item has been created
   CREATED
+  /// ПРОЦЕНЕН
+  PRICED
   /// The Item has been approved
   APPROVED
-  /// The Item is paid for
+  /// закуплено
   PURCHASED
   /// Товар на складе в Европе
   EUSTOCK
@@ -476,16 +473,4 @@ enum ItemStatus {
   RUSTOCK
   /// Товар доставлен
   COMPLETED
-}
-
-// Тип доставки товара
-enum DeliveryType {
-  /// РОРО
-  RORO
-  /// Через Турцию
-  TURKIYE
-  /// Через Казахстан
-  KAZAKHSTAN
-  /// Через Литву
-  LITHUANIA
 }
