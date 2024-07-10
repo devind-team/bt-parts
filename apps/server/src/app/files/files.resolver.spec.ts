@@ -3,9 +3,9 @@ import { FilesResolver } from './files.resolver'
 import { FilesService } from '@files/files.service'
 import { PrismaService } from '@common/services/prisma.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { MinioModule } from '@minio/minio.module'
+import { S3Module } from '@s3/s3.module'
 
-export const MinioModuleTest = MinioModule.forRootAsync({
+export const MinioModuleTest = S3Module.forRootAsync({
   imports: [ConfigModule],
   useFactory: (config: ConfigService) => ({
     accessKey: config.get<string>('MINIO_ROOT_USER'),
