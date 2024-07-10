@@ -49,7 +49,7 @@ Thumbs.db
 .cache
 .nx
 
-packages/queries/types/graphql.ts
+packages/queries/src/types/graphql.ts
 apps/server/src/@generated
 apps/server/.env
 apps/server/prisma/dbml

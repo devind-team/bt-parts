@@ -88,6 +88,17 @@ model User {
   /// My files
   files File[]
 
+  /// My orders
+  orders Order[] @relation("OrderUser")
+
+  /// Orders taken
+  manageOrders Order[]       @relation("OrderManager")
+  status       Status[]
+  item         Item[]
+  statusItem   StatusItem[]
+  comment      Comment[]
+  commentItem  CommentItem[]
+
   @@index([username, email])
   @@map("users")
 }
@@ -128,8 +139,335 @@ model File {
   /// Updated data
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   /// User ID
+  /// If null - system file
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?  @map("user_id")
 
+  products Product[]
+
   @@map("files")
+}
+
+/// List of available products
+model Product {
+  /// Product ID
+  id           Int              @id @default(autoincrement())
+  /// Article number
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(30)
+  vendorCode   String           @unique @map("verndor_code") @db.VarChar(128)
+  /// English name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(30)
+  nameEn       String?          @db.VarChar(256)
+  /// Russian name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(30)
+  nameRu       String?          @db.VarChar(256)
+  /// Polish name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(30)
+  namePl       String?          @db.VarChar(256)
+  /// Manufacturer
+  manufacturer String?          @map("manufacturer") @db.VarChar(256)
+  /// Aliases separated by commas
+  aliases      String?          @db.VarChar(500)
+  /// The originality of the product
+  original     Boolean          @default(true)
+  /// Goods in stock
+  stock        Int              @default(0)
+  /// Вес нетто
+  netto        Decimal?         @db.Decimal(9, 2)
+  /// Вес брутто
+  brutto       Decimal?         @db.Decimal(9, 2)
+  /// Код ТН ВЭД
+  tnved        String?          @db.VarChar(50)
+  /// Created data
+  createdAt    DateTime         @default(now()) @map("created_at")
+  /// Update data
+  updatedAt    DateTime         @default(now()) @updatedAt @map("updated_at")
+  // Product prices
+  prices       Price[]
+  /// Product attribute
+  attributes   AttributeValue[]
+  /// Products in orders
+  item         Item[]
+  /// Products images
+  images       File[]
+
+  @@map("products")
+}
+
+/// Products prices model
+model Price {
+  /// Price ID
+  id       Int     @id @default(autoincrement())
+  /// Price per unit/piece
+  price    Decimal @db.Decimal(9, 2)
+  /// Delivery time in days to the warehouse in Europe
+  duration Int?    @default(0)
+
+  /// Supplier name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(200)
+  supplierName String   @map("supplier_name") @db.VarChar(200)
+  /// Supplier's country
+  country      String?  @db.VarChar(50)
+  /// Site
+  site         String?  @db.VarChar(128)
+  /// Comment
+  comment      String?
+  /// Relevant
+  relevant     Boolean? @default(true)
+
+  /// Created date
+  createdAt DateTime  @default(now()) @map("created_at")
+  /// Updated date
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  /// Price validity date
+  validAt   DateTime? @map("valid_at")
+
+  /// Product
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int      @map("product_id")
+  item      Item[]
+  /// Location
+  location  Location @default(CHINA)
+
+  @@map("prices")
+}
+
+enum Location {
+  CHINA
+  EUROPE
+  RUSSIA
+}
+
+/// Attribute model
+model Attribute {
+  /// Attribude ID
+  id        Int              @id @default(autoincrement())
+  /// Attribute name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(50)
+  name      String           @map("name") @db.VarChar(50)
+  /// Attribute created date
+  createdAt DateTime         @default(now()) @map("created_at")
+  /// Products
+  products  AttributeValue[]
+
+  @@map("attributes")
+}
+
+/// Модель значений атрибутов товара
+model AttributeValue {
+  /// Идентификатор атрибута
+  id          Int       @id @default(autoincrement())
+  /// Название атрибута
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(50)
+  value       String    @map("name") @db.VarChar(50)
+  /// Дата создания
+  createdAt   DateTime  @default(now()) @map("created_at")
+  /// Товар
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   Int       @map("product_id")
+  /// Атрибут
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  attributeId Int       @map("attribute_id")
+
+  @@map("attribute_values")
+}
+
+/// Order model
+model Order {
+  /// Order ID
+  id        Int       @id @default(autoincrement())
+  /// Delivery Address
+  address   String?
+  /// Created date
+  createdAt DateTime  @default(now()) @map("created_at")
+  /// User who created the order
+  user      User      @relation("OrderUser", fields: [userId], references: [id])
+  userId    String    @map("user_id")
+  /// Order manager
+  manager   User?     @relation("OrderManager", fields: [managerId], references: [id])
+  managerId String?   @map("manager_id")
+  /// Order status
+  statuses  Status[]
+  items     Item[]
+  comments  Comment[]
+
+  @@map("orders")
+}
+
+/// Order status model
+model Status {
+  /// Status ID
+  id        Int         @id @default(autoincrement())
+  /// Order status
+  status    OrderStatus @default(CREATED)
+  /// Created date
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  /// Order
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int     @map("order_id")
+  /// User
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId  String? @map("user_id")
+
+  @@map("statuses")
+}
+
+/// Order status list
+enum OrderStatus {
+  /// Order created
+  CREATED
+  /// The order is subject to approval
+  APPROVAL
+  /// The order has been agreed
+  APPROVED
+  /// The order has been paid for
+  PURCHASING
+  /// The order is on the way
+  DELIVERY
+  /// The order is closed
+  CLOSED
+}
+
+/// Comments on the order model
+model Comment {
+  /// Comment ID
+  id        Int      @id @default(autoincrement())
+  /// Comment text
+  text      String
+  /// Comment created date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Order
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int     @map("order_id")
+  /// User 
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId  String? @map("user_id")
+
+  /// Comments on the tree
+  comment  Comment?  @relation("ParentComment", fields: [parentId], references: [id])
+  parentId Int?      @map("parent_id")
+  comments Comment[] @relation("ParentComment")
+
+  @@map("comments")
+}
+
+/// Item in order model
+model Item {
+  /// ID of the order item
+  id           Int           @id @default(autoincrement())
+  /// Quantity
+  quantity     Int           @default(1)
+  /// Margin factor
+  coefficient  Float         @default(2)
+  /// Car number
+  carNo        String?       @map("car_no") @db.VarChar(50)
+  /// Flight number
+  routeNo      String?       @map("route_no") @db.VarChar(50)
+  /// Type of delivery
+  deliveryType DeliveryType? @default(TURKIYE) @map("delivery_type")
+
+  /// Created date
+  createdAt DateTime @default(now()) @map("created_at")
+  /// Updated date
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  /// Order
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int      @map("order_id")
+  /// Product
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int      @map("product_id")
+  /// Product price
+  price     Price?   @relation(fields: [priceId], references: [id], onDelete: SetNull)
+  priceId   Int?     @map("price_id")
+  /// User
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?  @map("user_id")
+
+  /// Item statuses
+  statuses    StatusItem[]
+  commentItem CommentItem[]
+
+  @@map("items")
+}
+
+/// Comments on the order item
+model CommentItem {
+  /// Comment ID
+  id        Int      @id @default(autoincrement())
+  /// Comment text
+  text      String
+  /// Created date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Item
+  item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId Int     @map("item_id")
+  /// User create
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id")
+
+  /// Comments on the tree
+  comment  CommentItem?  @relation("ParentCommentItem", fields: [parentId], references: [id])
+  parentId Int?          @map("parent_id")
+  comments CommentItem[] @relation("ParentCommentItem")
+
+  @@map("comment_items")
+}
+
+/// The model of the item statuses in the order
+model StatusItem {
+  /// Status ID
+  id        Int        @id @default(autoincrement())
+  /// Item status
+  status    ItemStatus @default(CREATED)
+  /// Created date
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  /// Item
+  item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId Int     @map("item_id")
+  /// User
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id")
+
+  @@map("status_items")
+}
+
+/// Item statuses in the order
+enum ItemStatus {
+  /// The Item has been created
+  CREATED
+  /// The Item has been approved
+  APPROVED
+  /// The Item is paid for
+  PURCHASED
+  /// Товар на складе в Европе
+  EUSTOCK
+  /// Товар в пути
+  DELIVERY
+  /// Товар на складе в России
+  RUSTOCK
+  /// Товар доставлен
+  COMPLETED
+}
+
+// Тип доставки товара
+enum DeliveryType {
+  /// РОРО
+  RORO
+  /// Через Турцию
+  TURKIYE
+  /// Через Казахстан
+  KAZAKHSTAN
+  /// Через Литву
+  LITHUANIA
 }

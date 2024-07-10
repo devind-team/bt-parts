@@ -1,6 +1,6 @@
 x-postgres-variables: &postgres-variables
-  POSTGRES_DB: 'parts'
-  POSTGRES_USER: 'postgres'
+  POSTGRES_DB: 'bt-parts'
+  POSTGRES_USER: 'bt-parts'
   POSTGRES_PASSWORD: '12345678'
 
 x-minio-variables: &minio-variables
