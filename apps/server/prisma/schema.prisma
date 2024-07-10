@@ -85,6 +85,9 @@ model User {
   /// Дата обновления
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  /// Companies
+  companies Companies? @relation(fields: [companiesId], references: [id])
+
   /// My files
   files File[]
 
@@ -98,6 +101,7 @@ model User {
   statusItem   StatusItem[]
   comment      Comment[]
   commentItem  CommentItem[]
+  companiesId  String?
 
   @@index([username, email])
   @@map("users")
@@ -115,6 +119,20 @@ enum Gender {
   UNKNOWN
   MALE
   FEMALE
+}
+
+// Companies model
+model Companies {
+  /// Companies ID
+  id       String   @id @default(uuid())
+  /// Companies Name
+  /// @Validator.MinLength(3)
+  name     String   @db.VarChar(512)
+  /// Location
+  location Location @default(RUSSIA)
+  User     User[]
+
+  @@map("companies")
 }
 
 // Save model for files
@@ -151,7 +169,7 @@ model File {
 /// List of available products
 model Product {
   /// Product ID
-  id           Int              @id @default(autoincrement())
+  id           String           @id @default(uuid())
   /// Article number
   /// @Validator.MinLength(3)
   /// @Validator.MaxLength(30)
@@ -201,10 +219,10 @@ model Product {
 /// Products prices model
 model Price {
   /// Price ID
-  id       Int     @id @default(autoincrement())
+  id       String  @id @default(uuid())
   /// Price per unit/piece
   price    Decimal @db.Decimal(9, 2)
-  /// Delivery time in days to the warehouse in Europe
+  /// Delivery time in days to the warehouse
   duration Int?    @default(0)
 
   /// Supplier name
@@ -229,7 +247,7 @@ model Price {
 
   /// Product
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int      @map("product_id")
+  productId String   @map("product_id")
   item      Item[]
   /// Location
   location  Location @default(CHINA)
@@ -246,7 +264,7 @@ enum Location {
 /// Attribute model
 model Attribute {
   /// Attribude ID
-  id        Int              @id @default(autoincrement())
+  id        String           @id @default(uuid())
   /// Attribute name
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(50)
@@ -262,7 +280,7 @@ model Attribute {
 /// Модель значений атрибутов товара
 model AttributeValue {
   /// Идентификатор атрибута
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   /// Название атрибута
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(50)
@@ -271,10 +289,10 @@ model AttributeValue {
   createdAt   DateTime  @default(now()) @map("created_at")
   /// Товар
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId   Int       @map("product_id")
+  productId   String    @map("product_id")
   /// Атрибут
   attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
-  attributeId Int       @map("attribute_id")
+  attributeId String    @map("attribute_id")
 
   @@map("attribute_values")
 }
@@ -282,7 +300,7 @@ model AttributeValue {
 /// Order model
 model Order {
   /// Order ID
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   /// Delivery Address
   address   String?
   /// Created date
@@ -304,7 +322,7 @@ model Order {
 /// Order status model
 model Status {
   /// Status ID
-  id        Int         @id @default(autoincrement())
+  id        String      @id @default(uuid())
   /// Order status
   status    OrderStatus @default(CREATED)
   /// Created date
@@ -312,7 +330,7 @@ model Status {
 
   /// Order
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId Int     @map("order_id")
+  orderId String  @map("order_id")
   /// User
   user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId  String? @map("user_id")
@@ -339,7 +357,7 @@ enum OrderStatus {
 /// Comments on the order model
 model Comment {
   /// Comment ID
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   /// Comment text
   text      String
   /// Comment created date
@@ -347,14 +365,14 @@ model Comment {
 
   /// Order
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId Int     @map("order_id")
+  orderId String  @map("order_id")
   /// User 
   user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId  String? @map("user_id")
 
   /// Comments on the tree
   comment  Comment?  @relation("ParentComment", fields: [parentId], references: [id])
-  parentId Int?      @map("parent_id")
+  parentId String?   @map("parent_id")
   comments Comment[] @relation("ParentComment")
 
   @@map("comments")
@@ -363,7 +381,7 @@ model Comment {
 /// Item in order model
 model Item {
   /// ID of the order item
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(uuid())
   /// Quantity
   quantity     Int           @default(1)
   /// Margin factor
@@ -381,13 +399,13 @@ model Item {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   /// Order
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId   Int      @map("order_id")
+  orderId   String   @map("order_id")
   /// Product
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int      @map("product_id")
+  productId String   @map("product_id")
   /// Product price
   price     Price?   @relation(fields: [priceId], references: [id], onDelete: SetNull)
-  priceId   Int?     @map("price_id")
+  priceId   String?  @map("price_id")
   /// User
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?  @map("user_id")
@@ -402,7 +420,7 @@ model Item {
 /// Comments on the order item
 model CommentItem {
   /// Comment ID
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   /// Comment text
   text      String
   /// Created date
@@ -410,14 +428,14 @@ model CommentItem {
 
   /// Item
   item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId Int     @map("item_id")
+  itemId String  @map("item_id")
   /// User create
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId String? @map("user_id")
 
   /// Comments on the tree
   comment  CommentItem?  @relation("ParentCommentItem", fields: [parentId], references: [id])
-  parentId Int?          @map("parent_id")
+  parentId String?       @map("parent_id")
   comments CommentItem[] @relation("ParentCommentItem")
 
   @@map("comment_items")
@@ -426,7 +444,7 @@ model CommentItem {
 /// The model of the item statuses in the order
 model StatusItem {
   /// Status ID
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(uuid())
   /// Item status
   status    ItemStatus @default(CREATED)
   /// Created date
@@ -434,7 +452,7 @@ model StatusItem {
 
   /// Item
   item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId Int     @map("item_id")
+  itemId String  @map("item_id")
   /// User
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId String? @map("user_id")
