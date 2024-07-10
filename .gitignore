@@ -51,6 +51,8 @@ Thumbs.db
 
 packages/queries/types/graphql.ts
 apps/server/src/@generated
+apps/server/.env
 apps/server/prisma/dbml
+apps/client/.env
 
 .env
