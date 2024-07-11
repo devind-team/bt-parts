@@ -82,11 +82,26 @@ model User {
 
   /// Register data
   createdAt DateTime @default(now()) @map("created_at")
-  /// Дата обновления
+  /// Updated date
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Companies
+  companies Companies? @relation(fields: [companiesId], references: [id])
 
   /// My files
   files File[]
+
+  /// My orders
+  orders Order[] @relation("OrderUser")
+
+  /// Orders taken
+  manageOrders Order[]       @relation("OrderManager")
+  status       Status[]
+  item         Item[]
+  statusItem   StatusItem[]
+  comment      Comment[]
+  commentItem  CommentItem[]
+  companiesId  String?
 
   @@index([username, email])
   @@map("users")
@@ -104,6 +119,23 @@ enum Gender {
   UNKNOWN
   MALE
   FEMALE
+}
+
+// Companies model
+model Companies {
+  /// Companies ID
+  id       String   @id @default(uuid())
+  /// Companies Name
+  /// @Validator.MinLength(3)
+  name     String   @db.VarChar(512)
+  /// Location
+  location Location @default(RUSSIA)
+  /// Address
+  address  String   @db.VarChar(512)
+
+  User User[]
+
+  @@map("companies")
 }
 
 // Save model for files
@@ -128,8 +160,345 @@ model File {
   /// Updated data
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   /// User ID
+  /// If null - system file
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?  @map("user_id")
 
+  products Product[]
+
   @@map("files")
+}
+
+/// Manufacturer model
+model Manufacturer {
+  /// Manufacturer ID
+  id       String    @id @default(uuid())
+  /// Manufacturer name
+  /// @Validator.MinLength(3)
+  name     String    @db.VarChar(512)
+  products Product[]
+}
+
+///Supplier model
+model Supplier {
+  /// Supplier ID
+  id       String   @id @default(uuid())
+  /// Supplier name
+  /// @Validator.MinLength(3)
+  name     String   @db.VarChar(512)
+  location Location @default(CHINA)
+  products Price[]
+}
+
+/// List of available products
+model Product {
+  /// Product ID
+  id             String           @id @default(uuid())
+  /// Article number
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(30)
+  vendorCode     String           @unique @map("verndor_code") @db.VarChar(128)
+  /// English name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(30)
+  nameEn         String?          @db.VarChar(256)
+  /// Russian name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(30)
+  nameRu         String?          @db.VarChar(256)
+  /// Manufacturer
+  manufacturer   Manufacturer?    @relation(fields: [manufacturerId], references: [id])
+  /// Aliases separated by commas
+  aliases        String?          @db.VarChar(500)
+  /// The originality of the product
+  original       Boolean          @default(true)
+  /// Goods in stock
+  stock          Int              @default(0)
+  /// Netto weight
+  netto          Decimal?         @db.Decimal(9, 2)
+  /// Brutto weight
+  brutto         Decimal?         @db.Decimal(9, 2)
+  /// TN VED code
+  tnved          String?          @db.VarChar(50)
+  /// Created data
+  createdAt      DateTime         @default(now()) @map("created_at")
+  /// Update data
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
+  // Product prices
+  prices         Price[]
+  /// Product attribute
+  attributes     AttributeValue[]
+  /// Products in orders
+  item           Item[]
+  /// Products images
+  images         File[]
+  manufacturerId String?
+
+  @@map("products")
+}
+
+/// Products prices model
+model Price {
+  /// Price ID
+  id       String  @id @default(uuid())
+  /// Price per unit/piece
+  price    Decimal @db.Decimal(9, 2)
+  /// Delivery time in days to the warehouse
+  duration Int?    @default(0)
+
+  /// Supplier name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(200)
+  supplierName String   @map("supplier_name") @db.VarChar(200)
+  /// Supplier's country
+  country      String?  @db.VarChar(50)
+  /// Site
+  site         String?  @db.VarChar(128)
+  /// Comment
+  comment      String?
+  /// Relevant
+  relevant     Boolean? @default(true)
+
+  /// Created date
+  createdAt DateTime  @default(now()) @map("created_at")
+  /// Updated date
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  /// Price validity date
+  validAt   DateTime? @map("valid_at")
+
+  /// Product
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String    @map("product_id")
+  item       Item[]
+  Supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?
+
+  @@map("prices")
+}
+
+enum Location {
+  CHINA
+  EUROPE
+  RUSSIA
+}
+
+/// Attribute model
+model Attribute {
+  /// Attribude ID
+  id        String           @id @default(uuid())
+  /// Attribute name
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(50)
+  name      String           @map("name") @db.VarChar(50)
+  /// Attribute created date
+  createdAt DateTime         @default(now()) @map("created_at")
+  /// Products
+  products  AttributeValue[]
+
+  @@map("attributes")
+}
+
+/// Attribute Values model
+model AttributeValue {
+  /// Attribute values ID
+  id          String    @id @default(uuid())
+  /// atribute value
+  /// @Validator.MinLength(2)
+  /// @Validator.MaxLength(50)
+  value       String    @map("name") @db.VarChar(50)
+  /// Created date
+  createdAt   DateTime  @default(now()) @map("created_at")
+  /// Product
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String    @map("product_id")
+  /// Attribute
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  attributeId String    @map("attribute_id")
+
+  @@map("attribute_values")
+}
+
+/// Order model
+model Order {
+  /// Order ID
+  id        String    @id @default(uuid())
+  /// Delivery Address
+  address   String?
+  /// Created date
+  createdAt DateTime  @default(now()) @map("created_at")
+  /// User who created the order
+  user      User      @relation("OrderUser", fields: [userId], references: [id])
+  userId    String    @map("user_id")
+  /// Order manager
+  manager   User?     @relation("OrderManager", fields: [managerId], references: [id])
+  managerId String?   @map("manager_id")
+  /// Order status
+  statuses  Status[]
+  items     Item[]
+  comments  Comment[]
+
+  @@map("orders")
+}
+
+/// Order status model
+model Status {
+  /// Status ID
+  id        String      @id @default(uuid())
+  /// Order status
+  status    OrderStatus @default(CREATED)
+  /// Created date
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  /// Order
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String  @map("order_id")
+  /// User
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId  String? @map("user_id")
+
+  @@map("statuses")
+}
+
+/// Order status list
+enum OrderStatus {
+  /// Order created
+  CREATED
+  /// The order was accepted by the manager
+  ADOPTED
+  /// The order has been priced
+  PRICED
+  /// The order is awaiting confirmation
+  OFFER
+  /// The order has been agreed
+  APPROVED
+  /// The order has been paid for
+  PURCHASING
+  /// The order has been partially issued
+  PARTIALLY
+  /// The order is closed
+  CLOSED
+}
+
+/// Comments on the order model
+model Comment {
+  /// Comment ID
+  id        String   @id @default(uuid())
+  /// Comment text
+  text      String
+  /// Comment created date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Order
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String  @map("order_id")
+  /// User 
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId  String? @map("user_id")
+
+  /// Comments on the tree
+  comment  Comment?  @relation("ParentComment", fields: [parentId], references: [id])
+  parentId String?   @map("parent_id")
+  comments Comment[] @relation("ParentComment")
+
+  @@map("comments")
+}
+
+/// Item in order model
+model Item {
+  /// ID of the order item
+  id          String  @id @default(uuid())
+  /// Quantity
+  quantity    Int     @default(1)
+  /// Margin factor
+  coefficient Float   @default(2)
+  /// Car number
+  carNo       String? @map("car_no") @db.VarChar(50)
+  /// Flight number
+  routeNo     String? @map("route_no") @db.VarChar(50)
+
+  /// Created date
+  createdAt DateTime @default(now()) @map("created_at")
+  /// Updated date
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  /// Order
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String   @map("order_id")
+  /// Product
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String   @map("product_id")
+  /// Product price
+  price     Price?   @relation(fields: [priceId], references: [id], onDelete: SetNull)
+  priceId   String?  @map("price_id")
+  /// User
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?  @map("user_id")
+
+  /// Item statuses
+  statuses    StatusItem[]
+  commentItem CommentItem[]
+
+  @@map("items")
+}
+
+/// Comments on the order item
+model CommentItem {
+  /// Comment ID
+  id        String   @id @default(uuid())
+  /// Comment text
+  text      String
+  /// Created date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Item
+  item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId String  @map("item_id")
+  /// User create
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id")
+
+  /// Comments on the tree
+  comment  CommentItem?  @relation("ParentCommentItem", fields: [parentId], references: [id])
+  parentId String?       @map("parent_id")
+  comments CommentItem[] @relation("ParentCommentItem")
+
+  @@map("comment_items")
+}
+
+/// The model of the item statuses in the order
+model StatusItem {
+  /// Status ID
+  id        String     @id @default(uuid())
+  /// Item status
+  status    ItemStatus @default(CREATED)
+  /// Created date
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  /// Item
+  item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId String  @map("item_id")
+  /// User
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id")
+
+  @@map("status_items")
+}
+
+/// Item statuses in the order
+enum ItemStatus {
+  /// The Item has been created
+  CREATED
+  /// ПРОЦЕНЕН
+  PRICED
+  /// The Item has been approved
+  APPROVED
+  /// Suppliers stock
+  SUSTOCK
+  /// Tranzit stock
+  TRSTOCK
+  /// On the way 
+  DELIVERY
+  /// Russian stock
+  RUSTOCK
+  /// Completed
+  COMPLETED
 }
