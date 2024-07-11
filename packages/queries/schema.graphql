@@ -25,6 +25,7 @@ type UserCountAggregate {
   gender: Int!
   createdAt: Int!
   updatedAt: Int!
+  companiesId: Int!
   _all: Int!
 }
 
@@ -44,6 +45,7 @@ type UserMinAggregate {
   gender: Gender
   createdAt: DateTime
   updatedAt: DateTime
+  companiesId: String
 }
 
 """
@@ -81,6 +83,426 @@ type UserMaxAggregate {
   gender: Gender
   createdAt: DateTime
   updatedAt: DateTime
+  companiesId: String
+}
+
+type CompaniesCount {
+  User: Int!
+}
+
+type Companies {
+  """Companies ID"""
+  id: ID!
+
+  """Companies Name"""
+  name: String!
+
+  """Location"""
+  location: Location!
+
+  """Address"""
+  address: String!
+  User: [User!]
+  _count: CompaniesCount!
+}
+
+enum Location {
+  CHINA
+  EUROPE
+  RUSSIA
+}
+
+type ManufacturerCount {
+  products: Int!
+}
+
+"""Manufacturer model"""
+type Manufacturer {
+  """Manufacturer ID"""
+  id: ID!
+
+  """Manufacturer name"""
+  name: String!
+  products: [Product!]
+  _count: ManufacturerCount!
+}
+
+"""Order status model"""
+type Status {
+  """Status ID"""
+  id: ID!
+
+  """Order status"""
+  status: OrderStatus!
+
+  """Created date"""
+  createdAt: DateTime!
+  orderId: String!
+  userId: String
+
+  """Order"""
+  order: Order!
+
+  """User"""
+  user: User
+}
+
+"""Order status list"""
+enum OrderStatus {
+  CREATED
+  ADOPTED
+  PRICED
+  OFFER
+  APPROVED
+  PURCHASING
+  PARTIALLY
+  CLOSED
+}
+
+type CommentCount {
+  comments: Int!
+}
+
+"""Comments on the order model"""
+type Comment {
+  """Comment ID"""
+  id: ID!
+
+  """Comment text"""
+  text: String!
+
+  """Comment created date"""
+  createdAt: DateTime!
+  orderId: String!
+  userId: String
+  parentId: String
+
+  """Order"""
+  order: Order!
+
+  """User """
+  user: User
+
+  """Comments on the tree"""
+  comment: Comment
+  comments: [Comment!]
+  _count: CommentCount!
+}
+
+type OrderCount {
+  statuses: Int!
+  items: Int!
+  comments: Int!
+}
+
+"""Order model"""
+type Order {
+  """Order ID"""
+  id: ID!
+
+  """Delivery Address"""
+  address: String
+
+  """Created date"""
+  createdAt: DateTime!
+  userId: String!
+  managerId: String
+
+  """User who created the order"""
+  user: User!
+
+  """Order manager"""
+  manager: User
+
+  """Order status"""
+  statuses: [Status!]
+  items: [Item!]
+  comments: [Comment!]
+  _count: OrderCount!
+}
+
+"""The model of the item statuses in the order"""
+type StatusItem {
+  """Status ID"""
+  id: ID!
+
+  """Item status"""
+  status: ItemStatus!
+
+  """Created date"""
+  createdAt: DateTime!
+  itemId: String!
+  userId: String
+
+  """Item"""
+  item: Item!
+
+  """User"""
+  user: User
+}
+
+"""Item statuses in the order"""
+enum ItemStatus {
+  CREATED
+  PRICED
+  APPROVED
+  SUSTOCK
+  TRSTOCK
+  DELIVERY
+  RUSTOCK
+  COMPLETED
+}
+
+type CommentItemCount {
+  comments: Int!
+}
+
+"""Comments on the order item"""
+type CommentItem {
+  """Comment ID"""
+  id: ID!
+
+  """Comment text"""
+  text: String!
+
+  """Created date"""
+  createdAt: DateTime!
+  itemId: String!
+  userId: String
+  parentId: String
+
+  """Item"""
+  item: Item!
+
+  """User create"""
+  user: User
+
+  """Comments on the tree"""
+  comment: CommentItem
+  comments: [CommentItem!]
+  _count: CommentItemCount!
+}
+
+type ItemCount {
+  statuses: Int!
+  commentItem: Int!
+}
+
+"""Item in order model"""
+type Item {
+  """ID of the order item"""
+  id: ID!
+
+  """Quantity"""
+  quantity: Int!
+
+  """Margin factor"""
+  coefficient: Float!
+
+  """Car number"""
+  carNo: String
+
+  """Flight number"""
+  routeNo: String
+
+  """Created date"""
+  createdAt: DateTime!
+
+  """Updated date"""
+  updatedAt: DateTime!
+  orderId: String!
+  productId: String!
+  priceId: String
+  userId: String
+
+  """Order"""
+  order: Order!
+
+  """Product"""
+  product: Product!
+
+  """Product price"""
+  price: Price
+
+  """User"""
+  user: User
+
+  """Item statuses"""
+  statuses: [StatusItem!]
+  commentItem: [CommentItem!]
+  _count: ItemCount!
+}
+
+type SupplierCount {
+  products: Int!
+}
+
+"""Supplier model"""
+type Supplier {
+  """Supplier ID"""
+  id: ID!
+
+  """Supplier name"""
+  name: String!
+  location: Location!
+  products: [Price!]
+  _count: SupplierCount!
+}
+
+type PriceCount {
+  item: Int!
+}
+
+"""Products prices model"""
+type Price {
+  """Price ID"""
+  id: ID!
+
+  """Price per unit/piece"""
+  price: Decimal!
+
+  """Delivery time in days to the warehouse"""
+  duration: Int
+
+  """Supplier name"""
+  supplierName: String!
+
+  """Supplier's country"""
+  country: String
+
+  """Site"""
+  site: String
+
+  """Comment"""
+  comment: String
+
+  """Relevant"""
+  relevant: Boolean
+
+  """Created date"""
+  createdAt: DateTime!
+
+  """Updated date"""
+  updatedAt: DateTime!
+
+  """Price validity date"""
+  validAt: DateTime
+  productId: String!
+  supplierId: String
+
+  """Product"""
+  product: Product!
+  item: [Item!]
+  Supplier: Supplier
+  _count: PriceCount!
+}
+
+"""An arbitrary-precision Decimal type"""
+scalar Decimal
+
+type AttributeCount {
+  products: Int!
+}
+
+"""Attribute model"""
+type Attribute {
+  """Attribude ID"""
+  id: ID!
+
+  """Attribute name"""
+  name: String!
+
+  """Attribute created date"""
+  createdAt: DateTime!
+
+  """Products"""
+  products: [AttributeValue!]
+  _count: AttributeCount!
+}
+
+"""Attribute Values model"""
+type AttributeValue {
+  """Attribute values ID"""
+  id: ID!
+
+  """atribute value"""
+  value: String!
+
+  """Created date"""
+  createdAt: DateTime!
+  productId: String!
+  attributeId: String!
+
+  """Product"""
+  product: Product!
+
+  """Attribute"""
+  attribute: Attribute!
+}
+
+type ProductCount {
+  prices: Int!
+  attributes: Int!
+  item: Int!
+  images: Int!
+}
+
+"""List of available products"""
+type Product {
+  """Product ID"""
+  id: ID!
+
+  """Article number"""
+  vendorCode: String!
+
+  """English name"""
+  nameEn: String
+
+  """Russian name"""
+  nameRu: String
+
+  """Aliases separated by commas"""
+  aliases: String
+
+  """The originality of the product"""
+  original: Boolean!
+
+  """Goods in stock"""
+  stock: Int!
+
+  """Netto weight"""
+  netto: Decimal
+
+  """Brutto weight"""
+  brutto: Decimal
+
+  """TN VED code"""
+  tnved: String
+
+  """Created data"""
+  createdAt: DateTime!
+
+  """Update data"""
+  updatedAt: DateTime!
+  manufacturerId: String
+
+  """Manufacturer"""
+  manufacturer: Manufacturer
+  prices: [Price!]
+
+  """Product attribute"""
+  attributes: [AttributeValue!]
+
+  """Products in orders"""
+  item: [Item!]
+
+  """Products images"""
+  images: [File!]
+  _count: ProductCount!
+}
+
+type FileCount {
+  products: Int!
 }
 
 type File {
@@ -106,8 +528,13 @@ type File {
   updatedAt: DateTime!
   userId: String
 
-  """User ID"""
+  """
+  User ID
+  If null - system file
+  """
   user: User
+  products: [Product!]
+  _count: FileCount!
 }
 
 type User {
@@ -153,11 +580,26 @@ type User {
   """Register data"""
   createdAt: DateTime!
 
-  """Дата обновления"""
+  """Updated date"""
   updatedAt: DateTime!
+  companiesId: String
+
+  """Companies"""
+  companies: Companies
 
   """My files"""
   files: [File!]
+
+  """My orders"""
+  orders: [Order!]
+
+  """Orders taken"""
+  manageOrders: [Order!]
+  status: [Status!]
+  item: [Item!]
+  statusItem: [StatusItem!]
+  comment: [Comment!]
+  commentItem: [CommentItem!]
 }
 
 type UserLoginType {
@@ -165,15 +607,1048 @@ type UserLoginType {
   user: User!
 }
 
+type DeleteOrderItemsType {
+  """Идентификаторы удаленных записей"""
+  deleteIds: [String!]!
+}
+
+type ItemCountAggregate {
+  id: Int!
+  quantity: Int!
+  coefficient: Int!
+  carNo: Int!
+  routeNo: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  orderId: Int!
+  productId: Int!
+  priceId: Int!
+  userId: Int!
+  _all: Int!
+}
+
+type ItemAvgAggregate {
+  quantity: Float
+  coefficient: Float
+}
+
+type ItemSumAggregate {
+  quantity: Int
+  coefficient: Float
+}
+
+type ItemMinAggregate {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderId: String
+  productId: String
+  priceId: String
+  userId: String
+}
+
+type ItemMaxAggregate {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderId: String
+  productId: String
+  priceId: String
+  userId: String
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type ItemEdge {
+  cursor: String!
+  node: Item!
+}
+
+type ItemConnectionType {
+  edges: [ItemEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Query {
   me: User!
   presignedPutUrl(fileName: String!): FileUploadType!
+  items(where: ItemWhereInput, orderBy: [ItemOrderByWithRelationInput!], cursor: ItemWhereUniqueInput, take: Int, skip: Int, distinct: [ItemScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ItemConnectionType!
+  itemsByLastStatus(
+    """Текущий статус позиции"""
+    status: ItemStatus!
+    where: ItemWhereInput
+    orderBy: [ItemOrderByWithRelationInput!]
+    cursor: ItemWhereUniqueInput
+    take: Int
+    skip: Int
+    distinct: [ItemScalarFieldEnum!]
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): ItemConnectionType!
+}
+
+input ItemWhereInput {
+  AND: [ItemWhereInput!]
+  OR: [ItemWhereInput!]
+  NOT: [ItemWhereInput!]
+  id: StringFilter
+  quantity: IntFilter
+  coefficient: FloatFilter
+  carNo: StringNullableFilter
+  routeNo: StringNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  orderId: StringFilter
+  productId: StringFilter
+  priceId: StringNullableFilter
+  userId: StringNullableFilter
+  order: OrderRelationFilter
+  product: ProductRelationFilter
+  price: PriceNullableRelationFilter
+  user: UserNullableRelationFilter
+  statuses: StatusItemListRelationFilter
+  commentItem: CommentItemListRelationFilter
+}
+
+input StringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input NestedStringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringFilter
+}
+
+input IntFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter
+}
+
+input NestedIntFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter
+}
+
+input FloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: NestedFloatFilter
+}
+
+input NestedFloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: NestedFloatFilter
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+}
+
+input NestedStringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeFilter
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeFilter
+}
+
+input OrderRelationFilter {
+  is: OrderWhereInput
+  isNot: OrderWhereInput
+}
+
+input OrderWhereInput {
+  AND: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  id: StringFilter
+  address: StringNullableFilter
+  createdAt: DateTimeFilter
+  userId: StringFilter
+  managerId: StringNullableFilter
+  user: UserRelationFilter
+  manager: UserNullableRelationFilter
+  statuses: StatusListRelationFilter
+  items: ItemListRelationFilter
+  comments: CommentListRelationFilter
+}
+
+input UserRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+  id: StringFilter
+  username: StringFilter
+  password: StringFilter
+  email: StringFilter
+  avatar: StringNullableFilter
+  lastName: StringFilter
+  firstName: StringFilter
+  patronymic: StringNullableFilter
+  isActive: BoolFilter
+  tz: StringFilter
+  phone: StringNullableFilter
+  birthday: DateTimeNullableFilter
+  role: EnumRoleFilter
+  gender: EnumGenderFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  companiesId: StringNullableFilter
+  companies: CompaniesNullableRelationFilter
+  files: FileListRelationFilter
+  orders: OrderListRelationFilter
+  manageOrders: OrderListRelationFilter
+  status: StatusListRelationFilter
+  item: ItemListRelationFilter
+  statusItem: StatusItemListRelationFilter
+  comment: CommentListRelationFilter
+  commentItem: CommentItemListRelationFilter
+}
+
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeNullableFilter
+}
+
+input NestedDateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeNullableFilter
+}
+
+input EnumRoleFilter {
+  equals: Role
+  in: [Role!]
+  notIn: [Role!]
+  not: NestedEnumRoleFilter
+}
+
+input NestedEnumRoleFilter {
+  equals: Role
+  in: [Role!]
+  notIn: [Role!]
+  not: NestedEnumRoleFilter
+}
+
+input EnumGenderFilter {
+  equals: Gender
+  in: [Gender!]
+  notIn: [Gender!]
+  not: NestedEnumGenderFilter
+}
+
+input NestedEnumGenderFilter {
+  equals: Gender
+  in: [Gender!]
+  notIn: [Gender!]
+  not: NestedEnumGenderFilter
+}
+
+input CompaniesNullableRelationFilter {
+  is: CompaniesWhereInput
+  isNot: CompaniesWhereInput
+}
+
+input CompaniesWhereInput {
+  AND: [CompaniesWhereInput!]
+  OR: [CompaniesWhereInput!]
+  NOT: [CompaniesWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  location: EnumLocationFilter
+  address: StringFilter
+  User: UserListRelationFilter
+}
+
+input EnumLocationFilter {
+  equals: Location
+  in: [Location!]
+  notIn: [Location!]
+  not: NestedEnumLocationFilter
+}
+
+input NestedEnumLocationFilter {
+  equals: Location
+  in: [Location!]
+  notIn: [Location!]
+  not: NestedEnumLocationFilter
+}
+
+input UserListRelationFilter {
+  every: UserWhereInput
+  some: UserWhereInput
+  none: UserWhereInput
+}
+
+input FileListRelationFilter {
+  every: FileWhereInput
+  some: FileWhereInput
+  none: FileWhereInput
+}
+
+input FileWhereInput {
+  AND: [FileWhereInput!]
+  OR: [FileWhereInput!]
+  NOT: [FileWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  serverUrl: StringFilter
+  bucket: StringFilter
+  key: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  userId: StringNullableFilter
+  user: UserNullableRelationFilter
+  products: ProductListRelationFilter
+}
+
+input UserNullableRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
+}
+
+input ProductListRelationFilter {
+  every: ProductWhereInput
+  some: ProductWhereInput
+  none: ProductWhereInput
+}
+
+input ProductWhereInput {
+  AND: [ProductWhereInput!]
+  OR: [ProductWhereInput!]
+  NOT: [ProductWhereInput!]
+  id: StringFilter
+  vendorCode: StringFilter
+  nameEn: StringNullableFilter
+  nameRu: StringNullableFilter
+  aliases: StringNullableFilter
+  original: BoolFilter
+  stock: IntFilter
+  netto: DecimalNullableFilter
+  brutto: DecimalNullableFilter
+  tnved: StringNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  manufacturerId: StringNullableFilter
+  manufacturer: ManufacturerNullableRelationFilter
+  prices: PriceListRelationFilter
+  attributes: AttributeValueListRelationFilter
+  item: ItemListRelationFilter
+  images: FileListRelationFilter
+}
+
+input DecimalNullableFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalNullableFilter
+}
+
+input NestedDecimalNullableFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalNullableFilter
+}
+
+input ManufacturerNullableRelationFilter {
+  is: ManufacturerWhereInput
+  isNot: ManufacturerWhereInput
+}
+
+input ManufacturerWhereInput {
+  AND: [ManufacturerWhereInput!]
+  OR: [ManufacturerWhereInput!]
+  NOT: [ManufacturerWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  products: ProductListRelationFilter
+}
+
+input PriceListRelationFilter {
+  every: PriceWhereInput
+  some: PriceWhereInput
+  none: PriceWhereInput
+}
+
+input PriceWhereInput {
+  AND: [PriceWhereInput!]
+  OR: [PriceWhereInput!]
+  NOT: [PriceWhereInput!]
+  id: StringFilter
+  price: DecimalFilter
+  duration: IntNullableFilter
+  supplierName: StringFilter
+  country: StringNullableFilter
+  site: StringNullableFilter
+  comment: StringNullableFilter
+  relevant: BoolNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  validAt: DateTimeNullableFilter
+  productId: StringFilter
+  supplierId: StringNullableFilter
+  product: ProductRelationFilter
+  item: ItemListRelationFilter
+  Supplier: SupplierNullableRelationFilter
+}
+
+input DecimalFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalFilter
+}
+
+input NestedDecimalFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalFilter
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntNullableFilter
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntNullableFilter
+}
+
+input BoolNullableFilter {
+  equals: Boolean
+  not: NestedBoolNullableFilter
+}
+
+input NestedBoolNullableFilter {
+  equals: Boolean
+  not: NestedBoolNullableFilter
+}
+
+input ProductRelationFilter {
+  is: ProductWhereInput
+  isNot: ProductWhereInput
+}
+
+input ItemListRelationFilter {
+  every: ItemWhereInput
+  some: ItemWhereInput
+  none: ItemWhereInput
+}
+
+input SupplierNullableRelationFilter {
+  is: SupplierWhereInput
+  isNot: SupplierWhereInput
+}
+
+input SupplierWhereInput {
+  AND: [SupplierWhereInput!]
+  OR: [SupplierWhereInput!]
+  NOT: [SupplierWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  location: EnumLocationFilter
+  products: PriceListRelationFilter
+}
+
+input AttributeValueListRelationFilter {
+  every: AttributeValueWhereInput
+  some: AttributeValueWhereInput
+  none: AttributeValueWhereInput
+}
+
+input AttributeValueWhereInput {
+  AND: [AttributeValueWhereInput!]
+  OR: [AttributeValueWhereInput!]
+  NOT: [AttributeValueWhereInput!]
+  id: StringFilter
+  value: StringFilter
+  createdAt: DateTimeFilter
+  productId: StringFilter
+  attributeId: StringFilter
+  product: ProductRelationFilter
+  attribute: AttributeRelationFilter
+}
+
+input AttributeRelationFilter {
+  is: AttributeWhereInput
+  isNot: AttributeWhereInput
+}
+
+input AttributeWhereInput {
+  AND: [AttributeWhereInput!]
+  OR: [AttributeWhereInput!]
+  NOT: [AttributeWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  createdAt: DateTimeFilter
+  products: AttributeValueListRelationFilter
+}
+
+input OrderListRelationFilter {
+  every: OrderWhereInput
+  some: OrderWhereInput
+  none: OrderWhereInput
+}
+
+input StatusListRelationFilter {
+  every: StatusWhereInput
+  some: StatusWhereInput
+  none: StatusWhereInput
+}
+
+input StatusWhereInput {
+  AND: [StatusWhereInput!]
+  OR: [StatusWhereInput!]
+  NOT: [StatusWhereInput!]
+  id: StringFilter
+  status: EnumOrderStatusFilter
+  createdAt: DateTimeFilter
+  orderId: StringFilter
+  userId: StringNullableFilter
+  order: OrderRelationFilter
+  user: UserNullableRelationFilter
+}
+
+input EnumOrderStatusFilter {
+  equals: OrderStatus
+  in: [OrderStatus!]
+  notIn: [OrderStatus!]
+  not: NestedEnumOrderStatusFilter
+}
+
+input NestedEnumOrderStatusFilter {
+  equals: OrderStatus
+  in: [OrderStatus!]
+  notIn: [OrderStatus!]
+  not: NestedEnumOrderStatusFilter
+}
+
+input StatusItemListRelationFilter {
+  every: StatusItemWhereInput
+  some: StatusItemWhereInput
+  none: StatusItemWhereInput
+}
+
+input StatusItemWhereInput {
+  AND: [StatusItemWhereInput!]
+  OR: [StatusItemWhereInput!]
+  NOT: [StatusItemWhereInput!]
+  id: StringFilter
+  status: EnumItemStatusFilter
+  createdAt: DateTimeFilter
+  itemId: StringFilter
+  userId: StringNullableFilter
+  item: ItemRelationFilter
+  user: UserNullableRelationFilter
+}
+
+input EnumItemStatusFilter {
+  equals: ItemStatus
+  in: [ItemStatus!]
+  notIn: [ItemStatus!]
+  not: NestedEnumItemStatusFilter
+}
+
+input NestedEnumItemStatusFilter {
+  equals: ItemStatus
+  in: [ItemStatus!]
+  notIn: [ItemStatus!]
+  not: NestedEnumItemStatusFilter
+}
+
+input ItemRelationFilter {
+  is: ItemWhereInput
+  isNot: ItemWhereInput
+}
+
+input CommentListRelationFilter {
+  every: CommentWhereInput
+  some: CommentWhereInput
+  none: CommentWhereInput
+}
+
+input CommentWhereInput {
+  AND: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
+  id: StringFilter
+  text: StringFilter
+  createdAt: DateTimeFilter
+  orderId: StringFilter
+  userId: StringNullableFilter
+  parentId: StringNullableFilter
+  order: OrderRelationFilter
+  user: UserNullableRelationFilter
+  comment: CommentNullableRelationFilter
+  comments: CommentListRelationFilter
+}
+
+input CommentNullableRelationFilter {
+  is: CommentWhereInput
+  isNot: CommentWhereInput
+}
+
+input CommentItemListRelationFilter {
+  every: CommentItemWhereInput
+  some: CommentItemWhereInput
+  none: CommentItemWhereInput
+}
+
+input CommentItemWhereInput {
+  AND: [CommentItemWhereInput!]
+  OR: [CommentItemWhereInput!]
+  NOT: [CommentItemWhereInput!]
+  id: StringFilter
+  text: StringFilter
+  createdAt: DateTimeFilter
+  itemId: StringFilter
+  userId: StringNullableFilter
+  parentId: StringNullableFilter
+  item: ItemRelationFilter
+  user: UserNullableRelationFilter
+  comment: CommentItemNullableRelationFilter
+  comments: CommentItemListRelationFilter
+}
+
+input CommentItemNullableRelationFilter {
+  is: CommentItemWhereInput
+  isNot: CommentItemWhereInput
+}
+
+input PriceNullableRelationFilter {
+  is: PriceWhereInput
+  isNot: PriceWhereInput
+}
+
+input ItemOrderByWithRelationInput {
+  id: SortOrder
+  quantity: SortOrder
+  coefficient: SortOrder
+  carNo: SortOrderInput
+  routeNo: SortOrderInput
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  orderId: SortOrder
+  productId: SortOrder
+  priceId: SortOrderInput
+  userId: SortOrderInput
+  order: OrderOrderByWithRelationInput
+  product: ProductOrderByWithRelationInput
+  price: PriceOrderByWithRelationInput
+  user: UserOrderByWithRelationInput
+  statuses: StatusItemOrderByRelationAggregateInput
+  commentItem: CommentItemOrderByRelationAggregateInput
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input SortOrderInput {
+  sort: SortOrder!
+  nulls: NullsOrder
+}
+
+enum NullsOrder {
+  first
+  last
+}
+
+input OrderOrderByWithRelationInput {
+  id: SortOrder
+  address: SortOrderInput
+  createdAt: SortOrder
+  userId: SortOrder
+  managerId: SortOrderInput
+  user: UserOrderByWithRelationInput
+  manager: UserOrderByWithRelationInput
+  statuses: StatusOrderByRelationAggregateInput
+  items: ItemOrderByRelationAggregateInput
+  comments: CommentOrderByRelationAggregateInput
+}
+
+input UserOrderByWithRelationInput {
+  id: SortOrder
+  username: SortOrder
+  password: SortOrder
+  email: SortOrder
+  avatar: SortOrderInput
+  lastName: SortOrder
+  firstName: SortOrder
+  patronymic: SortOrderInput
+  isActive: SortOrder
+  tz: SortOrder
+  phone: SortOrderInput
+  birthday: SortOrderInput
+  role: SortOrder
+  gender: SortOrder
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  companiesId: SortOrderInput
+  companies: CompaniesOrderByWithRelationInput
+  files: FileOrderByRelationAggregateInput
+  orders: OrderOrderByRelationAggregateInput
+  manageOrders: OrderOrderByRelationAggregateInput
+  status: StatusOrderByRelationAggregateInput
+  item: ItemOrderByRelationAggregateInput
+  statusItem: StatusItemOrderByRelationAggregateInput
+  comment: CommentOrderByRelationAggregateInput
+  commentItem: CommentItemOrderByRelationAggregateInput
+}
+
+input CompaniesOrderByWithRelationInput {
+  id: SortOrder
+  name: SortOrder
+  location: SortOrder
+  address: SortOrder
+  User: UserOrderByRelationAggregateInput
+}
+
+input UserOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input FileOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input OrderOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input StatusOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input StatusItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input CommentOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input CommentItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ProductOrderByWithRelationInput {
+  id: SortOrder
+  vendorCode: SortOrder
+  nameEn: SortOrderInput
+  nameRu: SortOrderInput
+  aliases: SortOrderInput
+  original: SortOrder
+  stock: SortOrder
+  netto: SortOrderInput
+  brutto: SortOrderInput
+  tnved: SortOrderInput
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  manufacturerId: SortOrderInput
+  manufacturer: ManufacturerOrderByWithRelationInput
+  prices: PriceOrderByRelationAggregateInput
+  attributes: AttributeValueOrderByRelationAggregateInput
+  item: ItemOrderByRelationAggregateInput
+  images: FileOrderByRelationAggregateInput
+}
+
+input ManufacturerOrderByWithRelationInput {
+  id: SortOrder
+  name: SortOrder
+  products: ProductOrderByRelationAggregateInput
+}
+
+input ProductOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PriceOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input AttributeValueOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PriceOrderByWithRelationInput {
+  id: SortOrder
+  price: SortOrder
+  duration: SortOrderInput
+  supplierName: SortOrder
+  country: SortOrderInput
+  site: SortOrderInput
+  comment: SortOrderInput
+  relevant: SortOrderInput
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  validAt: SortOrderInput
+  productId: SortOrder
+  supplierId: SortOrderInput
+  product: ProductOrderByWithRelationInput
+  item: ItemOrderByRelationAggregateInput
+  Supplier: SupplierOrderByWithRelationInput
+}
+
+input SupplierOrderByWithRelationInput {
+  id: SortOrder
+  name: SortOrder
+  location: SortOrder
+  products: PriceOrderByRelationAggregateInput
+}
+
+input ItemWhereUniqueInput {
+  id: String
+  AND: [ItemWhereInput!]
+  OR: [ItemWhereInput!]
+  NOT: [ItemWhereInput!]
+  quantity: IntFilter
+  coefficient: FloatFilter
+  carNo: StringNullableFilter
+  routeNo: StringNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  orderId: StringFilter
+  productId: StringFilter
+  priceId: StringNullableFilter
+  userId: StringNullableFilter
+  order: OrderRelationFilter
+  product: ProductRelationFilter
+  price: PriceNullableRelationFilter
+  user: UserNullableRelationFilter
+  statuses: StatusItemListRelationFilter
+  commentItem: CommentItemListRelationFilter
+}
+
+enum ItemScalarFieldEnum {
+  id
+  quantity
+  coefficient
+  carNo
+  routeNo
+  createdAt
+  updatedAt
+  orderId
+  productId
+  priceId
+  userId
 }
 
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!): UserLoginType
   uploadAvatar(fileUpload: FileUploadInput!): User!
+  addStatusItems(
+    """Идентификатор заказа"""
+    orderId: String!
+
+    """Идентификаторы позиций"""
+    itemIds: [String!]!
+
+    """Статус позиции заказа"""
+    status: ItemStatus!
+  ): [Item!]!
+  recountPrices(
+    """Идентификатор заказа"""
+    orderId: String!
+
+    """Идентификаторы позиций"""
+    itemIds: [String!]!
+  ): [Item!]!
+  changeCoefficientItems(
+    """Идентификатор заказа"""
+    orderId: String!
+
+    """Идентификаторы позиций"""
+    itemIds: [String!]!
+
+    """Коэффициент"""
+    coefficient: Float!
+  ): [Item!]!
+  changeSellingPriceItem(
+    """Идентификатор позиции"""
+    itemId: String!
+
+    """Цена продажи"""
+    price: Float!
+  ): Item!
+  changeQuantityItem(
+    """Идентификатор позиции"""
+    itemId: String!
+
+    """Количество позиций"""
+    quantity: Int!
+  ): Item!
+  deleteOrderItems(
+    """Идентификатор заказа"""
+    orderId: String!
+    where: ItemWhereInput
+  ): DeleteOrderItemsType!
 }
 
 input UserLoginInput {

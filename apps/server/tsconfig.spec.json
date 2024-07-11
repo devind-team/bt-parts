@@ -3,12 +3,16 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "paths": {
+      "@common/*": ["apps/server/src/app/common/*"],
+      "@auth/*": ["apps/server/src/app/auth/*"],
+      "@users/*": ["apps/server/src/app/users/*"],
+      "@files/*": ["apps/server/src/app/files/*"],
+      "@items/*": ["apps/server/src/app/items/*"],
+      "@s3/*": ["apps/server/src/app/s3/*"],
+      "@generated/*": ["apps/server/src/@generated/*"]
+    }
   },
-  "include": [
-    "jest.config.ts",
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts"
-  ]
+  "include": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.d.ts"]
 }
