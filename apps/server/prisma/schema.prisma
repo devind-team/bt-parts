@@ -82,7 +82,7 @@ model User {
 
   /// Register data
   createdAt DateTime @default(now()) @map("created_at")
-  /// Дата обновления
+  /// Updated date
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   /// Companies
@@ -169,48 +169,70 @@ model File {
   @@map("files")
 }
 
+/// Manufacturer model
+model Manufacturer {
+  /// Manufacturer ID
+  id       String    @id @default(uuid())
+  /// Manufacturer name
+  /// @Validator.MinLength(3)
+  name     String    @db.VarChar(512)
+  products Product[]
+}
+
+///Supplier model
+model Supplier {
+  /// Supplier ID
+  id       String   @id @default(uuid())
+  /// Supplier name
+  /// @Validator.MinLength(3)
+  name     String   @db.VarChar(512)
+  location Location @default(CHINA)
+  products Price[]
+}
+
 /// List of available products
 model Product {
   /// Product ID
-  id           String           @id @default(uuid())
+  id             String           @id @default(uuid())
   /// Article number
   /// @Validator.MinLength(3)
   /// @Validator.MaxLength(30)
-  vendorCode   String           @unique @map("verndor_code") @db.VarChar(128)
+  vendorCode     String           @unique @map("verndor_code") @db.VarChar(128)
   /// English name
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(30)
-  nameEn       String?          @db.VarChar(256)
+  nameEn         String?          @db.VarChar(256)
   /// Russian name
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(30)
-  nameRu       String?          @db.VarChar(256)
+  nameRu         String?          @db.VarChar(256)
   /// Manufacturer
-  manufacturer String?          @map("manufacturer") @db.VarChar(256)
+  manufacturer   Manufacturer?    @relation(fields: [manufacturerId], references: [id])
   /// Aliases separated by commas
-  aliases      String?          @db.VarChar(500)
+  aliases        String?          @db.VarChar(500)
   /// The originality of the product
-  original     Boolean          @default(true)
+  original       Boolean          @default(true)
   /// Goods in stock
-  stock        Int              @default(0)
-  /// Вес нетто
-  netto        Decimal?         @db.Decimal(9, 2)
-  /// Вес брутто
-  brutto       Decimal?         @db.Decimal(9, 2)
-  /// Код ТН ВЭД
-  tnved        String?          @db.VarChar(50)
+  stock          Int              @default(0)
+  /// Netto weight
+  netto          Decimal?         @db.Decimal(9, 2)
+  /// Brutto weight
+  brutto         Decimal?         @db.Decimal(9, 2)
+  /// TN VED code
+  tnved          String?          @db.VarChar(50)
   /// Created data
-  createdAt    DateTime         @default(now()) @map("created_at")
+  createdAt      DateTime         @default(now()) @map("created_at")
   /// Update data
-  updatedAt    DateTime         @default(now()) @updatedAt @map("updated_at")
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
   // Product prices
-  prices       Price[]
+  prices         Price[]
   /// Product attribute
-  attributes   AttributeValue[]
+  attributes     AttributeValue[]
   /// Products in orders
-  item         Item[]
+  item           Item[]
   /// Products images
-  images       File[]
+  images         File[]
+  manufacturerId String?
 
   @@map("products")
 }
@@ -245,9 +267,11 @@ model Price {
   validAt   DateTime? @map("valid_at")
 
   /// Product
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String  @map("product_id")
-  item      Item[]
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String    @map("product_id")
+  item       Item[]
+  Supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?
 
   @@map("prices")
 }
@@ -274,20 +298,20 @@ model Attribute {
   @@map("attributes")
 }
 
-/// Модель значений атрибутов товара
+/// Attribute Values model
 model AttributeValue {
-  /// Идентификатор атрибута
+  /// Attribute values ID
   id          String    @id @default(uuid())
-  /// Название атрибута
+  /// atribute value
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(50)
   value       String    @map("name") @db.VarChar(50)
-  /// Дата создания
+  /// Created date
   createdAt   DateTime  @default(now()) @map("created_at")
-  /// Товар
+  /// Product
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   String    @map("product_id")
-  /// Атрибут
+  /// Attribute
   attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
   attributeId String    @map("attribute_id")
 
@@ -339,14 +363,18 @@ model Status {
 enum OrderStatus {
   /// Order created
   CREATED
-  /// The order is subject to approval
-  APPROVAL
+  /// The order was accepted by the manager
+  ADOPTED
+  /// The order has been priced
+  PRICED
+  /// The order is awaiting confirmation
+  OFFER
   /// The order has been agreed
   APPROVED
   /// The order has been paid for
   PURCHASING
-  /// The order is on the way
-  DELIVERY
+  /// The order has been partially issued
+  PARTIALLY
   /// The order is closed
   CLOSED
 }
@@ -463,14 +491,14 @@ enum ItemStatus {
   PRICED
   /// The Item has been approved
   APPROVED
-  /// закуплено
-  PURCHASED
-  /// Товар на складе в Европе
-  EUSTOCK
-  /// Товар в пути
+  /// Suppliers stock
+  SUSTOCK
+  /// Tranzit stock
+  TRSTOCK
+  /// On the way 
   DELIVERY
-  /// Товар на складе в России
+  /// Russian stock
   RUSTOCK
-  /// Товар доставлен
+  /// Completed
   COMPLETED
 }
