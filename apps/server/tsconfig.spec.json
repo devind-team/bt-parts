@@ -11,7 +11,8 @@
       "@files/*": ["apps/server/src/app/files/*"],
       "@items/*": ["apps/server/src/app/items/*"],
       "@s3/*": ["apps/server/src/app/s3/*"],
-      "@generated/*": ["apps/server/src/@generated/*"]
+      "@generated/*": ["apps/server/src/@generated/*"],
+      "@products/*": ["apps/server/src/products/*"]
     }
   },
   "include": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.d.ts"]
