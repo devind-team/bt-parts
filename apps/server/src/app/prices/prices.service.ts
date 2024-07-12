@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@common/services/prisma.service'
 import { findManyCursorConnection } from '@common/relay/find-many-cursor-connection'
-import { Decimal } from '@prisma/client/runtime'
+import { Decimal } from '@prisma/client/runtime/library'
 import { PriceConnectionArgs } from '@prices/dto/price-connection.args'
 import { PriceConnectionType } from '@prices/dto/price-connection.type'
 import { CreateUploadPricesType } from '@prices/dto/create-upload-prices.type'
@@ -64,8 +64,8 @@ export class PricesService {
    */
   async #makePricesForWrite(
     values: Map<string, unknown>[],
-    productsIndex: Map<string, number>,
-    createdProductIndex: Map<string, number>,
+    productsIndex: Map<string, string>,
+    createdProductIndex: Map<string, string>,
   ): Promise<{ rows: CreateUploadPriceRowType[]; data: PriceCreateManyInput[] }> {
     const rows: CreateUploadPriceRowType[] = []
     const data: PriceCreateManyInput[] = []

@@ -683,6 +683,78 @@ type ItemConnectionType {
   totalCount: Int!
 }
 
+type ProductCountAggregate {
+  id: Int!
+  vendorCode: Int!
+  nameEn: Int!
+  nameRu: Int!
+  aliases: Int!
+  original: Int!
+  stock: Int!
+  netto: Int!
+  brutto: Int!
+  tnved: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  manufacturerId: Int!
+  _all: Int!
+}
+
+type ProductAvgAggregate {
+  stock: Float
+  netto: Decimal
+  brutto: Decimal
+}
+
+type ProductSumAggregate {
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+}
+
+type ProductMinAggregate {
+  id: String
+  vendorCode: String
+  nameEn: String
+  nameRu: String
+  aliases: String
+  original: Boolean
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+  tnved: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  manufacturerId: String
+}
+
+type ProductMaxAggregate {
+  id: String
+  vendorCode: String
+  nameEn: String
+  nameRu: String
+  aliases: String
+  original: Boolean
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+  tnved: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  manufacturerId: String
+}
+
+type ProductEdge {
+  cursor: String!
+  node: Product!
+}
+
+type ProductConnectionType {
+  edges: [ProductEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Query {
   me: User!
   presignedPutUrl(fileName: String!): FileUploadType!
@@ -701,6 +773,7 @@ type Query {
     first: Int
     last: Int
   ): ItemConnectionType!
+  products(where: ProductWhereInput, orderBy: [ProductOrderByWithRelationInput!], cursor: ProductWhereUniqueInput, take: Int, skip: Int, distinct: [ProductScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ProductConnectionType!
 }
 
 input ItemWhereInput {
@@ -1597,6 +1670,46 @@ enum ItemScalarFieldEnum {
   productId
   priceId
   userId
+}
+
+input ProductWhereUniqueInput {
+  id: String
+  vendorCode: String
+  AND: [ProductWhereInput!]
+  OR: [ProductWhereInput!]
+  NOT: [ProductWhereInput!]
+  nameEn: StringNullableFilter
+  nameRu: StringNullableFilter
+  aliases: StringNullableFilter
+  original: BoolFilter
+  stock: IntFilter
+  netto: DecimalNullableFilter
+  brutto: DecimalNullableFilter
+  tnved: StringNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  manufacturerId: StringNullableFilter
+  manufacturer: ManufacturerNullableRelationFilter
+  prices: PriceListRelationFilter
+  attributes: AttributeValueListRelationFilter
+  item: ItemListRelationFilter
+  images: FileListRelationFilter
+}
+
+enum ProductScalarFieldEnum {
+  id
+  vendorCode
+  nameEn
+  nameRu
+  aliases
+  original
+  stock
+  netto
+  brutto
+  tnved
+  createdAt
+  updatedAt
+  manufacturerId
 }
 
 type Mutation {

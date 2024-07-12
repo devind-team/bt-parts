@@ -12,5 +12,5 @@ export class CreatePriceInput extends PickType(PriceCreateInput, [
   'validAt',
 ] as const) {
   @Field(() => Int, { nullable: false })
-  productId!: number
+  productId!: string
 }
