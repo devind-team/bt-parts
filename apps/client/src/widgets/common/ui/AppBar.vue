@@ -6,7 +6,7 @@ const localePath = useLocalePath()
 </script>
 <template>
   <v-app-bar
-    :title="$t('title')"
+    :title="$t('name')"
     density="compact"
     floating
   >

@@ -4,5 +4,7 @@ useHead({ title: t('title') })
 </script>
 
 <template>
-  <div>Hello, world! <v-btn>Hello</v-btn></div>
+  <v-container>
+    <div>Hello, world! <v-btn>Hello</v-btn></div>
+  </v-container>
 </template>
