@@ -49,7 +49,7 @@ Thumbs.db
 .cache
 .nx
 
-packages/queries/src/types/composables/graphql.ts
+packages/queries/src/composables/graphql.ts
 packages/queries/src/types/graphql.ts
 apps/server/src/@generated
 apps/server/.env
