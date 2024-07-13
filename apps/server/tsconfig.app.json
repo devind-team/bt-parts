@@ -21,8 +21,17 @@
       "@files/*": [
         "apps/server/src/app/files/*"
       ],
+      "@items/*": [
+        "apps/server/src/app/items/*"
+      ],
       "@s3/*": [
         "apps/server/src/app/s3/*"
+      ],
+      "@products/*": [
+        "apps/server/src/app/products/*"
+      ],
+      "@prices/*": [
+        "apps/server/src/app/prices/*"
       ],
       "@generated/*": [
         "apps/server/src/@generated/*"

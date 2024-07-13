@@ -7,6 +7,8 @@ import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs'
 
 import { PrismaService } from '@common/services/prisma.service'
 import { AuthModule } from '@auth/auth.module'
+import { ItemsModule } from '@items/items.module'
+import { ProductsModule } from '@products/products.module'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -21,6 +23,8 @@ import { AppService } from './app.service'
       // resolvers: { JSON: GraphQLJSON },
     }),
     AuthModule,
+    ItemsModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
