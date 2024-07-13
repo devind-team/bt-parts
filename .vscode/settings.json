@@ -20,11 +20,13 @@
     "Nuxt",
     "nuxtjs",
     "pinia",
+    "singleline",
     "vuetify",
     "vueuse"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
+  "html.format.wrapAttributes": "force-expand-multiline",
   "typescript.tsdk": "node_modules/typescript/lib"
 }

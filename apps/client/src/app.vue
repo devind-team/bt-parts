@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useHead } from '#imports'
-useHead({
-  title: 'hello'
-})
+useHead({ title: 'hello' })
 </script>
 
 <template>
