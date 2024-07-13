@@ -10,15 +10,18 @@
   },
   "cSpell.words": [
     "codegen",
+    "composables",
     "consola",
     "dbml",
+    "defu",
     "devkit",
     "exceljs",
     "nestjs",
     "Nuxt",
     "nuxtjs",
     "pinia",
-    "vuetify"
+    "vuetify",
+    "vueuse"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"

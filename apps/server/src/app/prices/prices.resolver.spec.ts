@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { PrismaService } from '@common/services/prisma.service'
+import { ProductsService } from '@products/products.service'
 import { FilesModule } from '@files/files.module'
 import { PricesResolver } from './prices.resolver'
 import { PricesService } from './prices.service'
-import { ProductsService } from '@products/products.service'
 
 describe('PricesResolver', () => {
   let resolver: PricesResolver
