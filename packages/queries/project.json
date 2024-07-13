@@ -6,10 +6,10 @@
   "tags": [],
   "targets": {
     "serve": {
-      "command": "pnpm graphql-codegen -c packages/queries/codegen.yaml --watch"
+      "command": "pnpm graphql-codegen -c packages/queries/codegen.ts --watch"
     },
     "codegen-schema": {
-      "command": "pnpm graphql-codegen -c packages/queries/codegen.yaml"
+      "command": "pnpm graphql-codegen -c packages/queries/codegen.ts"
     },
     "update-schema": {
       "command": "graphql-codegen -c packages/queries/codegen.download.yaml && node packages/queries/schemaQuery.js"

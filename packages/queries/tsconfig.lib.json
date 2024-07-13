@@ -8,7 +8,8 @@
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "codegen.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts",
