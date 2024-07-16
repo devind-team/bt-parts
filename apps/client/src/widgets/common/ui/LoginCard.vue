@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import LoginCard from '@/widgets/common/ui/LoginCard.vue'
+import LoginMenu from '@/features/auth/LoginMenu.vue'
 </script>
+
 <template>
   <v-container>
-    <LoginCard />
+    <LoginMenu />
   </v-container>
 </template>

@@ -3,6 +3,9 @@
   "title": "Главная",
   "auth": {
     "login": "Войти",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "title": "Вход",
+    "username": "Логин",
+    "password": "Пароль"
   }
 }
