@@ -41,7 +41,6 @@ const handleSubmit = async (
     <Form
       as="v-form"
       :validation-schema="schema"
-      @submit="handleSubmit"
     >
       <v-card
         :loading="loading"
@@ -72,6 +71,13 @@ const handleSubmit = async (
           </Field>
         </v-card-text>
         <v-card-actions>
+          <v-btn
+            color="primary"
+            :to="localePath({ name: 'auth-register' })"
+            stacked
+          >
+            {{ $t('auth.register') }}
+          </v-btn>
           <v-spacer />
           <v-btn
             color="primary"

@@ -6,6 +6,13 @@
     "logout": "Выйти",
     "title": "Вход",
     "username": "Логин",
-    "password": "Пароль"
+    "password": "Пароль",
+    "register": "Зарегистрироваться",
+    "email": "Email",
+    "lastName": "Фамилия",
+    "firstName": "Имя",
+    "sirName": "Отчество",
+    "passwordConfirmation": "Повторите пароль",
+    "doRegister": "Зарегистрироваться"
   }
 }
