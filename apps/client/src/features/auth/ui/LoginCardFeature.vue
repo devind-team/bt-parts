@@ -23,7 +23,7 @@ const { defineField, handleSubmit } = useForm<UserLoginInput>({
 const [username, usernameProps] = defineField('username', vuetifyFieldConfig)
 const [password, passwordProps] = defineField('password', vuetifyFieldConfig)
 
-const { onDone, loading } = useLoginMutation()
+const { mutate, onDone, loading } = useLoginMutation()
 
 onDone(async ({ data }) => {
   if (!data) return
@@ -34,7 +34,14 @@ onDone(async ({ data }) => {
 })
 
 const onSubmit = handleSubmit(async (values: UserLoginInput) => {
-  console.log(values)
+  try{
+    await mutate({ 
+        userLoginInput: values 
+      })
+  }catch (e){
+    console.log(e)
+  }
+  
 })
 
 </script>
