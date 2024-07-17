@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import LoginCard from '@/widgets/common/ui/LoginCard.vue'
+import LoginWidget from '@/widgets/auth/ui/LoginWidget.vue'
 </script>
 <template>
   <v-container>
-    <LoginCard />
+    <LoginWidget />
   </v-container>
 </template>
