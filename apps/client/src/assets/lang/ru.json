@@ -1,3 +1,18 @@
 {
-  "title": "Главная"
+  "name": "Заказ запчастей",
+  "title": "Главная",
+  "auth": {
+    "login": "Войти",
+    "logout": "Выйти",
+    "title": "Вход",
+    "username": "Логин",
+    "password": "Пароль",
+    "register": "Зарегистрироваться",
+    "email": "Email",
+    "lastName": "Фамилия",
+    "firstName": "Имя",
+    "sirName": "Отчество",
+    "passwordConfirmation": "Повторите пароль",
+    "doRegister": "Зарегистрироваться"
+  }
 }

@@ -9,11 +9,6 @@ export default defineConfig({
 
   plugins: [vue(), nxViteTsPaths()],
 
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
-
   test: {
     watch: false,
     globals: true,
