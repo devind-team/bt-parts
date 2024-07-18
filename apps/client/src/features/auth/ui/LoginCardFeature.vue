@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { object, string } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { useLoginMutation, type UserLoginInput } from '@repo/queries/composables/graphql.ts'
+import { useLoginMutation } from '@repo/queries/composables/graphql.ts'
+import type { UserLoginInput, UserLoginType } from '@repo/queries/composables/graphql.ts'
 import { useAuthStore } from '@/stores/auth-store'
 import { vuetifyFieldConfig } from '@/shared/utils/vuetify'
 
@@ -25,9 +26,9 @@ const [password, passwordProps] = defineField('password', vuetifyFieldConfig)
 
 const { mutate, onDone, loading } = useLoginMutation()
 
-onDone(async ({ data }) => {
-  if (!data) return
-  const { accessToken, user } = data.login
+onDone(async (result: { data?: { login: UserLoginType } | null }) => {
+  if (!result.data) return
+  const { accessToken, user } = result.data.login
   await onLogin(accessToken)
   authStore.user = user
   await router.push(localePath({ name: 'index' }))
