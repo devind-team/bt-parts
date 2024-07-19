@@ -23,7 +23,6 @@ const localePath = useLocalePath()
         <v-menu>
           <template #activator="{ props }">
             <v-avatar
-              :image="authStore.user?.avatar"
               v-bind="props"
               color="primary"
             >
