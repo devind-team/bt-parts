@@ -20,6 +20,8 @@
     "Nuxt",
     "nuxtjs",
     "pinia",
+    "primeicons",
+    "primevue",
     "singleline",
     "vuetify",
     "vueuse"

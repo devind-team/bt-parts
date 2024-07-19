@@ -2,7 +2,7 @@
 import LoginWidget from '@/widgets/auth/ui/LoginWidget.vue'
 </script>
 <template>
-  <v-container>
+  <div>
     <LoginWidget />
-  </v-container>
+  </div>
 </template>

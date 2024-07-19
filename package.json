@@ -9,7 +9,6 @@
   "dependencies": {
     "@apollo/server": "^4.10.4",
     "@graphql-yoga/nestjs": "^3.6.1",
-    "@mdi/font": "^7.4.47",
     "@nestjs/common": "^10.3.10",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.3.10",
@@ -22,6 +21,7 @@
     "@nuxtjs/apollo": "5.0.0-alpha.14",
     "@nuxtjs/color-mode": "^3.4.2",
     "@nuxtjs/robots": "^3.0.0",
+    "@primevue/themes": "^4.0.0",
     "@prisma/client": "^5.17.0",
     "@vee-validate/i18n": "^4.13.2",
     "@vee-validate/nuxt": "^4.13.2",
@@ -46,6 +46,8 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.0.0",
     "prisma-graphql-type-decimal": "^3.0.0",
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.8.1",
@@ -84,7 +86,7 @@
     "@nx/webpack": "^19.5.1",
     "@nx/workspace": "^19.5.1",
     "@pinia/nuxt": "^0.5.1",
-    "@repo/queries": "workspace:*",
+    "@primevue/nuxt-module": "^4.0.0",
     "@swc-node/register": "^1.10.9",
     "@swc/cli": "~0.3.14",
     "@swc/core": "^1.7.0",
@@ -123,12 +125,10 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.3",
     "vite": "^5.3.4",
-    "vite-plugin-vuetify": "^2.0.3",
     "vitest": "^1.6.0",
-    "vue": "^3.4.32",
+    "vue": "^3.4.33",
     "vue-router": "^4.4.0",
     "vue-tsc": "^2.0.26",
-    "vuetify": "^3.6.13",
     "webpack-cli": "^5.1.4"
   }
 }

@@ -3,7 +3,7 @@ import LoginCardFeature from '@/features/auth/ui/LoginCardFeature.vue'
 </script>
 
 <template>
-  <v-container>
+  <div>
     <LoginCardFeature />
-  </v-container>
+  </div>
 </template>

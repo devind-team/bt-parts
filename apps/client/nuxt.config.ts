@@ -1,10 +1,14 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { defineNuxtConfig } from 'nuxt/config'
+import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-07-06',
+  alias: {
+    '@repo/queries': fileURLToPath(new URL('../../packages/queries/src', import.meta.url)),
+  },
   modules: [
+    '@primevue/nuxt-module',
     '@nuxtjs/apollo',
     '@pinia/nuxt',
     '@nuxtjs/i18n',
@@ -13,7 +17,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@vee-validate/nuxt',
   ],
-  css: ['~/assets/css/styles.scss', 'vuetify/lib/styles/main.sass', '@mdi/font/css/materialdesignicons.css'],
+  css: ['~/assets/css/styles.scss', 'primeicons/primeicons.css'],
   // ---------- development ----------
   workspaceDir: '../../',
   srcDir: 'src',
@@ -58,18 +62,18 @@ export default defineNuxtConfig({
       { code: 'en', file: 'en.json' },
     ],
   },
+  primevue: {
+    usePrimeVue: true,
+    autoImport: true,
+    components: {
+      exclude: ['Chart', 'Editor'],
+    },
+    importTheme: { from: '@@/theme.ts' },
+  },
   vite: {
     plugins: [
-      vuetify({
-        autoImport: true,
-      }),
       nxViteTsPaths(),
     ],
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
   },
   nitro: {
     devProxy: {
@@ -80,6 +84,6 @@ export default defineNuxtConfig({
     lintOnStart: false,
   },
   build: {
-    transpile: ['vuetify'],
-  },
+    transpile: ['primevue']
+  }
 })
