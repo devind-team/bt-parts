@@ -6,6 +6,7 @@ const ThemePreset = definePreset(Aura, {})
 export default {
   preset: ThemePreset,
   options: {
-    darkModeSelector: '.p-dark',
+    prefix: 'p',
+    darkModeSelector: '.dark-mode',
   },
 }

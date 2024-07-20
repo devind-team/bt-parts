@@ -8,16 +8,16 @@ export default defineNuxtConfig({
     '@repo/queries': fileURLToPath(new URL('../../packages/queries/src', import.meta.url)),
   },
   modules: [
+    '@nuxtjs/color-mode',
     '@primevue/nuxt-module',
     '@nuxtjs/apollo',
     '@pinia/nuxt',
     '@nuxtjs/i18n',
     '@nuxt/image',
     '@nuxtjs/eslint-module',
-    '@nuxtjs/color-mode',
     '@vee-validate/nuxt',
   ],
-  css: ['primeicons/primeicons.css', '~/assets/css/styles.scss'],
+  css: ['@/assets/css/styles.scss'],
   // ---------- development ----------
   workspaceDir: '../../',
   srcDir: 'src',

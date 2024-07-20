@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import AppBar from '@/widgets/common/ui/AppBar.vue'
+import App from '@/widgets/common/ui/App.vue'
+import AppMain from '~/widgets/common/ui/AppMain.vue'
+import AppToolBar from '~/widgets/common/ui/AppToolBar.vue'
 import AppFooter from '@/widgets/common/ui/AppFooter.vue'
 </script>
 
 <template>
-  <div>
-    <AppBar />
-    <slot />
-    <AppFooter />
-  </div>
+  <app>
+    <app-tool-bar />
+    <app-main>
+      <slot />
+    </app-main>
+    <app-footer />
+  </app>
 </template>

@@ -115,6 +115,7 @@
     "nuxt": "^3.12.4",
     "nx": "^19.5.1",
     "prettier": "^2.8.8",
+    "primeflex": "^3.3.1",
     "prisma": "^5.17.0",
     "prisma-dbml-generator": "^0.12.0",
     "prisma-nestjs-graphql": "^20.0.3",
@@ -130,5 +131,8 @@
     "vue-router": "^4.4.0",
     "vue-tsc": "^2.0.26",
     "webpack-cli": "^5.1.4"
+  },
+  "resolutions": {
+    "vue-tsc": "^2.0.26"
   }
 }
