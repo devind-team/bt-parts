@@ -8,4 +8,4 @@ export default {
   options: {
     darkModeSelector: '.p-dark',
   },
-};
+}

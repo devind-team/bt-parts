@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@vee-validate/nuxt',
   ],
-  css: ['~/assets/css/styles.scss', 'primeicons/primeicons.css'],
+  css: ['primeicons/primeicons.css', '~/assets/css/styles.scss'],
   // ---------- development ----------
   workspaceDir: '../../',
   srcDir: 'src',
@@ -67,6 +67,9 @@ export default defineNuxtConfig({
     autoImport: true,
     components: {
       exclude: ['Chart', 'Editor'],
+    },
+    options: {
+      ripple: true
     },
     importTheme: { from: '@@/theme.ts' },
   },
