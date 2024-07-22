@@ -9,13 +9,13 @@ const router = useRouter()
 const items = ref([
   {
     label: 'Выйти',
-    icon: 'pi pi-home',
+    icon: 'pi pi-sign-out',
     command: () => {
       router.push(localePath({ name: 'auth-logout' }))
     }
   }
 ])
-
+2
 
 </script>
 
