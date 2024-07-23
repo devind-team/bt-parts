@@ -13,6 +13,11 @@
     "firstName": "Имя",
     "sirName": "Отчество",
     "passwordConfirmation": "Повторите пароль",
-    "doRegister": "Зарегистрироваться"
+    "doRegister": "Зарегистрироваться",
+    "error": "Ошибка авторизации",
+    "not_account": "Нет аккаунта?",
+    "create": "Создать!",
+    "welcome": "Добро пожаловать!",
+    "forgot_password": "Забыли пароль?"
   }
 }

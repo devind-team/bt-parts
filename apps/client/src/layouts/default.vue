@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import AppBar from '@/widgets/common/ui/AppBar.vue'
-
-// For info: https://github.com/vuetifyjs/vuetify/issues/15202
-const styles = "--v-layout-left:0px;--v-layout-right:0px;--v-layout-top:64px;--v-layout-bottom:0px;transition:none !important;" 
+import App from '@/widgets/common/ui/App.vue'
+import AppMain from '~/widgets/common/ui/AppMain.vue'
+import AppToolBar from '~/widgets/common/ui/AppToolBar.vue'
+import AppFooter from '@/widgets/common/ui/AppFooter.vue'
 </script>
 
 <template>
-  <v-app>
-    <app-bar />
-    <v-main :style="styles">
+  <app>
+    <app-tool-bar />
+    <app-main>
       <slot />
-    </v-main>
-  </v-app>
+    </app-main>
+    <app-footer />
+  </app>
 </template>

@@ -16,10 +16,5 @@ router.push(localePath({ name: 'index' }))
 </script>
 
 <template>
-  <v-container>
-    <v-progress-circular
-      color="primary"
-      indeterminate
-    />
-  </v-container>
+  <div>Logout.</div>
 </template>
