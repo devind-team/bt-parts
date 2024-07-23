@@ -1,6 +1,8 @@
 {
   "name": "Заказ запчастей",
   "title": "Главная",
+  "profile": "Профиль",
+  "uploadAvatar": "Загрузить аватар",
   "auth": {
     "login": "Войти",
     "logout": "Выйти",
@@ -11,13 +13,15 @@
     "email": "Email",
     "lastName": "Фамилия",
     "firstName": "Имя",
-    "sirName": "Отчество",
+    "patronymic": "Отчество",
+    "gender": "Пол",
     "passwordConfirmation": "Повторите пароль",
     "doRegister": "Зарегистрироваться",
     "error": "Ошибка авторизации",
     "not_account": "Нет аккаунта?",
     "create": "Создать!",
     "welcome": "Добро пожаловать!",
-    "forgot_password": "Забыли пароль?"
+    "forgot_password": "Забыли пароль?",
+    
   }
 }
