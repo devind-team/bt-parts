@@ -729,6 +729,7 @@ export type Mutation = {
   login: UserLoginType;
   recountPrices: Array<Item>;
   register?: Maybe<UserLoginType>;
+  updateUser?: Maybe<UserLoginType>;
   uploadAvatar: User;
 };
 
@@ -778,6 +779,11 @@ export type MutationRecountPricesArgs = {
 
 export type MutationRegisterArgs = {
   userRegisterInput: UserRegisterInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUserInput;
 };
 
 
@@ -1578,6 +1584,18 @@ export type SupplierWhereInput = {
   products?: InputMaybe<PriceListRelationFilter>;
 };
 
+export type UpdateUserInput = {
+  /** Date of birthday  */
+  birthday?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['EmailAddress']['input'];
+  firstName: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  patronymic?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   /** Avatar */
@@ -1806,6 +1824,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'UserLoginType', accessToken: string, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } } | null };
 
+export type UpdateUserMutationVariables = Exact<{
+  updateUserInput: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'UserLoginType', accessToken: string, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } } | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1895,6 +1920,38 @@ export function useRegisterMutation(options: VueApolloComposable.UseMutationOpti
   return VueApolloComposable.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
 }
 export type RegisterMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RegisterMutation, RegisterMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation updateUser($updateUserInput: UpdateUserInput!) {
+  updateUser(updateUserInput: $updateUserInput) {
+    accessToken
+    user {
+      ...UserFields
+    }
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateUserMutation({
+ *   variables: {
+ *     updateUserInput: // value for 'updateUserInput'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(options: VueApolloComposable.UseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+}
+export type UpdateUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateUserMutation, UpdateUserMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

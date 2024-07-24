@@ -47,8 +47,6 @@ const items = ref([
       <template v-if="authStore.loginIn">
         <SplitButton  
           label="Профиль" 
-          as="router-link" 
-          :to="localePath({ name: 'profile-me' })"
           icon="pi pi-user"
           :model="items"
         />
