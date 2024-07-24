@@ -4,12 +4,10 @@ import { UserCreateInput } from '@generated/user'
 @InputType()
 export class UpdateUserInput extends PickType(UserCreateInput, [
   'id',
-  'username',
   'email',
   'lastName',
   'firstName',
   'patronymic',
-  'password',
 ] as const) {
   @Field(() => Date, { nullable: true, description: 'Date of birthday ' })
   birthday?: Date | string

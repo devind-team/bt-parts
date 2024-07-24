@@ -4,7 +4,6 @@ import { User } from '@generated/user'
 import { FilesService } from '@files/files.service'
 import { FileUploadInput } from '@files/dto/file-upload.input'
 import { UpdateUserInput } from './dto/update-user.input'
-import { UserLoginType } from '@auth/dto'
 import type { Bcrypt } from '@auth/providers'
 import { BCRYPT } from '@auth/providers'
 import { GraphQLError } from 'graphql'
@@ -26,27 +25,23 @@ export class UsersService {
     })
   }
 
-  async updateUser(userDto: UpdateUserInput): Promise<UserLoginType> {
+  async updateUser(userDto: UpdateUserInput): Promise<User> {
     const id = userDto.id
-    const user = await this.prismaService.user.findUnique({
+    const userFirst = await this.prismaService.user.findUnique({
       where: { id },
     })
-    if (!user) {
+    if (!userFirst) {
       throw new GraphQLError('Неверный id', {
         extensions: { code: 'FORBIDDEN' },
       })
     }
-    const saltRounds = 10
-    const password = await this.bcryptService.hash(userDto.password, saltRounds)
-    const updatedUser = await this.prismaService.user.update({
+    const user = await this.prismaService.user.update({
       where: { id },
       data: {
         ...userDto,
-        password,
       },
     })
-    const accessToken = await this.createJwtToken(updatedUser)
-    return { accessToken, updatedUser }
+    return user
   }
 
   async updateAvatar(uploadFile: FileUploadInput, user: User): Promise<User> {

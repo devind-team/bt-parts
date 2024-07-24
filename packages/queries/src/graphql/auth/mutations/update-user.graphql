@@ -2,9 +2,6 @@
 
 mutation updateUser($updateUserInput: UpdateUserInput!) {
   updateUser(updateUserInput: $updateUserInput) {
-    accessToken
-    user {
-      ...UserFields
-    }
+    ...UserFields
   }
 }
