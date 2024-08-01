@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useAuthStore } from '@/stores/auth-store';
+import { object, string } from 'zod'
 import FileUpload from 'primevue/fileupload';
-import { useMeQuery } from '@repo/queries/composables/graphql';
-import type { UserFieldsFragment } from '@repo/queries/composables/graphql';
-import { useToast } from 'primevue/usetoast';
+import { PrimeVueFieldConfig } from '@/shared/utils/PrimeVue.js'
+import { useMeQuery, useUpdateUserMutation } from '@repo/queries/composables/graphql';
+import type { UpdateUserInput, UserFieldsFragment } from '@repo/queries/composables/graphql';
 
-const { result, loading, error } = useMeQuery();
-const toast = useToast();
+const { result } = useMeQuery();
+const { mutate, error, onDone }  = useUpdateUserMutation();
 const user = ref<UserFieldsFragment | null>(null);
 
 watch(result, (newResult) => {
@@ -20,13 +20,34 @@ const userAvatar = computed(() => user.value?.avatar || '');
 
 const displayConfirmDialog = ref(false);
 const displayFileUploadDialog = ref(false);
-const password = ref<string>('');
+
+const { defineField, handleSubmit, errors } = useForm<UpdateUserInput>({
+  validationSchema: toTypedSchema(
+    object({
+      firstName: string().min(2),
+      lastName: string().min(2),
+      patronymic: string().optional(),
+      email: string().email()
+    })
+  ),
+  
+})
+
+const [firstName, firstNameProps] = defineField('firstName', PrimeVueFieldConfig,)
+const [lastName, lastNameProps] = defineField('lastName', PrimeVueFieldConfig)
+const [email, emailProps] = defineField('email', PrimeVueFieldConfig)
+const [patronymic, patronymicProps] = defineField('patronymic', PrimeVueFieldConfig)
+
 
 const saveChanges = () => {
   displayConfirmDialog.value = true;
 };
 
-const onUpload = (event: any) => {
+const editConfirm = () => {
+  
+};
+
+const onUpload = () => {
   return
 };
 
@@ -51,75 +72,67 @@ const onUpload = (event: any) => {
         class="p-button-secondary"
         @click="displayFileUploadDialog = true"
       />
+      {{ firstName }}
     </div>
-    <div
-      v-if="user"
-      class="user-details"
-    >
-      <div class="p-field p-fluid">
-        <label for="username">{{ $t('auth.username') }}</label>
-        <InputText 
-          id="username"
-          v-model="user.username"
-          class="w-full mb-3"
-        />
+    <form @submit="editConfirm">
+      <div
+        v-if="user"
+        class="user-details"
+      >
+        <div class="p-field p-fluid">
+          <label for="firstname">{{ $t('auth.firstName') }}</label>
+          <InputText
+            id="firstname"
+            v-model="user.firstName"
+            v-bind="firstNameProps"
+            class="w-full mb-3"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <label for="lastname">{{ $t('auth.lastName') }}</label>
+          <InputText
+            id="lastname"
+            v-model="user.lastName"
+            class="w-full mb-3"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <label for="patronymic">{{ $t('auth.patronymic') }}</label>
+          <InputText
+            id="patronymic"
+            v-model="user.patronymic"
+            class="w-full mb-3"
+          />
+        </div>
+        <div class="p-field p-fluid">
+          <label for="email">{{ $t('auth.email') }}</label>
+          <InputText
+            id="email"
+            v-model="user.email"
+            class="w-full mb-3"
+          />
+        </div>
       </div>
-      <div class="p-field p-fluid">
-        <label for="firstname">{{ $t('auth.firstName') }}</label>
-        <InputText
-          id="firstname"
-          v-model="user.firstName"
-          class="w-full mb-3"
-        />
-      </div>
-      <div class="p-field p-fluid">
-        <label for="lastname">{{ $t('auth.lastName') }}</label>
-        <InputText
-          id="lastname"
-          v-model="user.lastName"
-          class="w-full mb-3"
-        />
-      </div>
-      <div class="p-field p-fluid">
-        <label for="patronymic">{{ $t('auth.patronymic') }}</label>
-        <InputText
-          id="patronymic"
-          v-model="user.patronymic"
-          class="w-full mb-3"
-        />
-      </div>
-      <div class="p-field p-fluid">
-        <label for="email">{{ $t('auth.email') }}</label>
-        <InputText
-          id="email"
-          v-model="user.email"
-          class="w-full mb-3"
-        />
-      </div>
-    </div>
-    <Button
-      label="Сохранить"
-      icon="pi pi-check"
-      class="p-button-success"
-      @click="saveChanges"
-    />
+      <Button
+        label="Сохранить"
+        icon="pi pi-check"
+        class="p-button-success"
+        @click="saveChanges"
+      />
+    </form>
 
     <Dialog
       v-model:visible="displayConfirmDialog"
       header="Подтверждение изменений"
       modal
     >
-      <p>Для подтверждения изменений введите пароль:</p>
-      <InputText
-        v-model="password"
-        type="password"
-        placeholder="Пароль"
-      />
+      <p>Вы уверены?</p>
       <div class="dialog-footer">
         <Button
           label="Подтвердить"
           icon="pi pi-check"
           class="p-button-success"
+          @click="editConfirm"
         />
         <Button
           label="Отмена"
