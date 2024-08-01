@@ -89,9 +89,13 @@ jobs:
     steps:
       - name: Deploy application
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_USER: ${{ secrets.DB_USER }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY_PRIVATE }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: ${{ secrets.DEPLOY_COMMAND }}
+          envs: DB_PASSWORD,DB_USER
