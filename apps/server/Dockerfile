@@ -1,10 +1,10 @@
 # ----------- builder -----------
-FROM node:latest as builder
+FROM node:latest AS builder
 
 WORKDIR /build
 
 RUN npm add -g pnpm
-COPY ["package.json", "pnpm-lock.yaml", "nx.json", "./"]
+COPY ["package.json", "pnpm-lock.yaml", ".npmrc", "nx.json", "./"]
 RUN pnpm i --ignore-scripts
 COPY . .
 RUN pnpm exec nx run server:prisma-generate && \
@@ -20,7 +20,7 @@ WORKDIR /app
 
 RUN npm i -g pm2 pnpm
 
-COPY ["package.json", "pnpm-lock.yaml", "nx.json", "./"]
+COPY ["package.json", "pnpm-lock.yaml", ".npmrc", "nx.json", "./"]
 COPY --from=builder /build/node_modules ./node_modules
 COPY --from=builder /build/apps/server/prisma ./prisma
 COPY --from=builder /build/dist/apps/server ./

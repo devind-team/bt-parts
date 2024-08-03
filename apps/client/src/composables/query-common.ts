@@ -201,7 +201,7 @@ export function useCommonQuery<
       cache,
       result,
       (dataCache) => {
-        const { id = null } = getMutationResult(result) as { id: number | string | null }
+        const { id = undefined } = getMutationResult(result) as { id: number | string | undefined }
         if (id) {
           // cache.evict({ id: id as string })
           const dataKey: keyof typeof dataCache = Object.keys(dataCache)[0]

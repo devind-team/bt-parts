@@ -1,10 +1,10 @@
 # ----------- builder -----------
-FROM node:latest as builder
+FROM node:latest AS builder
 
 WORKDIR /build
 
 RUN npm add -g pnpm
-COPY ["package.json", "pnpm-lock.yaml", "nx.json", "./"]
+COPY ["package.json", "pnpm-lock.yaml", ".npmrc", "nx.json", "./"]
 RUN pnpm i --ignore-scripts
 COPY . .
 RUN pnpm exec nx run client:build
