@@ -373,7 +373,7 @@ importers:
         specifier: ^4.4.2
         version: 4.4.2(vue@3.4.35(typescript@5.5.4))
       vue-tsc:
-        specifier: ^2.0.29
+        specifier: ^2.0.26
         version: 2.0.29(typescript@5.5.4)
       webpack-cli:
         specifier: ^5.1.4
