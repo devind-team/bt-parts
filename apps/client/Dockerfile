@@ -5,7 +5,7 @@ WORKDIR /build
 
 RUN npm add -g pnpm
 COPY ["package.json", "pnpm-lock.yaml", ".npmrc", "nx.json", "./"]
-RUN pnpm i --ignore-scripts
+RUN echo "\nnode-linker=hoisted" >> .npmrc && pnpm install
 COPY . .
 RUN pnpm exec nx run client:build
 
