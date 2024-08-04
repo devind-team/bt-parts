@@ -34,7 +34,6 @@ export type Attribute = {
   id: Scalars['ID']['output'];
   /** Attribute name */
   name: Scalars['String']['output'];
-  /** Products */
   products?: Maybe<Array<AttributeValue>>;
 };
 
@@ -51,14 +50,12 @@ export type AttributeRelationFilter = {
 /** Attribute Values model */
 export type AttributeValue = {
   __typename?: 'AttributeValue';
-  /** Attribute */
   attribute: Attribute;
   attributeId: Scalars['String']['output'];
   /** Created date */
   createdAt: Scalars['DateTime']['output'];
   /** Attribute values ID */
   id: Scalars['ID']['output'];
-  /** Product */
   product: Product;
   productId: Scalars['String']['output'];
   /** atribute value */
@@ -112,20 +109,17 @@ export type BoolNullableFilter = {
 export type Comment = {
   __typename?: 'Comment';
   _count: CommentCount;
-  /** Comments on the tree */
   comment?: Maybe<Comment>;
   comments?: Maybe<Array<Comment>>;
   /** Comment created date */
   createdAt: Scalars['DateTime']['output'];
   /** Comment ID */
   id: Scalars['ID']['output'];
-  /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
   parentId?: Maybe<Scalars['String']['output']>;
   /** Comment text */
   text: Scalars['String']['output'];
-  /** User  */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -139,20 +133,17 @@ export type CommentCount = {
 export type CommentItem = {
   __typename?: 'CommentItem';
   _count: CommentItemCount;
-  /** Comments on the tree */
   comment?: Maybe<CommentItem>;
   comments?: Maybe<Array<CommentItem>>;
   /** Created date */
   createdAt: Scalars['DateTime']['output'];
   /** Comment ID */
   id: Scalars['ID']['output'];
-  /** Item */
   item: Item;
   itemId: Scalars['String']['output'];
   parentId?: Maybe<Scalars['String']['output']>;
   /** Comment text */
   text: Scalars['String']['output'];
-  /** User create */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -370,10 +361,6 @@ export type File = {
   serverUrl: Scalars['String']['output'];
   /** Updated data */
   updatedAt: Scalars['DateTime']['output'];
-  /**
-   * User ID
-   * If null - system file
-   */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -474,24 +461,19 @@ export type Item = {
   createdAt: Scalars['DateTime']['output'];
   /** ID of the order item */
   id: Scalars['ID']['output'];
-  /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
-  /** Product price */
   price?: Maybe<Price>;
   priceId?: Maybe<Scalars['String']['output']>;
-  /** Product */
   product: Product;
   productId: Scalars['String']['output'];
   /** Quantity */
   quantity: Scalars['Int']['output'];
   /** Flight number */
   routeNo?: Maybe<Scalars['String']['output']>;
-  /** Item statuses */
   statuses?: Maybe<Array<StatusItem>>;
   /** Updated date */
   updatedAt: Scalars['DateTime']['output'];
-  /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -729,6 +711,7 @@ export type Mutation = {
   login: UserLoginType;
   recountPrices: Array<Item>;
   register?: Maybe<UserLoginType>;
+  updateUser: User;
   uploadAvatar: User;
 };
 
@@ -778,6 +761,11 @@ export type MutationRecountPricesArgs = {
 
 export type MutationRegisterArgs = {
   userRegisterInput: UserRegisterInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUserInput;
 };
 
 
@@ -951,12 +939,9 @@ export type Order = {
   /** Order ID */
   id: Scalars['ID']['output'];
   items?: Maybe<Array<Item>>;
-  /** Order manager */
   manager?: Maybe<User>;
   managerId?: Maybe<Scalars['String']['output']>;
-  /** Order status */
   statuses?: Maybe<Array<Status>>;
-  /** User who created the order */
   user: User;
   userId: Scalars['String']['output'];
 };
@@ -1049,7 +1034,6 @@ export type Price = {
   item?: Maybe<Array<Item>>;
   /** Price per unit/piece */
   price: Scalars['Decimal']['output'];
-  /** Product */
   product: Product;
   productId: Scalars['String']['output'];
   /** Relevant */
@@ -1132,7 +1116,6 @@ export type Product = {
   _count: ProductCount;
   /** Aliases separated by commas */
   aliases?: Maybe<Scalars['String']['output']>;
-  /** Product attribute */
   attributes?: Maybe<Array<AttributeValue>>;
   /** Brutto weight */
   brutto?: Maybe<Scalars['Decimal']['output']>;
@@ -1140,11 +1123,8 @@ export type Product = {
   createdAt: Scalars['DateTime']['output'];
   /** Product ID */
   id: Scalars['ID']['output'];
-  /** Products images */
   images?: Maybe<Array<File>>;
-  /** Products in orders */
   item?: Maybe<Array<Item>>;
-  /** Manufacturer */
   manufacturer?: Maybe<Manufacturer>;
   manufacturerId?: Maybe<Scalars['String']['output']>;
   /** English name */
@@ -1436,12 +1416,10 @@ export type Status = {
   createdAt: Scalars['DateTime']['output'];
   /** Status ID */
   id: Scalars['ID']['output'];
-  /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
   /** Order status */
   status: OrderStatus;
-  /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -1453,12 +1431,10 @@ export type StatusItem = {
   createdAt: Scalars['DateTime']['output'];
   /** Status ID */
   id: Scalars['ID']['output'];
-  /** Item */
   item: Item;
   itemId: Scalars['String']['output'];
   /** Item status */
   status: ItemStatus;
-  /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -1578,6 +1554,16 @@ export type SupplierWhereInput = {
   products?: InputMaybe<PriceListRelationFilter>;
 };
 
+export type UpdateUserInput = {
+  /** Date of birthday  */
+  birthday?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['EmailAddress']['input'];
+  firstName: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['String']['input']>;
+  lastName: Scalars['String']['input'];
+  patronymic?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type User = {
   __typename?: 'User';
   /** Avatar */
@@ -1586,14 +1572,12 @@ export type User = {
   birthday?: Maybe<Scalars['DateTime']['output']>;
   comment?: Maybe<Array<Comment>>;
   commentItem?: Maybe<Array<CommentItem>>;
-  /** Companies */
   companies?: Maybe<Companies>;
   companiesId?: Maybe<Scalars['String']['output']>;
   /** Register data */
   createdAt: Scalars['DateTime']['output'];
   /** Email */
   email: Scalars['String']['output'];
-  /** My files */
   files?: Maybe<Array<File>>;
   /** First Name */
   firstName: Scalars['String']['output'];
@@ -1606,9 +1590,7 @@ export type User = {
   item?: Maybe<Array<Item>>;
   /** Last Name */
   lastName: Scalars['String']['output'];
-  /** Orders taken */
   manageOrders?: Maybe<Array<Order>>;
-  /** My orders */
   orders?: Maybe<Array<Order>>;
   /** Patronymic */
   patronymic?: Maybe<Scalars['String']['output']>;
@@ -1806,6 +1788,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'UserLoginType', accessToken: string, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } } | null };
 
+export type UpdateUserMutationVariables = Exact<{
+  updateUserInput: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1895,6 +1884,35 @@ export function useRegisterMutation(options: VueApolloComposable.UseMutationOpti
   return VueApolloComposable.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
 }
 export type RegisterMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RegisterMutation, RegisterMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation updateUser($updateUserInput: UpdateUserInput!) {
+  updateUser(updateUserInput: $updateUserInput) {
+    ...UserFields
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateUserMutation({
+ *   variables: {
+ *     updateUserInput: // value for 'updateUserInput'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(options: VueApolloComposable.UseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+}
+export type UpdateUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateUserMutation, UpdateUserMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

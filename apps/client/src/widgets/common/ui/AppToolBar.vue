@@ -3,12 +3,20 @@ import { useAuthStore } from '@/stores/auth-store'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
 const router = useRouter()
 const items = ref([
+{
+    label: t('profile'),
+    icon: 'pi pi-user',
+    command: () => {
+      router.push(localePath({ name: 'profile-me' }))
+    }
+  },
   {
-    label: 'Выйти',
+    label: t('auth.logout'),
     icon: 'pi pi-sign-out',
     command: () => {
       router.push(localePath({ name: 'auth-logout' }))
@@ -38,7 +46,7 @@ const items = ref([
     <template #end>
       <template v-if="authStore.loginIn">
         <SplitButton  
-          label="Profile" 
+          label="Профиль" 
           icon="pi pi-user"
           :model="items"
         />

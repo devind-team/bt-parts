@@ -18,13 +18,13 @@ type UserCountAggregate {
   firstName: Int!
   patronymic: Int!
   isActive: Int!
-  tz: Int!
   phone: Int!
   birthday: Int!
   role: Int!
   gender: Int!
   createdAt: Int!
   updatedAt: Int!
+  tz: Int!
   companiesId: Int!
   _all: Int!
 }
@@ -38,13 +38,13 @@ type UserMinAggregate {
   firstName: String
   patronymic: String
   isActive: Boolean
-  tz: String
   phone: String
   birthday: DateTime
   role: Role
   gender: Gender
   createdAt: DateTime
   updatedAt: DateTime
+  tz: String
   companiesId: String
 }
 
@@ -76,87 +76,14 @@ type UserMaxAggregate {
   firstName: String
   patronymic: String
   isActive: Boolean
-  tz: String
   phone: String
   birthday: DateTime
   role: Role
   gender: Gender
   createdAt: DateTime
   updatedAt: DateTime
+  tz: String
   companiesId: String
-}
-
-type CompaniesCount {
-  User: Int!
-}
-
-type Companies {
-  """Companies ID"""
-  id: ID!
-
-  """Companies Name"""
-  name: String!
-
-  """Location"""
-  location: Location!
-
-  """Address"""
-  address: String!
-  User: [User!]
-  _count: CompaniesCount!
-}
-
-enum Location {
-  CHINA
-  EUROPE
-  RUSSIA
-}
-
-type ManufacturerCount {
-  products: Int!
-}
-
-"""Manufacturer model"""
-type Manufacturer {
-  """Manufacturer ID"""
-  id: ID!
-
-  """Manufacturer name"""
-  name: String!
-  products: [Product!]
-  _count: ManufacturerCount!
-}
-
-"""Order status model"""
-type Status {
-  """Status ID"""
-  id: ID!
-
-  """Order status"""
-  status: OrderStatus!
-
-  """Created date"""
-  createdAt: DateTime!
-  orderId: String!
-  userId: String
-
-  """Order"""
-  order: Order!
-
-  """User"""
-  user: User
-}
-
-"""Order status list"""
-enum OrderStatus {
-  CREATED
-  ADOPTED
-  PRICED
-  OFFER
-  APPROVED
-  PURCHASING
-  PARTIALLY
-  CLOSED
 }
 
 type CommentCount {
@@ -176,23 +103,45 @@ type Comment {
   orderId: String!
   userId: String
   parentId: String
-
-  """Order"""
   order: Order!
-
-  """User """
-  user: User
-
-  """Comments on the tree"""
   comment: Comment
   comments: [Comment!]
+  user: User
   _count: CommentCount!
 }
 
+"""Order status model"""
+type Status {
+  """Status ID"""
+  id: ID!
+
+  """Order status"""
+  status: OrderStatus!
+
+  """Created date"""
+  createdAt: DateTime!
+  orderId: String!
+  userId: String
+  order: Order!
+  user: User
+}
+
+"""Order status list"""
+enum OrderStatus {
+  CREATED
+  ADOPTED
+  PRICED
+  OFFER
+  APPROVED
+  PURCHASING
+  PARTIALLY
+  CLOSED
+}
+
 type OrderCount {
-  statuses: Int!
-  items: Int!
   comments: Int!
+  items: Int!
+  statuses: Int!
 }
 
 """Order model"""
@@ -207,131 +156,149 @@ type Order {
   createdAt: DateTime!
   userId: String!
   managerId: String
-
-  """User who created the order"""
-  user: User!
-
-  """Order manager"""
-  manager: User
-
-  """Order status"""
-  statuses: [Status!]
-  items: [Item!]
   comments: [Comment!]
+  items: [Item!]
+  manager: User
+  user: User!
+  statuses: [Status!]
   _count: OrderCount!
 }
 
-"""The model of the item statuses in the order"""
-type StatusItem {
-  """Status ID"""
+type AttributeCount {
+  products: Int!
+}
+
+"""Attribute model"""
+type Attribute {
+  """Attribude ID"""
   id: ID!
 
-  """Item status"""
-  status: ItemStatus!
+  """Attribute name"""
+  name: String!
+
+  """Attribute created date"""
+  createdAt: DateTime!
+  products: [AttributeValue!]
+  _count: AttributeCount!
+}
+
+"""Attribute Values model"""
+type AttributeValue {
+  """Attribute values ID"""
+  id: ID!
+
+  """atribute value"""
+  value: String!
 
   """Created date"""
   createdAt: DateTime!
-  itemId: String!
-  userId: String
-
-  """Item"""
-  item: Item!
-
-  """User"""
-  user: User
-}
-
-"""Item statuses in the order"""
-enum ItemStatus {
-  CREATED
-  PRICED
-  APPROVED
-  SUSTOCK
-  TRSTOCK
-  DELIVERY
-  RUSTOCK
-  COMPLETED
-}
-
-type CommentItemCount {
-  comments: Int!
-}
-
-"""Comments on the order item"""
-type CommentItem {
-  """Comment ID"""
-  id: ID!
-
-  """Comment text"""
-  text: String!
-
-  """Created date"""
-  createdAt: DateTime!
-  itemId: String!
-  userId: String
-  parentId: String
-
-  """Item"""
-  item: Item!
-
-  """User create"""
-  user: User
-
-  """Comments on the tree"""
-  comment: CommentItem
-  comments: [CommentItem!]
-  _count: CommentItemCount!
-}
-
-type ItemCount {
-  statuses: Int!
-  commentItem: Int!
-}
-
-"""Item in order model"""
-type Item {
-  """ID of the order item"""
-  id: ID!
-
-  """Quantity"""
-  quantity: Int!
-
-  """Margin factor"""
-  coefficient: Float!
-
-  """Car number"""
-  carNo: String
-
-  """Flight number"""
-  routeNo: String
-
-  """Created date"""
-  createdAt: DateTime!
-
-  """Updated date"""
-  updatedAt: DateTime!
-  orderId: String!
   productId: String!
-  priceId: String
-  userId: String
-
-  """Order"""
-  order: Order!
-
-  """Product"""
+  attributeId: String!
+  attribute: Attribute!
   product: Product!
-
-  """Product price"""
-  price: Price
-
-  """User"""
-  user: User
-
-  """Item statuses"""
-  statuses: [StatusItem!]
-  commentItem: [CommentItem!]
-  _count: ItemCount!
 }
+
+type ManufacturerCount {
+  products: Int!
+}
+
+"""Manufacturer model"""
+type Manufacturer {
+  """Manufacturer ID"""
+  id: ID!
+
+  """Manufacturer name"""
+  name: String!
+  products: [Product!]
+  _count: ManufacturerCount!
+}
+
+type FileCount {
+  products: Int!
+}
+
+type File {
+  """ID"""
+  id: ID!
+
+  """Name"""
+  name: String!
+
+  """Service url file"""
+  serverUrl: String!
+
+  """Bucket name"""
+  bucket: String!
+
+  """Path file in bucket"""
+  key: String!
+
+  """Created data"""
+  createdAt: DateTime!
+
+  """Updated data"""
+  updatedAt: DateTime!
+  userId: String
+  user: User
+  products: [Product!]
+  _count: FileCount!
+}
+
+type ProductCount {
+  attributes: Int!
+  item: Int!
+  prices: Int!
+  images: Int!
+}
+
+"""List of available products"""
+type Product {
+  """Product ID"""
+  id: ID!
+
+  """Article number"""
+  vendorCode: String!
+
+  """English name"""
+  nameEn: String
+
+  """Russian name"""
+  nameRu: String
+
+  """Aliases separated by commas"""
+  aliases: String
+
+  """The originality of the product"""
+  original: Boolean!
+
+  """Goods in stock"""
+  stock: Int!
+
+  """Netto weight"""
+  netto: Decimal
+
+  """Brutto weight"""
+  brutto: Decimal
+
+  """TN VED code"""
+  tnved: String
+
+  """Created data"""
+  createdAt: DateTime!
+
+  """Update data"""
+  updatedAt: DateTime!
+  manufacturerId: String
+  attributes: [AttributeValue!]
+  item: [Item!]
+  prices: [Price!]
+  manufacturer: Manufacturer
+  images: [File!]
+  _count: ProductCount!
+}
+
+"""An arbitrary-precision Decimal type"""
+scalar Decimal
 
 type SupplierCount {
   products: Int!
@@ -347,6 +314,12 @@ type Supplier {
   location: Location!
   products: [Price!]
   _count: SupplierCount!
+}
+
+enum Location {
+  CHINA
+  EUROPE
+  RUSSIA
 }
 
 type PriceCount {
@@ -389,152 +362,122 @@ type Price {
   validAt: DateTime
   productId: String!
   supplierId: String
-
-  """Product"""
-  product: Product!
   item: [Item!]
+  product: Product!
   Supplier: Supplier
   _count: PriceCount!
 }
 
-"""An arbitrary-precision Decimal type"""
-scalar Decimal
-
-type AttributeCount {
-  products: Int!
-}
-
-"""Attribute model"""
-type Attribute {
-  """Attribude ID"""
+"""The model of the item statuses in the order"""
+type StatusItem {
+  """Status ID"""
   id: ID!
 
-  """Attribute name"""
-  name: String!
-
-  """Attribute created date"""
-  createdAt: DateTime!
-
-  """Products"""
-  products: [AttributeValue!]
-  _count: AttributeCount!
-}
-
-"""Attribute Values model"""
-type AttributeValue {
-  """Attribute values ID"""
-  id: ID!
-
-  """atribute value"""
-  value: String!
+  """Item status"""
+  status: ItemStatus!
 
   """Created date"""
   createdAt: DateTime!
-  productId: String!
-  attributeId: String!
-
-  """Product"""
-  product: Product!
-
-  """Attribute"""
-  attribute: Attribute!
+  itemId: String!
+  userId: String
+  item: Item!
+  user: User
 }
 
-type ProductCount {
-  prices: Int!
-  attributes: Int!
-  item: Int!
-  images: Int!
+"""Item statuses in the order"""
+enum ItemStatus {
+  CREATED
+  PRICED
+  APPROVED
+  SUSTOCK
+  TRSTOCK
+  DELIVERY
+  RUSTOCK
+  COMPLETED
 }
 
-"""List of available products"""
-type Product {
-  """Product ID"""
+type ItemCount {
+  commentItem: Int!
+  statuses: Int!
+}
+
+"""Item in order model"""
+type Item {
+  """ID of the order item"""
   id: ID!
 
-  """Article number"""
-  vendorCode: String!
+  """Quantity"""
+  quantity: Int!
 
-  """English name"""
-  nameEn: String
+  """Margin factor"""
+  coefficient: Float!
 
-  """Russian name"""
-  nameRu: String
+  """Car number"""
+  carNo: String
 
-  """Aliases separated by commas"""
-  aliases: String
+  """Flight number"""
+  routeNo: String
 
-  """The originality of the product"""
-  original: Boolean!
-
-  """Goods in stock"""
-  stock: Int!
-
-  """Netto weight"""
-  netto: Decimal
-
-  """Brutto weight"""
-  brutto: Decimal
-
-  """TN VED code"""
-  tnved: String
-
-  """Created data"""
+  """Created date"""
   createdAt: DateTime!
 
-  """Update data"""
+  """Updated date"""
   updatedAt: DateTime!
-  manufacturerId: String
-
-  """Manufacturer"""
-  manufacturer: Manufacturer
-  prices: [Price!]
-
-  """Product attribute"""
-  attributes: [AttributeValue!]
-
-  """Products in orders"""
-  item: [Item!]
-
-  """Products images"""
-  images: [File!]
-  _count: ProductCount!
+  orderId: String!
+  productId: String!
+  priceId: String
+  userId: String
+  commentItem: [CommentItem!]
+  order: Order!
+  price: Price
+  product: Product!
+  user: User
+  statuses: [StatusItem!]
+  _count: ItemCount!
 }
 
-type FileCount {
-  products: Int!
+type CommentItemCount {
+  comments: Int!
 }
 
-type File {
-  """ID"""
+"""Comments on the order item"""
+type CommentItem {
+  """Comment ID"""
   id: ID!
 
-  """Name"""
+  """Comment text"""
+  text: String!
+
+  """Created date"""
+  createdAt: DateTime!
+  itemId: String!
+  userId: String
+  parentId: String
+  item: Item!
+  comment: CommentItem
+  comments: [CommentItem!]
+  user: User
+  _count: CommentItemCount!
+}
+
+type CompaniesCount {
+  User: Int!
+}
+
+type Companies {
+  """Companies ID"""
+  id: ID!
+
+  """Companies Name"""
   name: String!
 
-  """Service url file"""
-  serverUrl: String!
+  """Location"""
+  location: Location!
 
-  """Bucket name"""
-  bucket: String!
-
-  """Path file in bucket"""
-  key: String!
-
-  """Created data"""
-  createdAt: DateTime!
-
-  """Updated data"""
-  updatedAt: DateTime!
-  userId: String
-
-  """
-  User ID
-  If null - system file
-  """
-  user: User
-  products: [Product!]
-  _count: FileCount!
+  """Address"""
+  address: String!
+  User: [User!]
+  _count: CompaniesCount!
 }
 
 type User {
@@ -562,9 +505,6 @@ type User {
   """Active user"""
   isActive: Boolean!
 
-  """TimeZone"""
-  tz: String!
-
   """Phone number"""
   phone: String
 
@@ -582,24 +522,19 @@ type User {
 
   """Updated date"""
   updatedAt: DateTime!
+
+  """TimeZone"""
+  tz: String!
   companiesId: String
-
-  """Companies"""
-  companies: Companies
-
-  """My files"""
-  files: [File!]
-
-  """My orders"""
-  orders: [Order!]
-
-  """Orders taken"""
-  manageOrders: [Order!]
-  status: [Status!]
-  item: [Item!]
-  statusItem: [StatusItem!]
-  comment: [Comment!]
   commentItem: [CommentItem!]
+  comment: [Comment!]
+  files: [File!]
+  item: [Item!]
+  manageOrders: [Order!]
+  orders: [Order!]
+  statusItem: [StatusItem!]
+  status: [Status!]
+  companies: Companies
 }
 
 type UserLoginType {
@@ -791,12 +726,12 @@ input ItemWhereInput {
   productId: StringFilter
   priceId: StringNullableFilter
   userId: StringNullableFilter
+  commentItem: CommentItemListRelationFilter
   order: OrderRelationFilter
-  product: ProductRelationFilter
   price: PriceNullableRelationFilter
+  product: ProductRelationFilter
   user: UserNullableRelationFilter
   statuses: StatusItemListRelationFilter
-  commentItem: CommentItemListRelationFilter
 }
 
 input StringFilter {
@@ -928,28 +863,39 @@ input NestedDateTimeFilter {
   not: NestedDateTimeFilter
 }
 
-input OrderRelationFilter {
-  is: OrderWhereInput
-  isNot: OrderWhereInput
+input CommentItemListRelationFilter {
+  every: CommentItemWhereInput
+  some: CommentItemWhereInput
+  none: CommentItemWhereInput
 }
 
-input OrderWhereInput {
-  AND: [OrderWhereInput!]
-  OR: [OrderWhereInput!]
-  NOT: [OrderWhereInput!]
+input CommentItemWhereInput {
+  AND: [CommentItemWhereInput!]
+  OR: [CommentItemWhereInput!]
+  NOT: [CommentItemWhereInput!]
   id: StringFilter
-  address: StringNullableFilter
+  text: StringFilter
   createdAt: DateTimeFilter
-  userId: StringFilter
-  managerId: StringNullableFilter
-  user: UserRelationFilter
-  manager: UserNullableRelationFilter
-  statuses: StatusListRelationFilter
-  items: ItemListRelationFilter
-  comments: CommentListRelationFilter
+  itemId: StringFilter
+  userId: StringNullableFilter
+  parentId: StringNullableFilter
+  item: ItemRelationFilter
+  comment: CommentItemNullableRelationFilter
+  comments: CommentItemListRelationFilter
+  user: UserNullableRelationFilter
 }
 
-input UserRelationFilter {
+input ItemRelationFilter {
+  is: ItemWhereInput
+  isNot: ItemWhereInput
+}
+
+input CommentItemNullableRelationFilter {
+  is: CommentItemWhereInput
+  isNot: CommentItemWhereInput
+}
+
+input UserNullableRelationFilter {
   is: UserWhereInput
   isNot: UserWhereInput
 }
@@ -967,23 +913,23 @@ input UserWhereInput {
   firstName: StringFilter
   patronymic: StringNullableFilter
   isActive: BoolFilter
-  tz: StringFilter
   phone: StringNullableFilter
   birthday: DateTimeNullableFilter
   role: EnumRoleFilter
   gender: EnumGenderFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
+  tz: StringFilter
   companiesId: StringNullableFilter
-  companies: CompaniesNullableRelationFilter
-  files: FileListRelationFilter
-  orders: OrderListRelationFilter
-  manageOrders: OrderListRelationFilter
-  status: StatusListRelationFilter
-  item: ItemListRelationFilter
-  statusItem: StatusItemListRelationFilter
-  comment: CommentListRelationFilter
   commentItem: CommentItemListRelationFilter
+  comment: CommentListRelationFilter
+  files: FileListRelationFilter
+  item: ItemListRelationFilter
+  manageOrders: OrderListRelationFilter
+  orders: OrderListRelationFilter
+  statusItem: StatusItemListRelationFilter
+  status: StatusListRelationFilter
+  companies: CompaniesNullableRelationFilter
 }
 
 input BoolFilter {
@@ -1046,40 +992,96 @@ input NestedEnumGenderFilter {
   not: NestedEnumGenderFilter
 }
 
-input CompaniesNullableRelationFilter {
-  is: CompaniesWhereInput
-  isNot: CompaniesWhereInput
+input CommentListRelationFilter {
+  every: CommentWhereInput
+  some: CommentWhereInput
+  none: CommentWhereInput
 }
 
-input CompaniesWhereInput {
-  AND: [CompaniesWhereInput!]
-  OR: [CompaniesWhereInput!]
-  NOT: [CompaniesWhereInput!]
+input CommentWhereInput {
+  AND: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
   id: StringFilter
-  name: StringFilter
-  location: EnumLocationFilter
-  address: StringFilter
-  User: UserListRelationFilter
+  text: StringFilter
+  createdAt: DateTimeFilter
+  orderId: StringFilter
+  userId: StringNullableFilter
+  parentId: StringNullableFilter
+  order: OrderRelationFilter
+  comment: CommentNullableRelationFilter
+  comments: CommentListRelationFilter
+  user: UserNullableRelationFilter
 }
 
-input EnumLocationFilter {
-  equals: Location
-  in: [Location!]
-  notIn: [Location!]
-  not: NestedEnumLocationFilter
+input OrderRelationFilter {
+  is: OrderWhereInput
+  isNot: OrderWhereInput
 }
 
-input NestedEnumLocationFilter {
-  equals: Location
-  in: [Location!]
-  notIn: [Location!]
-  not: NestedEnumLocationFilter
+input OrderWhereInput {
+  AND: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  id: StringFilter
+  address: StringNullableFilter
+  createdAt: DateTimeFilter
+  userId: StringFilter
+  managerId: StringNullableFilter
+  comments: CommentListRelationFilter
+  items: ItemListRelationFilter
+  manager: UserNullableRelationFilter
+  user: UserRelationFilter
+  statuses: StatusListRelationFilter
 }
 
-input UserListRelationFilter {
-  every: UserWhereInput
-  some: UserWhereInput
-  none: UserWhereInput
+input ItemListRelationFilter {
+  every: ItemWhereInput
+  some: ItemWhereInput
+  none: ItemWhereInput
+}
+
+input UserRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
+}
+
+input StatusListRelationFilter {
+  every: StatusWhereInput
+  some: StatusWhereInput
+  none: StatusWhereInput
+}
+
+input StatusWhereInput {
+  AND: [StatusWhereInput!]
+  OR: [StatusWhereInput!]
+  NOT: [StatusWhereInput!]
+  id: StringFilter
+  status: EnumOrderStatusFilter
+  createdAt: DateTimeFilter
+  orderId: StringFilter
+  userId: StringNullableFilter
+  order: OrderRelationFilter
+  user: UserNullableRelationFilter
+}
+
+input EnumOrderStatusFilter {
+  equals: OrderStatus
+  in: [OrderStatus!]
+  notIn: [OrderStatus!]
+  not: NestedEnumOrderStatusFilter
+}
+
+input NestedEnumOrderStatusFilter {
+  equals: OrderStatus
+  in: [OrderStatus!]
+  notIn: [OrderStatus!]
+  not: NestedEnumOrderStatusFilter
+}
+
+input CommentNullableRelationFilter {
+  is: CommentWhereInput
+  isNot: CommentWhereInput
 }
 
 input FileListRelationFilter {
@@ -1102,11 +1104,6 @@ input FileWhereInput {
   userId: StringNullableFilter
   user: UserNullableRelationFilter
   products: ProductListRelationFilter
-}
-
-input UserNullableRelationFilter {
-  is: UserWhereInput
-  isNot: UserWhereInput
 }
 
 input ProductListRelationFilter {
@@ -1132,10 +1129,10 @@ input ProductWhereInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturerId: StringNullableFilter
-  manufacturer: ManufacturerNullableRelationFilter
-  prices: PriceListRelationFilter
   attributes: AttributeValueListRelationFilter
   item: ItemListRelationFilter
+  prices: PriceListRelationFilter
+  manufacturer: ManufacturerNullableRelationFilter
   images: FileListRelationFilter
 }
 
@@ -1161,18 +1158,43 @@ input NestedDecimalNullableFilter {
   not: NestedDecimalNullableFilter
 }
 
-input ManufacturerNullableRelationFilter {
-  is: ManufacturerWhereInput
-  isNot: ManufacturerWhereInput
+input AttributeValueListRelationFilter {
+  every: AttributeValueWhereInput
+  some: AttributeValueWhereInput
+  none: AttributeValueWhereInput
 }
 
-input ManufacturerWhereInput {
-  AND: [ManufacturerWhereInput!]
-  OR: [ManufacturerWhereInput!]
-  NOT: [ManufacturerWhereInput!]
+input AttributeValueWhereInput {
+  AND: [AttributeValueWhereInput!]
+  OR: [AttributeValueWhereInput!]
+  NOT: [AttributeValueWhereInput!]
+  id: StringFilter
+  value: StringFilter
+  createdAt: DateTimeFilter
+  productId: StringFilter
+  attributeId: StringFilter
+  attribute: AttributeRelationFilter
+  product: ProductRelationFilter
+}
+
+input AttributeRelationFilter {
+  is: AttributeWhereInput
+  isNot: AttributeWhereInput
+}
+
+input AttributeWhereInput {
+  AND: [AttributeWhereInput!]
+  OR: [AttributeWhereInput!]
+  NOT: [AttributeWhereInput!]
   id: StringFilter
   name: StringFilter
-  products: ProductListRelationFilter
+  createdAt: DateTimeFilter
+  products: AttributeValueListRelationFilter
+}
+
+input ProductRelationFilter {
+  is: ProductWhereInput
+  isNot: ProductWhereInput
 }
 
 input PriceListRelationFilter {
@@ -1198,8 +1220,8 @@ input PriceWhereInput {
   validAt: DateTimeNullableFilter
   productId: StringFilter
   supplierId: StringNullableFilter
-  product: ProductRelationFilter
   item: ItemListRelationFilter
+  product: ProductRelationFilter
   Supplier: SupplierNullableRelationFilter
 }
 
@@ -1257,17 +1279,6 @@ input NestedBoolNullableFilter {
   not: NestedBoolNullableFilter
 }
 
-input ProductRelationFilter {
-  is: ProductWhereInput
-  isNot: ProductWhereInput
-}
-
-input ItemListRelationFilter {
-  every: ItemWhereInput
-  some: ItemWhereInput
-  none: ItemWhereInput
-}
-
 input SupplierNullableRelationFilter {
   is: SupplierWhereInput
   isNot: SupplierWhereInput
@@ -1283,77 +1294,38 @@ input SupplierWhereInput {
   products: PriceListRelationFilter
 }
 
-input AttributeValueListRelationFilter {
-  every: AttributeValueWhereInput
-  some: AttributeValueWhereInput
-  none: AttributeValueWhereInput
+input EnumLocationFilter {
+  equals: Location
+  in: [Location!]
+  notIn: [Location!]
+  not: NestedEnumLocationFilter
 }
 
-input AttributeValueWhereInput {
-  AND: [AttributeValueWhereInput!]
-  OR: [AttributeValueWhereInput!]
-  NOT: [AttributeValueWhereInput!]
-  id: StringFilter
-  value: StringFilter
-  createdAt: DateTimeFilter
-  productId: StringFilter
-  attributeId: StringFilter
-  product: ProductRelationFilter
-  attribute: AttributeRelationFilter
+input NestedEnumLocationFilter {
+  equals: Location
+  in: [Location!]
+  notIn: [Location!]
+  not: NestedEnumLocationFilter
 }
 
-input AttributeRelationFilter {
-  is: AttributeWhereInput
-  isNot: AttributeWhereInput
+input ManufacturerNullableRelationFilter {
+  is: ManufacturerWhereInput
+  isNot: ManufacturerWhereInput
 }
 
-input AttributeWhereInput {
-  AND: [AttributeWhereInput!]
-  OR: [AttributeWhereInput!]
-  NOT: [AttributeWhereInput!]
+input ManufacturerWhereInput {
+  AND: [ManufacturerWhereInput!]
+  OR: [ManufacturerWhereInput!]
+  NOT: [ManufacturerWhereInput!]
   id: StringFilter
   name: StringFilter
-  createdAt: DateTimeFilter
-  products: AttributeValueListRelationFilter
+  products: ProductListRelationFilter
 }
 
 input OrderListRelationFilter {
   every: OrderWhereInput
   some: OrderWhereInput
   none: OrderWhereInput
-}
-
-input StatusListRelationFilter {
-  every: StatusWhereInput
-  some: StatusWhereInput
-  none: StatusWhereInput
-}
-
-input StatusWhereInput {
-  AND: [StatusWhereInput!]
-  OR: [StatusWhereInput!]
-  NOT: [StatusWhereInput!]
-  id: StringFilter
-  status: EnumOrderStatusFilter
-  createdAt: DateTimeFilter
-  orderId: StringFilter
-  userId: StringNullableFilter
-  order: OrderRelationFilter
-  user: UserNullableRelationFilter
-}
-
-input EnumOrderStatusFilter {
-  equals: OrderStatus
-  in: [OrderStatus!]
-  notIn: [OrderStatus!]
-  not: NestedEnumOrderStatusFilter
-}
-
-input NestedEnumOrderStatusFilter {
-  equals: OrderStatus
-  in: [OrderStatus!]
-  notIn: [OrderStatus!]
-  not: NestedEnumOrderStatusFilter
 }
 
 input StatusItemListRelationFilter {
@@ -1389,63 +1361,26 @@ input NestedEnumItemStatusFilter {
   not: NestedEnumItemStatusFilter
 }
 
-input ItemRelationFilter {
-  is: ItemWhereInput
-  isNot: ItemWhereInput
+input CompaniesNullableRelationFilter {
+  is: CompaniesWhereInput
+  isNot: CompaniesWhereInput
 }
 
-input CommentListRelationFilter {
-  every: CommentWhereInput
-  some: CommentWhereInput
-  none: CommentWhereInput
-}
-
-input CommentWhereInput {
-  AND: [CommentWhereInput!]
-  OR: [CommentWhereInput!]
-  NOT: [CommentWhereInput!]
+input CompaniesWhereInput {
+  AND: [CompaniesWhereInput!]
+  OR: [CompaniesWhereInput!]
+  NOT: [CompaniesWhereInput!]
   id: StringFilter
-  text: StringFilter
-  createdAt: DateTimeFilter
-  orderId: StringFilter
-  userId: StringNullableFilter
-  parentId: StringNullableFilter
-  order: OrderRelationFilter
-  user: UserNullableRelationFilter
-  comment: CommentNullableRelationFilter
-  comments: CommentListRelationFilter
+  name: StringFilter
+  location: EnumLocationFilter
+  address: StringFilter
+  User: UserListRelationFilter
 }
 
-input CommentNullableRelationFilter {
-  is: CommentWhereInput
-  isNot: CommentWhereInput
-}
-
-input CommentItemListRelationFilter {
-  every: CommentItemWhereInput
-  some: CommentItemWhereInput
-  none: CommentItemWhereInput
-}
-
-input CommentItemWhereInput {
-  AND: [CommentItemWhereInput!]
-  OR: [CommentItemWhereInput!]
-  NOT: [CommentItemWhereInput!]
-  id: StringFilter
-  text: StringFilter
-  createdAt: DateTimeFilter
-  itemId: StringFilter
-  userId: StringNullableFilter
-  parentId: StringNullableFilter
-  item: ItemRelationFilter
-  user: UserNullableRelationFilter
-  comment: CommentItemNullableRelationFilter
-  comments: CommentItemListRelationFilter
-}
-
-input CommentItemNullableRelationFilter {
-  is: CommentItemWhereInput
-  isNot: CommentItemWhereInput
+input UserListRelationFilter {
+  every: UserWhereInput
+  some: UserWhereInput
+  none: UserWhereInput
 }
 
 input PriceNullableRelationFilter {
@@ -1465,12 +1400,12 @@ input ItemOrderByWithRelationInput {
   productId: SortOrder
   priceId: SortOrderInput
   userId: SortOrderInput
+  commentItem: CommentItemOrderByRelationAggregateInput
   order: OrderOrderByWithRelationInput
-  product: ProductOrderByWithRelationInput
   price: PriceOrderByWithRelationInput
+  product: ProductOrderByWithRelationInput
   user: UserOrderByWithRelationInput
   statuses: StatusItemOrderByRelationAggregateInput
-  commentItem: CommentItemOrderByRelationAggregateInput
 }
 
 enum SortOrder {
@@ -1488,17 +1423,29 @@ enum NullsOrder {
   last
 }
 
+input CommentItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
 input OrderOrderByWithRelationInput {
   id: SortOrder
   address: SortOrderInput
   createdAt: SortOrder
   userId: SortOrder
   managerId: SortOrderInput
-  user: UserOrderByWithRelationInput
-  manager: UserOrderByWithRelationInput
-  statuses: StatusOrderByRelationAggregateInput
-  items: ItemOrderByRelationAggregateInput
   comments: CommentOrderByRelationAggregateInput
+  items: ItemOrderByRelationAggregateInput
+  manager: UserOrderByWithRelationInput
+  user: UserOrderByWithRelationInput
+  statuses: StatusOrderByRelationAggregateInput
+}
+
+input CommentOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ItemOrderByRelationAggregateInput {
+  _count: SortOrder
 }
 
 input UserOrderByWithRelationInput {
@@ -1511,23 +1458,39 @@ input UserOrderByWithRelationInput {
   firstName: SortOrder
   patronymic: SortOrderInput
   isActive: SortOrder
-  tz: SortOrder
   phone: SortOrderInput
   birthday: SortOrderInput
   role: SortOrder
   gender: SortOrder
   createdAt: SortOrder
   updatedAt: SortOrder
+  tz: SortOrder
   companiesId: SortOrderInput
-  companies: CompaniesOrderByWithRelationInput
-  files: FileOrderByRelationAggregateInput
-  orders: OrderOrderByRelationAggregateInput
-  manageOrders: OrderOrderByRelationAggregateInput
-  status: StatusOrderByRelationAggregateInput
-  item: ItemOrderByRelationAggregateInput
-  statusItem: StatusItemOrderByRelationAggregateInput
-  comment: CommentOrderByRelationAggregateInput
   commentItem: CommentItemOrderByRelationAggregateInput
+  comment: CommentOrderByRelationAggregateInput
+  files: FileOrderByRelationAggregateInput
+  item: ItemOrderByRelationAggregateInput
+  manageOrders: OrderOrderByRelationAggregateInput
+  orders: OrderOrderByRelationAggregateInput
+  statusItem: StatusItemOrderByRelationAggregateInput
+  status: StatusOrderByRelationAggregateInput
+  companies: CompaniesOrderByWithRelationInput
+}
+
+input FileOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input OrderOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input StatusItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input StatusOrderByRelationAggregateInput {
+  _count: SortOrder
 }
 
 input CompaniesOrderByWithRelationInput {
@@ -1539,73 +1502,6 @@ input CompaniesOrderByWithRelationInput {
 }
 
 input UserOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input FileOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input OrderOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input StatusOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input ItemOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input StatusItemOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input CommentOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input CommentItemOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input ProductOrderByWithRelationInput {
-  id: SortOrder
-  vendorCode: SortOrder
-  nameEn: SortOrderInput
-  nameRu: SortOrderInput
-  aliases: SortOrderInput
-  original: SortOrder
-  stock: SortOrder
-  netto: SortOrderInput
-  brutto: SortOrderInput
-  tnved: SortOrderInput
-  createdAt: SortOrder
-  updatedAt: SortOrder
-  manufacturerId: SortOrderInput
-  manufacturer: ManufacturerOrderByWithRelationInput
-  prices: PriceOrderByRelationAggregateInput
-  attributes: AttributeValueOrderByRelationAggregateInput
-  item: ItemOrderByRelationAggregateInput
-  images: FileOrderByRelationAggregateInput
-}
-
-input ManufacturerOrderByWithRelationInput {
-  id: SortOrder
-  name: SortOrder
-  products: ProductOrderByRelationAggregateInput
-}
-
-input ProductOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input PriceOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
-input AttributeValueOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
@@ -1623,9 +1519,48 @@ input PriceOrderByWithRelationInput {
   validAt: SortOrderInput
   productId: SortOrder
   supplierId: SortOrderInput
-  product: ProductOrderByWithRelationInput
   item: ItemOrderByRelationAggregateInput
+  product: ProductOrderByWithRelationInput
   Supplier: SupplierOrderByWithRelationInput
+}
+
+input ProductOrderByWithRelationInput {
+  id: SortOrder
+  vendorCode: SortOrder
+  nameEn: SortOrderInput
+  nameRu: SortOrderInput
+  aliases: SortOrderInput
+  original: SortOrder
+  stock: SortOrder
+  netto: SortOrderInput
+  brutto: SortOrderInput
+  tnved: SortOrderInput
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  manufacturerId: SortOrderInput
+  attributes: AttributeValueOrderByRelationAggregateInput
+  item: ItemOrderByRelationAggregateInput
+  prices: PriceOrderByRelationAggregateInput
+  manufacturer: ManufacturerOrderByWithRelationInput
+  images: FileOrderByRelationAggregateInput
+}
+
+input AttributeValueOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PriceOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ManufacturerOrderByWithRelationInput {
+  id: SortOrder
+  name: SortOrder
+  products: ProductOrderByRelationAggregateInput
+}
+
+input ProductOrderByRelationAggregateInput {
+  _count: SortOrder
 }
 
 input SupplierOrderByWithRelationInput {
@@ -1650,12 +1585,12 @@ input ItemWhereUniqueInput {
   productId: StringFilter
   priceId: StringNullableFilter
   userId: StringNullableFilter
+  commentItem: CommentItemListRelationFilter
   order: OrderRelationFilter
-  product: ProductRelationFilter
   price: PriceNullableRelationFilter
+  product: ProductRelationFilter
   user: UserNullableRelationFilter
   statuses: StatusItemListRelationFilter
-  commentItem: CommentItemListRelationFilter
 }
 
 enum ItemScalarFieldEnum {
@@ -1689,10 +1624,10 @@ input ProductWhereUniqueInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturerId: StringNullableFilter
-  manufacturer: ManufacturerNullableRelationFilter
-  prices: PriceListRelationFilter
   attributes: AttributeValueListRelationFilter
   item: ItemListRelationFilter
+  prices: PriceListRelationFilter
+  manufacturer: ManufacturerNullableRelationFilter
   images: FileListRelationFilter
 }
 
@@ -1716,6 +1651,7 @@ type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!): UserLoginType
   uploadAvatar(fileUpload: FileUploadInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
   addStatusItems(
     """Идентификатор заказа"""
     orderId: String!
@@ -1790,4 +1726,15 @@ input FileUploadInput {
   fileName: String!
   bucket: String!
   name: String!
+}
+
+input UpdateUserInput {
+  id: String
+  email: EmailAddress!
+  lastName: String!
+  firstName: String!
+  patronymic: String
+
+  """Date of birthday """
+  birthday: DateTime
 }
