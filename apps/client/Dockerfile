@@ -1,17 +1,24 @@
 # ----------- builder -----------
 FROM node:latest AS builder
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 WORKDIR /build
 
-RUN npm add -g pnpm
+RUN corepack enable
 COPY ["package.json", "pnpm-lock.yaml", ".npmrc", "nx.json", "./"]
-RUN echo "\nnode-linker=hoisted" >> .npmrc && pnpm install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
 COPY . .
+
 RUN pnpm exec nx run client:build
 
 # ----------- application -----------
 FROM node:latest
 
+ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
