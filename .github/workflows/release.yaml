@@ -28,6 +28,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v3
         with:
           node-version: latest
@@ -37,7 +39,7 @@ jobs:
         run: pnpm i
       - name: Prisma generate
         run: pnpm nx run server:prisma-generate
-      - name: Linting
+      - name: Build
         run: pnpm nx run-many -t build
       - name: Release
         run: npx semantic-release
