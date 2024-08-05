@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - "main"
+      - 'main'
   workflow_dispatch:
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
         run: pnpm nx run server:prisma-generate
       - name: Linting
         run: pnpm nx run-many -t build
-  
+
   release:
     name: Release stage
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
       - name: Install pnpm
         run: npm i -g pnpm
       - name: Install dependancy
-        run: pnpm i
+        run: pnpm i --dev
       - name: Release
         run: npx semantic-release
         env:
