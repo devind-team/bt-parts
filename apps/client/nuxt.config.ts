@@ -44,12 +44,7 @@ export default defineNuxtConfig({
   },
   apollo: {
     clients: {
-      default: {
-        httpEndpoint: process.env.NUXT_API_URL as string,
-        browserHttpEndpoint: process.env.NUXT_API_URL_BROWSER,
-        wsEndpoint: process.env.NUXT_WS_URL_BROWSER,
-        connectToDevTools: true,
-      },
+      default: './src/shared/graphql/client.ts',
     },
   },
   i18n: {
@@ -69,14 +64,12 @@ export default defineNuxtConfig({
       exclude: ['Chart', 'Editor'],
     },
     options: {
-      ripple: true
+      ripple: true,
     },
     importTheme: { from: '@@/theme.ts' },
   },
   vite: {
-    plugins: [
-      nxViteTsPaths(),
-    ],
+    plugins: [nxViteTsPaths()],
   },
   nitro: {
     devProxy: {
@@ -87,6 +80,6 @@ export default defineNuxtConfig({
     lintOnStart: false,
   },
   build: {
-    transpile: ['primevue']
-  }
+    transpile: ['primevue'],
+  },
 })
