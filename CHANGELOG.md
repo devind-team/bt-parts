@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/devind-team/bt-parts/compare/v0.3.1...v0.3.2) (2024-08-05)
+
+
+### Bug Fixes
+
+* Add semantic summary ([2352b5b](https://github.com/devind-team/bt-parts/commit/2352b5b371b5abe1ff5725955454075caccb6bd9))
+
 ## [0.3.1](https://github.com/devind-team/bt-parts/compare/v0.3.0...v0.3.1) (2024-08-05)
 
 
