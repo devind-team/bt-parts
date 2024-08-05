@@ -42,6 +42,6 @@ jobs:
       - name: Build
         run: pnpm nx run-many -t build
       - name: Release
-        run: npx semantic-release
+        run: npx semantic-release --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
