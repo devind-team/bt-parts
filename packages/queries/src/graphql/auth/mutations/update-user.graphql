@@ -1,0 +1,7 @@
+#import "../fragments/user-fields.graphql"
+
+mutation updateUser($updateUserInput: UpdateUserInput!) {
+  updateUser(updateUserInput: $updateUserInput) {
+    ...UserFields
+  }
+}

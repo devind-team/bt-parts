@@ -1716,6 +1716,7 @@ type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!): UserLoginType
   uploadAvatar(fileUpload: FileUploadInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
   addStatusItems(
     """Идентификатор заказа"""
     orderId: String!
@@ -1790,4 +1791,15 @@ input FileUploadInput {
   fileName: String!
   bucket: String!
   name: String!
+}
+
+input UpdateUserInput {
+  id: String
+  email: EmailAddress!
+  lastName: String!
+  firstName: String!
+  patronymic: String
+
+  """Date of birthday """
+  birthday: DateTime
 }

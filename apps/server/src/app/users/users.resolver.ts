@@ -5,6 +5,7 @@ import { GqlAuthGuard } from '@auth/auth.guard'
 import { CurrentUser } from '@auth/auth.decorators'
 import { UsersService } from '@users/users.service'
 import { FileUploadInput } from '@files/dto/file-upload.input'
+import { UpdateUserInput } from './dto/update-user.input'
 
 @Resolver()
 export class UsersResolver {
@@ -23,5 +24,13 @@ export class UsersResolver {
     @Args({ name: 'fileUpload', type: () => FileUploadInput }) fileUpload: FileUploadInput,
   ): Promise<User> {
     return this.usersService.updateAvatar(fileUpload, user)
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => User)
+  async updateUser(
+    @Args({ name: 'updateUserInput', type: () => UpdateUserInput }) updateUserInput: UpdateUserInput,
+  ): Promise<User> {
+    return await this.usersService.updateUser(updateUserInput)
   }
 }

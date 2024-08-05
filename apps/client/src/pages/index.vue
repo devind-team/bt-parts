@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
 const { t } = useI18n()
-
+const localePath = useLocalePath()
 useHead({ title: t('title') })
 
 const onChangeTheme = () => {
@@ -14,25 +14,30 @@ const onChangeTheme = () => {
     <div class="grid grid-nogutter surface-section text-800">
       <div class="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
         <section>
-          <span class="block text-6xl font-bold mb-1">Create the screens your</span>
-          <div class="text-6xl text-primary font-bold mb-3">
-            visitors deserve to see
+          <span class="block text-5xl font-bold mb-1">{{ t('description') }}</span>
+          <div class="text-3xl text-primary font-bold mb-3">
+            {{ t('tagline') }}
           </div>
           <p class="mt-0 mb-4 text-700 line-height-3">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            {{ t('about') }}
           </p>
 
           <Button
-            label="Изменить тему"
+            label=""
             type="button"
             class="mr-3 p-button-raised"
             @click="onChangeTheme"
-          />
+          >
+            {{ t('changeTheme') }}
+          </Button>
           <Button
-            label="Live Demo"
             type="button"
             class="p-button-outlined"
-          />
+            as="router-link" 
+            :to="localePath({ name: 'auth.register' })"
+          >
+            {{ t('auth.register') }}
+          </Button>
         </section>
       </div>
       <div class="col-12 md:col-6 overflow-hidden">
@@ -46,11 +51,11 @@ const onChangeTheme = () => {
     </div>
     <div class="surface-section px-4 py-8 md:px-6 lg:px-8 text-center">
       <div class="mb-3 font-bold text-3xl">
-        <span class="text-900">One Product, </span>
-        <span class="text-blue-600">Many Solutions</span>
+        <span class="text-900">{{ t('features.original') }}, </span>
+        <span class="text-blue-600">{{ t('features.oem') }}</span>
       </div>
       <div class="text-700 mb-6">
-        Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna.
+        {{ t('features.qualityParts') }}
       </div>
       <div class="grid">
         <div class="col-12 md:col-4 mb-4 px-5">
@@ -58,36 +63,36 @@ const onChangeTheme = () => {
             class="p-3 shadow-2 mb-3 inline-block surface-card"
             style="border-radius: 10px"
           >
-            <i class="pi pi-desktop text-4xl text-blue-500" />
+            <i class="pi pi-warehouse text-4xl text-blue-500" />
           </span>
           <div class="text-900 text-xl mb-3 font-medium">
-            Built for Developers
+            {{ t('features.supplyFactories') }}
           </div>
-          <span class="text-700 line-height-3">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span>
+          <span class="text-700 line-height-3">{{ t('featureDescriptions.supplyFactories') }}</span>
         </div>
         <div class="col-12 md:col-4 mb-4 px-5">
           <span
             class="p-3 shadow-2 mb-3 inline-block surface-card"
             style="border-radius: 10px"
           >
-            <i class="pi pi-lock text-4xl text-blue-500" />
+            <i class="pi pi-verified text-4xl text-blue-500" />
           </span>
           <div class="text-900 text-xl mb-3 font-medium">
-            End-to-End Encryption
+            {{ t('features.warranty') }}
           </div>
-          <span class="text-700 line-height-3">Risus nec feugiat in fermentum posuere urna nec. Posuere sollicitudin aliquam ultrices sagittis.</span>
+          <span class="text-700 line-height-3">{{ t('featureDescriptions.warranty') }}</span>
         </div>
         <div class="col-12 md:col-4 mb-4 px-5">
           <span
             class="p-3 shadow-2 mb-3 inline-block surface-card"
             style="border-radius: 10px"
           >
-            <i class="pi pi-check-circle text-4xl text-blue-500" />
+            <i class="pi pi-wallet text-4xl text-blue-500" />
           </span>
           <div class="text-900 text-xl mb-3 font-medium">
-            Easy to Use
+            {{ t('features.lowPrices') }}
           </div>
-          <span class="text-700 line-height-3">Ornare suspendisse sed nisi lacus sed viverra tellus. Neque volutpat ac tincidunt vitae semper.</span>
+          <span class="text-700 line-height-3">{{ t('featureDescriptions.lowPrices') }}</span>
         </div>
         <div class="col-12 md:col-4 mb-4 px-5">
           <span
@@ -97,52 +102,34 @@ const onChangeTheme = () => {
             <i class="pi pi-globe text-4xl text-blue-500" />
           </span>
           <div class="text-900 text-xl mb-3 font-medium">
-            Fast & Global Support
+            {{ t('features.internationalLogistics') }}
           </div>
-          <span class="text-700 line-height-3">Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus.</span>
+          <span class="text-700 line-height-3">{{ t('featureDescriptions.internationalLogistics') }}</span>
         </div>
         <div class="col-12 md:col-4 mb-4 px-5">
           <span
             class="p-3 shadow-2 mb-3 inline-block surface-card"
             style="border-radius: 10px"
           >
-            <i class="pi pi-github text-4xl text-blue-500" />
+            <i class="pi pi-stopwatch text-4xl text-blue-500" />
           </span>
           <div class="text-900 text-xl mb-3 font-medium">
-            Open Source
+            {{ t('features.shortTerms') }}
           </div>
-          <span class="text-700 line-height-3">Nec tincidunt praesent semper feugiat. Sed adipiscing diam donec adipiscing tristique risus nec feugiat. </span>
+          <span class="text-700 line-height-3">{{ t('featureDescriptions.shortTerms') }}</span>
         </div>
         <div class="col-12 md:col-4 md:mb-4 mb-0 px-3">
           <span
             class="p-3 shadow-2 mb-3 inline-block surface-card"
             style="border-radius: 10px"
           >
-            <i class="pi pi-shield text-4xl text-blue-500" />
+            <i class="pi pi-desktop text-4xl text-blue-500" />
           </span>
           <div class="text-900 text-xl mb-3 font-medium">
-            Trusted Security
+            {{ t('features.itSystem') }}
           </div>
-          <span class="text-700 line-height-3">Mattis rhoncus urna neque viverra justo nec ultrices. Id cursus metus aliquam eleifend.</span>
+          <span class="text-700 line-height-3">{{ t('featureDescriptions.itSystem') }}</span>
         </div>
-      </div>
-    </div>
-    <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
-      <div class="text-700 text-center">
-        <div class="text-blue-600 font-bold mb-3">
-          <i class="pi pi-discord" />&nbsp;POWERED BY DISCORD
-        </div>
-        <div class="text-900 font-bold text-5xl mb-3">
-          Join Our Design Community
-        </div>
-        <div class="text-700 text-2xl mb-5">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.
-        </div>
-        <Button
-          label="Join Now"
-          icon="pi pi-discord"
-          class="font-bold px-5 py-3 p-button-raised p-button-rounded white-space-nowrap"
-        />
       </div>
     </div>
   </div>

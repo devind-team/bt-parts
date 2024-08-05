@@ -4,7 +4,7 @@
   "eslint.format.enable": false,
   "editor.detectIndentation": true,
   "typescript.validate.enable": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
