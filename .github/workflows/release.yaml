@@ -43,10 +43,5 @@ jobs:
         run: pnpm nx run-many -t build
       - name: Release
         run: npx semantic-release
-        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: write job summary
-        run: |
-          echo "__release-version__: ${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
-          echo "__release-tag__: ${{ steps.semantic.outputs.new_release_git_tag }}" >> $GITHUB_STEP_SUMMARY
