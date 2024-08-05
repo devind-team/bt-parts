@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/devind-team/bt-parts/compare/v0.3.0...v0.3.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* Semantic release after build ([3328433](https://github.com/devind-team/bt-parts/commit/332843389a0d7b7f9d00333cd5160958bed3cf96))
+
 # [0.3.0](https://github.com/devind-team/bt-parts/compare/v0.2.3...v0.3.0) (2024-08-05)
 
 
