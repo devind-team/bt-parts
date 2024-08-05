@@ -1,3 +1,10 @@
+## [0.3.6](https://github.com/devind-team/bt-parts/compare/v0.3.5...v0.3.6) (2024-08-05)
+
+
+### Bug Fixes
+
+* gh token ([cc0c5a0](https://github.com/devind-team/bt-parts/commit/cc0c5a0458c3be4a07d0d2f055e29f9f7a554485))
+
 ## [0.3.5](https://github.com/devind-team/bt-parts/compare/v0.3.4...v0.3.5) (2024-08-05)
 
 
