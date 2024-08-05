@@ -1,3 +1,10 @@
+## [0.3.4](https://github.com/devind-team/bt-parts/compare/v0.3.3...v0.3.4) (2024-08-05)
+
+
+### Bug Fixes
+
+* Add sr ci ([9ffe50a](https://github.com/devind-team/bt-parts/commit/9ffe50aa8796346e3007f01fb9e7bc75f32811d9))
+
 ## [0.3.3](https://github.com/devind-team/bt-parts/compare/v0.3.2...v0.3.3) (2024-08-05)
 
 
