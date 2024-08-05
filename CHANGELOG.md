@@ -1,3 +1,10 @@
+## [0.3.5](https://github.com/devind-team/bt-parts/compare/v0.3.4...v0.3.5) (2024-08-05)
+
+
+### Bug Fixes
+
+* Commit release message ([d295b33](https://github.com/devind-team/bt-parts/commit/d295b33d4b2e9dd7600e1de5457bfdfde759f266))
+
 ## [0.3.4](https://github.com/devind-team/bt-parts/compare/v0.3.3...v0.3.4) (2024-08-05)
 
 
