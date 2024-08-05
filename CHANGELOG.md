@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/devind-team/bt-parts/compare/v0.3.2...v0.3.3) (2024-08-05)
+
+
+### Bug Fixes
+
+* Remove sr summary ([9b1fb44](https://github.com/devind-team/bt-parts/commit/9b1fb44a890bbc401d895775be91c19fe3622604))
+
 ## [0.3.2](https://github.com/devind-team/bt-parts/compare/v0.3.1...v0.3.2) (2024-08-05)
 
 
