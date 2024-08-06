@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-
+import Card from 'primevue/card'
 import { object, string } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useLoginMutation } from '@repo/queries/composables/graphql'
 import type { UserLoginInput, UserLoginType } from '@repo/queries/composables/graphql.ts'
 import { useAuthStore } from '@/stores/auth-store'
-import { PrimeVueFieldConfig } from '@/shared/utils/PrimeVue.js'
 import { type FormActions } from 'vee-validate'
 
 const { t } = useI18n()
@@ -24,8 +23,8 @@ const { defineField, handleSubmit, errors } = useForm<UserLoginInput>({
   )
 })
 
-const [username, usernameProps] = defineField('username', PrimeVueFieldConfig)
-const [password, passwordProps] = defineField('password', PrimeVueFieldConfig)
+const [username] = defineField('username')
+const [password] = defineField('password')
 
 const { mutate, onDone } = useLoginMutation()
 
@@ -41,92 +40,94 @@ const onSubmit = handleSubmit(async (
   values: UserLoginInput,
   { setErrors }: FormActions<{ username: string; password: string }>,
 ) => {
-  try{
-    await mutate({ 
-        userLoginInput: values 
-      })
-  }catch (e){
+  try {
+    await mutate({
+      userLoginInput: values
+    })
+  } catch (e) {
     setErrors({ username: t('auth.error'), password: t('auth.error') })
   }
-  
+
 })
 </script>
 
 <template>
-  <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto">
-    <div class="text-center mb-5">
-      <img
-        src="/icon.svg"
-        alt="Image"
-        height="50"
-        class="mb-3"
-      >
-      <div class="text-900 text-3xl font-medium mb-3">
-        {{ $t('auth.welcome') }}
-      </div>
-      <span class="text-600 font-medium line-height-3">{{ $t('auth.not_account') }}</span>
-      <a 
-        class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" 
-        :to="localePath({ name: 'auth-register' })"
-      >{{ $t('auth.create') }}
-      </a>
-    </div>
-    <form @submit="onSubmit">
-      <div>
-        <div class="field">
-          <label 
-            for="username"
-            class="block text-900 font-medium mb-2"
-          >
-            {{ $t('auth.username') }}
-          </label>
-          <InputText
-            v-model="username"
-            v-bind="usernameProps"
-            aria-describedby="username-help"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.username }"
-          />
-          <small
-            id="username-help"
-            class="p-error"
-          >
-            {{ errors.username }}
-          </small>
-        </div>
-        <div class="field">
-          <label
-            for="password"
-            class="block text-900 font-medium mb-2"
-          >{{ $t('auth.password') }}</label>
-          <InputText
-            v-model="password"
-            v-bind="passwordProps"
-            aria-describedby="password-help"
-            type="password"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.password }"
-          />
-          <small 
-            id="password-help" 
-            class="p-error"
-          >
-            {{ errors.password }}
-          </small>
-        </div>
-
-        <div class="flex align-items-center justify-content-between mb-6">
-          <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">{{ $t('auth.forgot_password') }}</a>
-        </div>
-
-        <Button
-          icon="pi pi-user"
-          class="w-full"
-          type="submit"
+  <Card class="md:p-4 shadow-2 lg:w-6 mx-auto">
+    <template #header>
+      <div class="text-center mb-5">
+        <img
+          src="/icon.svg"
+          alt="Image"
+          height="50"
+          class="mb-3"
         >
-          {{ $t('auth.login') }}
-        </Button>
+        <div class="text-900 text-3xl font-medium mb-3">
+          {{ $t('auth.welcome') }}
+        </div>
+        <span class="mr-2">{{ $t('auth.not_account') }}</span>
+        <nuxt-link :to="localePath({ name: 'auth-register' })">
+          {{ $t('auth.create') }}
+        </nuxt-link>
       </div>
-    </form>
-  </div>
+    </template>
+    <template #content>
+      <form @submit="onSubmit">
+        <div>
+          <div class="field">
+            <label
+              for="username"
+              class="block text-900 font-medium mb-2"
+            >
+              {{ $t('auth.username') }}
+            </label>
+            <InputText
+              v-model="username"
+              aria-describedby="username-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.username }"
+            />
+            <small
+              id="username-help"
+              class="p-error"
+            >
+              {{ errors.username }}
+            </small>
+          </div>
+          <div class="field">
+            <label
+              for="password"
+              class="block text-900 font-medium mb-2"
+            >{{ $t('auth.password') }}</label>
+            <InputText
+              v-model="password"
+              aria-describedby="password-help"
+              type="password"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.password }"
+            />
+            <small
+              id="password-help"
+              class="p-error"
+            >
+              {{ errors.password }}
+            </small>
+          </div>
+
+          <div class="flex align-items-center justify-content-between mb-6">
+            <nuxt-link :to="localePath({ name: 'index' })">
+              {{ $t('auth.forgot_password') }}
+            </nuxt-link>
+          </div>
+
+          <Button
+            icon="pi pi-user"
+            class="w-full"
+            type="submit"
+          >
+            {{ $t('auth.login') }}
+          </Button>
+        </div>
+      </form>
+    </template>
+  </Card>
 </template>

@@ -28,7 +28,7 @@ const items = ref([
 </script>
 
 <template>
-  <Toolbar>
+  <Toolbar class="sticky top-0">
     <template #start>
       <NuxtLink
         :to="localePath({ name: 'index' })"
