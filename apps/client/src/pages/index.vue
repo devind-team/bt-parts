@@ -21,22 +21,13 @@ const onChangeTheme = () => {
           <p class="mt-0 mb-4 text-700 line-height-3">
             {{ t('about') }}
           </p>
-
-          <Button
-            label=""
-            type="button"
-            class="mr-3 p-button-raised"
-            @click="onChangeTheme"
-          >
-            {{ t('changeTheme') }}
-          </Button>
           <Button
             type="button"
             class="p-button-outlined"
-            as="router-link" 
-            :to="localePath({ name: 'auth.register' })"
+            as="router-link"
+            :to="localePath({ name: 'auth-register' })"
           >
-            {{ t('auth.register') }}
+            {{ t('auth.doOrder') }}
           </Button>
         </section>
       </div>

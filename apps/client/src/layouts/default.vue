@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import App from '@/widgets/common/ui/App.vue'
-import AppMain from '~/widgets/common/ui/AppMain.vue'
-import AppToolBar from '~/widgets/common/ui/AppToolBar.vue'
-import AppFooter from '@/widgets/common/ui/AppFooter.vue'
+import PvApp from '@/widgets/common/ui/PvApp.vue'
+import PvAppMain from '@/widgets/common/ui/PvAppMain.vue'
+import PvAppToolBar from '@/widgets/common/ui/PvAppToolBar.vue'
+import PvAppFooter from '@/widgets/common/ui/PvAppFooter.vue'
 </script>
 
 <template>
-  <app>
-    <app-tool-bar />
-    <app-main>
+  <pv-app>
+    <pv-app-tool-bar />
+    <pv-app-main>
       <slot />
-    </app-main>
-    <app-footer />
-  </app>
+    </pv-app-main>
+    <pv-app-footer />
+  </pv-app>
 </template>
