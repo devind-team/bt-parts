@@ -1,12 +1,8 @@
 <script setup lang="ts">
-const colorMode = useColorMode()
 const { t } = useI18n()
 const localePath = useLocalePath()
 useHead({ title: t('title') })
 
-const onChangeTheme = () => {
-  colorMode.preference = colorMode.value == 'dark' ? 'light' : 'dark'
-}
 </script>
 
 <template>

@@ -23,7 +23,7 @@ jobs:
         run: pnpm nx run-many -t lint
 
   build:
-    name: Build & Release stage
+    name: Build
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -41,6 +41,26 @@ jobs:
         run: pnpm nx run server:prisma-generate
       - name: Build
         run: pnpm nx run-many -t build
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Install pnpm
+        run: npm i -g pnpm
+      - name: Install dependancy
+        run: pnpm i -D
       - name: Release
         run: npx semantic-release
         env:
