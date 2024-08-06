@@ -1,3 +1,11 @@
+## [0.3.10](https://github.com/devind-team/bt-parts/compare/v0.3.9...v0.3.10) (2024-08-06)
+
+
+### Bug Fixes
+
+* Release stage ([b9bef06](https://github.com/devind-team/bt-parts/commit/b9bef06fb0b8b403cfcc652ac703d3781577314e))
+* remove [skip ci] for git commit ([846100a](https://github.com/devind-team/bt-parts/commit/846100a84607052773ecdd656e385aa6c356aa29))
+
 ## [0.3.9](https://github.com/devind-team/bt-parts/compare/v0.3.8...v0.3.9) (2024-08-06)
 
 
