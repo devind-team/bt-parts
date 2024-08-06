@@ -1,3 +1,15 @@
+## [0.3.7](https://github.com/devind-team/bt-parts/compare/v0.3.6...v0.3.7) (2024-08-06)
+
+
+### Bug Fixes
+
+* Change card overlay ([c90fb15](https://github.com/devind-team/bt-parts/commit/c90fb15da35494d2b121f288e876fad44816391f))
+
+
+### Performance Improvements
+
+* Theme toggle transfer to toolbar ([26711e6](https://github.com/devind-team/bt-parts/commit/26711e6c7580973d1c46bd4e0cca3008e20a1394))
+
 ## [0.3.6](https://github.com/devind-team/bt-parts/compare/v0.3.5...v0.3.6) (2024-08-05)
 
 
