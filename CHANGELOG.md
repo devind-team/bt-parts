@@ -1,3 +1,11 @@
+## [0.3.9](https://github.com/devind-team/bt-parts/compare/v0.3.8...v0.3.9) (2024-08-06)
+
+
+### Bug Fixes
+
+* depends install ([407c58b](https://github.com/devind-team/bt-parts/commit/407c58b8de3a495511137de3043e569e4326c7ee))
+* release needs build ([8c000a4](https://github.com/devind-team/bt-parts/commit/8c000a4e18705b8307f3ef7921d75567780e5210))
+
 ## [0.3.8](https://github.com/devind-team/bt-parts/compare/v0.3.7...v0.3.8) (2024-08-06)
 
 
