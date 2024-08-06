@@ -1,3 +1,10 @@
+## [0.3.8](https://github.com/devind-team/bt-parts/compare/v0.3.7...v0.3.8) (2024-08-06)
+
+
+### Bug Fixes
+
+* add no ci to message via CI ([772bc8b](https://github.com/devind-team/bt-parts/commit/772bc8b12effccb8c27cf25c48de6a2cfe473345))
+
 ## [0.3.7](https://github.com/devind-team/bt-parts/compare/v0.3.6...v0.3.7) (2024-08-06)
 
 
