@@ -9,11 +9,6 @@ module.exports = {
     '@semantic-release/changelog',
     '@semantic-release/npm',
     '@semantic-release/github',
-    [
-      '@semantic-release/git',
-      {
-        message: 'chore(release): ${nextRelease.version}\n\n${nextRelease.notes}',
-      },
-    ],
+    '@semantic-release/git',
   ],
 }
