@@ -1,3 +1,10 @@
+## [0.3.11](https://github.com/devind-team/bt-parts/compare/v0.3.10...v0.3.11) (2024-08-06)
+
+
+### Performance Improvements
+
+* Add lint & build stage to release wf ([57a2ced](https://github.com/devind-team/bt-parts/commit/57a2cede4381ca8eccd29eb902dd8dbdea036835))
+
 ## [0.3.10](https://github.com/devind-team/bt-parts/compare/v0.3.9...v0.3.10) (2024-08-06)
 
 
