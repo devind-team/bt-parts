@@ -7,6 +7,7 @@
   "changeTheme": "Изменить тему",
   "auth": {
     "login": "Войти",
+    "authorization": "Авторизация",
     "logout": "Выйти",
     "title": "Вход",
     "username": "Логин",
