@@ -60,7 +60,7 @@ jobs:
       - name: Install pnpm
         run: npm i -g pnpm
       - name: Install dependancy
-        run: pnpm i -D
+        run: pnpm i
       - name: Release
         run: npx semantic-release
         env:
