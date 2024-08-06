@@ -2,11 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth-store'
+import ToggleTheme from '@/features/common/ui/ToggleTheme.vue'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
 const router = useRouter()
+const profileMenu = ref()
+
 const items = ref([
   {
     label: t('profile.user'),
@@ -23,44 +26,55 @@ const items = ref([
     }
   }
 ])
-2
 
+const toggleProfileMenu = (event: PointerEvent) => {
+  profileMenu.value.toggle(event)
+}
 </script>
 
 <template>
-  <Toolbar class="sticky top-0">
+  <Toolbar>
     <template #start>
       <NuxtLink
         :to="localePath({ name: 'index' })"
-        class="flex"
+        class="flex flex-row align-content-center"
       >
         <NuxtImg
           src="/icon.svg"
-          width="32"
+          width="28"
         />
-        <span class="text-3xl ml-3 font-medium">
+        <span class="text-xl ml-3 font-medium">
           {{ $t('name') }}
         </span>
       </NuxtLink>
     </template>
     <template #end>
-      <template v-if="authStore.loginIn">
-        <SplitButton
-          label="Профиль"
-          icon="pi pi-user"
-          :model="items"
-        />
-      </template>
-      <template v-else>
-        <Button
-          as="router-link"
-          :to="localePath({ name: 'auth-login' })"
-        >
-          <span class="font-medium">
+      <div class="flex flex-row gap-2">
+        <ToggleTheme />
+        <template v-if="authStore.loginIn">
+          <Avatar
+            icon="pi pi-user"
+            shape="circle"
+            aria-haspopup="true"
+            aria-controls="overlay_menu_profile"
+            @click="toggleProfileMenu"
+          />
+          <Menu
+            id="overlay_menu_profile"
+            ref="profileMenu"
+            :model="items"
+            :popup="true"
+          />
+        </template>
+        <template v-else>
+          <Button
+            as="router-link"
+            :to="localePath({ name: 'auth-login' })"
+          >
             {{ $t('auth.login') }}
-          </span>
-        </Button>
-      </template>
+          </Button>
+        </template>
+      </div>
     </template>
   </Toolbar>
 </template>
