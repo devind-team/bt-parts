@@ -23,7 +23,8 @@
     "not_account": "Нет аккаунта?",
     "create": "Создать!",
     "welcome": "Добро пожаловать!",
-    "forgot_password": "Забыли пароль?"
+    "forgotPassword": "Забыли пароль?",
+    "doOrder": "Зарегистрироваться и сделать заказ"
   },
   "features": {
     "original": "Оригинал",

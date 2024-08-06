@@ -115,7 +115,7 @@ const onSubmit = handleSubmit(async (
 
           <div class="flex align-items-center justify-content-between mb-6">
             <nuxt-link :to="localePath({ name: 'index' })">
-              {{ $t('auth.forgot_password') }}
+              {{ $t('auth.forgotPassword') }}
             </nuxt-link>
           </div>
 
