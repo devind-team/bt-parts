@@ -41,7 +41,7 @@ const toggleProfileMenu = (event: PointerEvent) => {
       >
         <NuxtImg
           src="/icon.svg"
-          width="28"
+          width="32"
         />
         <span class="text-xl ml-3 font-medium">
           {{ $t('name') }}
@@ -53,6 +53,7 @@ const toggleProfileMenu = (event: PointerEvent) => {
         <ToggleTheme />
         <template v-if="authStore.loginIn">
           <Avatar
+            class="my-auto"
             icon="pi pi-user"
             shape="circle"
             aria-haspopup="true"
@@ -69,6 +70,7 @@ const toggleProfileMenu = (event: PointerEvent) => {
         <template v-else>
           <Button
             as="router-link"
+            size="small"
             :to="localePath({ name: 'auth-login' })"
           >
             {{ $t('auth.login') }}

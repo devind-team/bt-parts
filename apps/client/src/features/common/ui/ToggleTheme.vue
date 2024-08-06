@@ -9,6 +9,7 @@ const onChangeTheme = () => {
   <Button
     v-tooltip.bottom="t('changeTheme')"
     :icon="`pi ${colorMode.value == 'dark' ? 'pi-sun' : 'pi-moon'}`"
+    severity="help"
     rounded
     outlined
     @click="onChangeTheme"
