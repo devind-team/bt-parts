@@ -14,16 +14,12 @@ const items = ref([
   {
     label: t('profile.user'),
     icon: 'pi pi-user',
-    command: () => {
-      router.push(localePath({ name: 'profile-me' }))
-    }
+    command: () => router.push(localePath({ name: 'profile-me' })),
   },
   {
     label: t('auth.logout'),
     icon: 'pi pi-sign-out',
-    command: () => {
-      router.push(localePath({ name: 'auth-logout' }))
-    }
+    command: () => router.push(localePath({ name: 'auth-logout' })),
   }
 ])
 
