@@ -7,6 +7,7 @@ const props = withDefaults(defineProps<{ fluid?: boolean }>(), {
 
 <template>
   <div
+    v-bind="$attrs"
     class="pv-container"
     :class="{ 'pv-container_fluid': props.fluid }"
   >
@@ -17,7 +18,6 @@ const props = withDefaults(defineProps<{ fluid?: boolean }>(), {
 <style lang="scss">
 .pv-container {
   width: 100%;
-  padding: 12px;
   margin-left: auto !important;
   margin-right: auto !important;
 }

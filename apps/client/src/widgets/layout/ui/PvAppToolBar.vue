@@ -49,11 +49,12 @@ const toggleProfileMenu = (event: PointerEvent) => {
         <ToggleTheme />
         <template v-if="authStore.loginIn">
           <Avatar
+            :label="authStore.initials"
             class="my-auto"
-            icon="pi pi-user"
             shape="circle"
             aria-haspopup="true"
             aria-controls="overlay_menu_profile"
+            style="width: 40px; height: 40px; cursor: pointer;"
             @click="toggleProfileMenu"
           />
           <Menu
@@ -65,9 +66,11 @@ const toggleProfileMenu = (event: PointerEvent) => {
         </template>
         <template v-else>
           <Button
+            :to="localePath({ name: 'auth-login' })"
             as="router-link"
             size="small"
-            :to="localePath({ name: 'auth-login' })"
+            text
+            plain
           >
             {{ $t('auth.login') }}
           </Button>
