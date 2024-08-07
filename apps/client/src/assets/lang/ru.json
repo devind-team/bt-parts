@@ -11,13 +11,14 @@
     "email": "Email",
     "lastName": "Фамилия",
     "firstName": "Имя",
-    "sirName": "Отчество",
+    "patronymic": "Отчество",
     "passwordConfirmation": "Повторите пароль",
     "doRegister": "Зарегистрироваться",
     "error": "Ошибка авторизации",
     "not_account": "Нет аккаунта?",
     "create": "Создать!",
     "welcome": "Добро пожаловать!",
-    "forgot_password": "Забыли пароль?"
+    "forgot_password": "Забыли пароль?",
+    "have_account": "Есть аккаунт?"
   }
 }

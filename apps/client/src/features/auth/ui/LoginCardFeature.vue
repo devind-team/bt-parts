@@ -124,7 +124,7 @@ const onSubmit = handleSubmit(async (
           class="w-full"
           type="submit"
         >
-          {{ $t('auth.forgot_password') }}
+          {{ $t('auth.login') }}
         </Button>
       </div>
     </form>
