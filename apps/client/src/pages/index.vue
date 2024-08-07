@@ -7,7 +7,7 @@ useHead({ title: t('title') })
 </script>
 
 <template>
-  <pv-container>
+  <pv-container fluid>
     <div class="flex flex-column">
       <div class="grid grid-nogutter surface-section text-800">
         <div class="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">

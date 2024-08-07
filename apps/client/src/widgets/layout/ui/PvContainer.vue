@@ -1,5 +1,15 @@
+<script setup lang="ts">
+
+const props = withDefaults(defineProps<{ fluid?: boolean }>(), {
+  fluid: false
+})
+</script>
+
 <template>
-  <div class="pv-container">
+  <div
+    class="pv-container"
+    :class="{ 'pv-container_fluid': props.fluid }"
+  >
     <slot />
   </div>
 </template>
@@ -28,5 +38,9 @@
   .pv-container {
     max-width: 1785px;
   }
+}
+
+.pv-container_fluid {
+  max-width: 100%;
 }
 </style>
