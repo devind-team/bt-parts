@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { LinksType, BreadCrumbsItem } from '@/shared/common/types'
+import type { LinksType, BreadCrumbsItem } from '@/shared/layout/types'
 import { PrimeIcons } from '@primevue/core/api'
-import BreadCrumbs from '@/shared/common/ui/BreadCrumbs.vue'
-import TwoColumns from '@/shared/common/ui/TwoColumns.vue'
+import BreadCrumbs from '@/shared/layout/ui/BreadCrumbs.vue'
+import TwoColumns from '@/shared/layout/ui/TwoColumns.vue'
 const { t } = useI18n()
 
 definePageMeta({ middleware: 'auth' })

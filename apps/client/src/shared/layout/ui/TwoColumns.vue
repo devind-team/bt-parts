@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { MenuItem } from 'primevue/menuitem'
-import type { LinksType } from '@/shared/common/types'
+import type { LinksType } from '@/shared/layout/types'
 
 const route = useRoute()
 const localePath = useLocalePath()

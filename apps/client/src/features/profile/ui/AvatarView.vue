@@ -1,5 +1,15 @@
 <script setup lang="ts">
+import type { FileUploadUploaderEvent } from 'primevue/fileupload'
+import FileChoiceUpload from '@/shared/common/ui/FileChoiceUpload.vue'
+
 const authStore = useAuthStore()
+
+const visible = ref(false)
+
+const onHandleFileUpload = (event: FileUploadUploaderEvent) => {
+  console.log(event.files)
+  visible.value = false
+}
 </script>
 <template>
   <div class="flex flex-wrap">
@@ -13,7 +23,20 @@ const authStore = useAuthStore()
         size="xlarge"
         shape="circle"
       />
-      <Button :label="$t('profile.changeAvatar')" />
+      <Button
+        :label="$t('profile.changeAvatar')"
+        @click="visible = true"
+      />
+      <Dialog
+        v-model:visible="visible"
+        modal
+        :header="$t('profile.changeAvatar')"
+      >
+        <FileChoiceUpload
+          accept="image/*"
+          @uploader="onHandleFileUpload"
+        />
+      </Dialog>
     </div>
   </div>
 </template>

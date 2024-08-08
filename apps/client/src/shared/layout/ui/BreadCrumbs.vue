@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { type BreadCrumbsItem } from '@/shared/common/types'
+import { type BreadCrumbsItem } from '@/shared/layout/types'
 import type { MenuItem } from 'primevue/menuitem'
 import { useLocalePath } from '#imports'
 import PvContainer from '@/widgets/layout/ui/PvContainer.vue'
