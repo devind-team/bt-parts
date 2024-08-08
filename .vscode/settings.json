@@ -30,5 +30,6 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "html.format.wrapAttributes": "force-expand-multiline",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.debug": true
 }
