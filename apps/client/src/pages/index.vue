@@ -10,7 +10,7 @@ useHead({ title: t('title') })
 <template>
   <pv-container fluid>
     <div class="flex flex-column">
-      <div class="grid surface-section text-800">
+      <div class="grid text-800">
         <div class="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
           <section>
             <span class="block text-5xl font-bold mb-1">{{ t('description') }}</span>
