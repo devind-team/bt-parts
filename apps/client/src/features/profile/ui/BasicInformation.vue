@@ -17,7 +17,7 @@ const { mutate: updateUserMutation, onDone, loading } = useUpdateUserMutation({
 
 onDone(({ data }) => {
   authStore.user = data!.updateUser
-  toast.add({ severity: 'success', summary: t('profile.basicInformation.name'), detail: t('profile.successUpdate') })
+  toast.add({ severity: 'success', summary: t('profile.basicInformation.name'), detail: t('profile.successUpdate'), life: 3000 })
 })
 
 const { defineField, handleSubmit, errors } = useForm<UpdateUserInput>({
