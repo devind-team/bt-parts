@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import ProfileAvatar from '@/features/profile/ui/ProfileAvatar.vue'
-import MeInformationEntities from '@/entities/profile/MeInformationEntities.vue'
+import AvatarView from '~/features/profile/ui/AvatarView.vue'
+import BasicInformation from '~/features/profile/ui/BasicInformation.vue'
+
 const authStore = useAuthStore()
 const { dateTimeHM } = useFilters()
 </script>
@@ -14,8 +15,8 @@ const { dateTimeHM } = useFilters()
       {{ $t('profile.createdAt') }}: {{ dateTimeHM(authStore.user?.createdAt) }}
     </template>
     <template #content>
-      <profile-avatar />
-      <MeInformationEntities />
+      <avatar-view />
+      <basic-information />
     </template>
   </Card>
 </template>

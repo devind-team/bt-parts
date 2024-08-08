@@ -72,61 +72,59 @@ const onSubmit = handleSubmit(async (
     </template>
     <template #content>
       <form @submit="onSubmit">
-        <div>
-          <div class="field">
-            <label
-              for="username"
-              class="block text-900 font-medium mb-2"
-            >
-              {{ $t('auth.username') }}
-            </label>
-            <InputText
-              v-model="username"
-              aria-describedby="username-help"
-              class="w-full mb-3"
-              :class="{ 'p-invalid': errors.username }"
-            />
-            <small
-              id="username-help"
-              class="p-error"
-            >
-              {{ errors.username }}
-            </small>
-          </div>
-          <div class="field">
-            <label
-              for="password"
-              class="block text-900 font-medium mb-2"
-            >{{ $t('auth.password') }}</label>
-            <InputText
-              v-model="password"
-              aria-describedby="password-help"
-              type="password"
-              class="w-full mb-3"
-              :class="{ 'p-invalid': errors.password }"
-            />
-            <small
-              id="password-help"
-              class="p-error"
-            >
-              {{ errors.password }}
-            </small>
-          </div>
-
-          <div class="flex align-items-center justify-content-between mb-6">
-            <nuxt-link :to="localePath({ name: 'index' })">
-              {{ $t('auth.forgotPassword') }}
-            </nuxt-link>
-          </div>
-
-          <Button
-            icon="pi pi-user"
-            class="w-full"
-            type="submit"
+        <div class="field">
+          <label
+            for="username"
+            class="block text-900 font-medium mb-2"
           >
-            {{ $t('auth.login') }}
-          </Button>
+            {{ $t('auth.username') }}
+          </label>
+          <InputText
+            v-model="username"
+            aria-describedby="username-help"
+            class="w-full mb-3"
+            :invalid="!!errors.username"
+          />
+          <small
+            id="username-help"
+            class="p-error"
+          >
+            {{ errors.username }}
+          </small>
         </div>
+        <div class="field">
+          <label
+            for="password"
+            class="block text-900 font-medium mb-2"
+          >{{ $t('auth.password') }}</label>
+          <InputText
+            v-model="password"
+            aria-describedby="password-help"
+            type="password"
+            class="w-full mb-3"
+            :invalid="!!errors.password"
+          />
+          <small
+            id="password-help"
+            class="p-error"
+          >
+            {{ errors.password }}
+          </small>
+        </div>
+
+        <div class="flex align-items-center justify-content-between mb-6">
+          <nuxt-link :to="localePath({ name: 'index' })">
+            {{ $t('auth.forgotPassword') }}
+          </nuxt-link>
+        </div>
+
+        <Button
+          icon="pi pi-user"
+          class="w-full"
+          type="submit"
+        >
+          {{ $t('auth.login') }}
+        </Button>
       </form>
     </template>
   </Card>

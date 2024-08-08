@@ -62,6 +62,7 @@ export function useCommonQuery<
    * @param result - результат выполнения мутации
    */
   const getMutationResult = <TResultMutation>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     result: Omit<FetchResult<TResultMutation, Record<string, any>, Record<string, any>>, 'context'>,
   ): NonNullable<TResultMutation>[keyof NonNullable<TResultMutation>] | undefined | null =>
     result.data && result.data[Object.keys(result.data)[0] as keyof typeof result.data]
@@ -155,6 +156,7 @@ export function useCommonQuery<
             [field]: Array.isArray(dataCache[dataKey][field])
               ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 dataCache[dataKey][field].map((el: { id: string | number; [k: string]: any }) => ({
                   ...el,
                   [key]: mapMutationsResult[el.id] || el[key],

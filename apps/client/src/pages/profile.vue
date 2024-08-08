@@ -5,6 +5,8 @@ import BreadCrumbs from '@/shared/common/ui/BreadCrumbs.vue'
 import TwoColumns from '@/shared/common/ui/TwoColumns.vue'
 const { t } = useI18n()
 
+definePageMeta({ middleware: 'auth' })
+
 const items = ref<LinksType[]>([
   { label: t('profile.name'), icon: PrimeIcons.USER, name: 'profile-me' },
   { label: t('profile.settings'), icon: PrimeIcons.USER, name: 'profile-settings' },

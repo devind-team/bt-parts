@@ -2,7 +2,6 @@
 import type { MenuItem } from 'primevue/menuitem'
 import type { LinksType } from '@/shared/common/types'
 
-const router = useRouter()
 const route = useRoute()
 const localePath = useLocalePath()
 

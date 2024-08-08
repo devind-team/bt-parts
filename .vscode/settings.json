@@ -24,8 +24,10 @@
     "primeicons",
     "primevue",
     "singleline",
+    "usetoast",
     "vuetify",
-    "vueuse"
+    "vueuse",
+    "xlarge"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"

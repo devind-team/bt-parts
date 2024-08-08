@@ -35,7 +35,6 @@ useHead({ title: t('title') })
             src="/icon.svg"
             alt="Image"
             class="md:ml-auto block md:h-full"
-            style="clip-path: polygon(8% 0, 100% 0%, 100% 100%, 0 100%)"
           >
         </div>
       </div>
