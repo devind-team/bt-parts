@@ -5,6 +5,7 @@ import { PrismaService } from '@common/services/prisma.service'
 
 import { FilesResolver } from './files.resolver'
 import { FilesService } from './files.service'
+import { FilesController } from './files.controller'
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FilesService } from './files.service'
     }),
     ConfigModule,
   ],
+  controllers: [FilesController],
   providers: [FilesResolver, FilesService, PrismaService],
   exports: [FilesResolver, FilesService],
 })

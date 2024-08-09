@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectS3Client } from '@s3/s3.decorators'
-import { S3Client, BucketItemStat } from '@s3/s3.interfaces'
+import { S3Client, BucketItemStat, FileInputType } from '@s3/s3.interfaces'
 import { ConfigService } from '@nestjs/config'
 import { GraphQLError } from 'graphql'
 import { Readable as ReadableStream } from 'stream'
@@ -55,15 +55,15 @@ export class S3Service {
    * @param file
    * @return objectName
    */
-  async uploadObject(file): Promise<string> {
-    const [hashedFileName, ext] = this.hashedName(file.filename || file.fileName)
+  async uploadObject(file: FileInputType, prefix: string): Promise<string> {
+    const [hashedFileName, ext] = this.hashedName(file.originalname)
 
-    const objectName = `${hashedFileName}${ext}`
+    const objectName = `${prefix}/${hashedFileName}${ext}`
     const metaData = {
       'Content-Type': file.mimetype,
     }
     try {
-      await this.s3Client.putObject(this.bucket, objectName, file.buffer as Buffer, -1, metaData)
+      await this.s3Client.putObject(this.bucket, objectName, file.buffer, file.size, metaData)
     } catch (e) {
       throw new HttpException(`Error put object to s3: ${e}`, HttpStatus.BAD_REQUEST)
     }

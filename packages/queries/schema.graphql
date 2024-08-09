@@ -505,9 +505,6 @@ type File {
   """Name"""
   name: String!
 
-  """Service url file"""
-  serverUrl: String!
-
   """Bucket name"""
   bucket: String!
 
@@ -1086,7 +1083,6 @@ input FileWhereInput {
   NOT: [FileWhereInput!]
   id: StringFilter
   name: StringFilter
-  serverUrl: StringFilter
   bucket: StringFilter
   key: StringFilter
   createdAt: DateTimeFilter

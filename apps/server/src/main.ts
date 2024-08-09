@@ -5,6 +5,7 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { graphqlUploadExpress } from 'graphql-upload-ts'
 
 import { AppModule } from './app/app.module'
@@ -32,7 +33,15 @@ async function bootstrap() {
     }),
   )
 
-  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
+  app.use('/api/graphql', graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
+
+  const config = new DocumentBuilder()
+    .setTitle('bt-parts')
+    .setDescription('Best trans parts api description')
+    .setVersion('1.0')
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api', app, document)
 
   const port = process.env.PORT || 4200
   await app.listen(port)

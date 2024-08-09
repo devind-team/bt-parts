@@ -141,19 +141,16 @@ model Companies {
 // Save model for files
 model File {
   /// ID
-  id        String @id @default(uuid())
+  id     String @id @default(uuid())
   /// Name
   /// @Validator.MinLength(3)
-  name      String @db.VarChar(512)
-  /// Service url file
-  /// @FieldType('Scalars.GraphQLURL')
-  serverUrl String @map("server_url") @db.VarChar(64)
+  name   String @db.VarChar(512)
   /// Bucket name
   /// @Validator.MinLength(3)
-  bucket    String @db.VarChar(64)
+  bucket String @db.VarChar(64)
   /// Path file in bucket
   /// @Validator.MinLength(3)
-  key       String @db.VarChar(512)
+  key    String @db.VarChar(512)
 
   /// Created data
   createdAt DateTime @default(now()) @map("created_at")
