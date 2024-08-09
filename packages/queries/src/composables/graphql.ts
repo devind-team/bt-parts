@@ -34,7 +34,6 @@ export type Attribute = {
   id: Scalars['ID']['output'];
   /** Attribute name */
   name: Scalars['String']['output'];
-  /** Products */
   products?: Maybe<Array<AttributeValue>>;
 };
 
@@ -51,14 +50,12 @@ export type AttributeRelationFilter = {
 /** Attribute Values model */
 export type AttributeValue = {
   __typename?: 'AttributeValue';
-  /** Attribute */
   attribute: Attribute;
   attributeId: Scalars['String']['output'];
   /** Created date */
   createdAt: Scalars['DateTime']['output'];
   /** Attribute values ID */
   id: Scalars['ID']['output'];
-  /** Product */
   product: Product;
   productId: Scalars['String']['output'];
   /** atribute value */
@@ -112,20 +109,17 @@ export type BoolNullableFilter = {
 export type Comment = {
   __typename?: 'Comment';
   _count: CommentCount;
-  /** Comments on the tree */
   comment?: Maybe<Comment>;
   comments?: Maybe<Array<Comment>>;
   /** Comment created date */
   createdAt: Scalars['DateTime']['output'];
   /** Comment ID */
   id: Scalars['ID']['output'];
-  /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
   parentId?: Maybe<Scalars['String']['output']>;
   /** Comment text */
   text: Scalars['String']['output'];
-  /** User  */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -139,20 +133,17 @@ export type CommentCount = {
 export type CommentItem = {
   __typename?: 'CommentItem';
   _count: CommentItemCount;
-  /** Comments on the tree */
   comment?: Maybe<CommentItem>;
   comments?: Maybe<Array<CommentItem>>;
   /** Created date */
   createdAt: Scalars['DateTime']['output'];
   /** Comment ID */
   id: Scalars['ID']['output'];
-  /** Item */
   item: Item;
   itemId: Scalars['String']['output'];
   parentId?: Maybe<Scalars['String']['output']>;
   /** Comment text */
   text: Scalars['String']['output'];
-  /** User create */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -368,10 +359,6 @@ export type File = {
   products?: Maybe<Array<Product>>;
   /** Updated data */
   updatedAt: Scalars['DateTime']['output'];
-  /**
-   * User ID
-   * If null - system file
-   */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -457,24 +444,19 @@ export type Item = {
   createdAt: Scalars['DateTime']['output'];
   /** ID of the order item */
   id: Scalars['ID']['output'];
-  /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
-  /** Product price */
   price?: Maybe<Price>;
   priceId?: Maybe<Scalars['String']['output']>;
-  /** Product */
   product: Product;
   productId: Scalars['String']['output'];
   /** Quantity */
   quantity: Scalars['Int']['output'];
   /** Flight number */
   routeNo?: Maybe<Scalars['String']['output']>;
-  /** Item statuses */
   statuses?: Maybe<Array<StatusItem>>;
   /** Updated date */
   updatedAt: Scalars['DateTime']['output'];
-  /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -940,12 +922,9 @@ export type Order = {
   /** Order ID */
   id: Scalars['ID']['output'];
   items?: Maybe<Array<Item>>;
-  /** Order manager */
   manager?: Maybe<User>;
   managerId?: Maybe<Scalars['String']['output']>;
-  /** Order status */
   statuses?: Maybe<Array<Status>>;
-  /** User who created the order */
   user: User;
   userId: Scalars['String']['output'];
 };
@@ -1038,7 +1017,6 @@ export type Price = {
   item?: Maybe<Array<Item>>;
   /** Price per unit/piece */
   price: Scalars['Decimal']['output'];
-  /** Product */
   product: Product;
   productId: Scalars['String']['output'];
   /** Relevant */
@@ -1121,7 +1099,6 @@ export type Product = {
   _count: ProductCount;
   /** Aliases separated by commas */
   aliases?: Maybe<Scalars['String']['output']>;
-  /** Product attribute */
   attributes?: Maybe<Array<AttributeValue>>;
   /** Brutto weight */
   brutto?: Maybe<Scalars['Decimal']['output']>;
@@ -1129,11 +1106,8 @@ export type Product = {
   createdAt: Scalars['DateTime']['output'];
   /** Product ID */
   id: Scalars['ID']['output'];
-  /** Products images */
   images?: Maybe<Array<File>>;
-  /** Products in orders */
   item?: Maybe<Array<Item>>;
-  /** Manufacturer */
   manufacturer?: Maybe<Manufacturer>;
   manufacturerId?: Maybe<Scalars['String']['output']>;
   /** English name */
@@ -1419,12 +1393,10 @@ export type Status = {
   createdAt: Scalars['DateTime']['output'];
   /** Status ID */
   id: Scalars['ID']['output'];
-  /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
   /** Order status */
   status: OrderStatus;
-  /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -1436,12 +1408,10 @@ export type StatusItem = {
   createdAt: Scalars['DateTime']['output'];
   /** Status ID */
   id: Scalars['ID']['output'];
-  /** Item */
   item: Item;
   itemId: Scalars['String']['output'];
   /** Item status */
   status: ItemStatus;
-  /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
 };
@@ -1579,14 +1549,12 @@ export type User = {
   birthday?: Maybe<Scalars['DateTime']['output']>;
   comment?: Maybe<Array<Comment>>;
   commentItem?: Maybe<Array<CommentItem>>;
-  /** Companies */
   companies?: Maybe<Companies>;
   companiesId?: Maybe<Scalars['String']['output']>;
   /** Register data */
   createdAt: Scalars['DateTime']['output'];
   /** Email */
   email: Scalars['String']['output'];
-  /** My files */
   files?: Maybe<Array<File>>;
   /** First Name */
   firstName: Scalars['String']['output'];
@@ -1599,9 +1567,7 @@ export type User = {
   item?: Maybe<Array<Item>>;
   /** Last Name */
   lastName: Scalars['String']['output'];
-  /** Orders taken */
   manageOrders?: Maybe<Array<Order>>;
-  /** My orders */
   orders?: Maybe<Array<Order>>;
   /** Patronymic */
   patronymic?: Maybe<Scalars['String']['output']>;
