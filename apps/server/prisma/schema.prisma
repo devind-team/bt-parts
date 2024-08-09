@@ -175,7 +175,7 @@ model Manufacturer {
   id       String    @id @default(uuid())
   /// Manufacturer name
   /// @Validator.MinLength(3)
-  name     String    @db.VarChar(512)
+  name     String    @unique @db.VarChar(512)
   products Product[]
 }
 
