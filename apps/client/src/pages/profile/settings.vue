@@ -9,7 +9,7 @@ useHead({ title: t('profile.settings') })
       {{ $t('profile.settings') }}
     </template>
     <template #content>
-      Для смены пароля обратитесь к администратору.
+      Для изменения настроек обратитесь к администратору.
     </template>
   </Card>
 </template>

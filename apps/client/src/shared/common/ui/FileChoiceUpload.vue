@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FileUploadUploaderEvent } from 'primevue/fileupload'
+const { getToken } = useApollo()
 
 const props = withDefaults(defineProps<{
   accept?: string
@@ -14,8 +14,22 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
-  (e: 'uploader', event: FileUploadUploaderEvent): void
+  (e: 'uploader', fileId: string | null): void
 }>()
+
+const onHandleUpload = async (event: { files: File | File[] }) => {
+  const file = Array.isArray(event.files) ? event.files[0] : event.files
+  const formData = new FormData()
+  formData.append('file', file)
+  const data: { id: string | null } = await $fetch('/api/files/upload', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Authorization': `Bearer ${await getToken()}`
+    }
+  })
+  emit('uploader', data.id ?? null)
+}
 </script>
 
 <template>
@@ -29,7 +43,7 @@ const emit = defineEmits<{
     :multiple="props.multiple"
     :accept="props.accept"
     custom-upload
-    @uploader="emit('uploader', $event)"
+    @uploader="onHandleUpload"
   >
     <template #empty>
       <span>{{ $t('emptyFile') }}</span>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FetchResult } from '@apollo/client/link/core'
+import type { File as FileType } from '@repo/queries/composables/graphql.ts'
 import { ApolloCache } from '@apollo/client/core'
-import type { FileUploadUploaderEvent } from 'primevue/fileupload'
 import FileChoiceUpload from '@/shared/common/ui/FileChoiceUpload.vue'
 import { useUploadAvatarMutation, type UploadAvatarMutation, type MeQuery, type User } from '@repo/queries/composables/graphql.js'
 
@@ -26,9 +26,8 @@ onDone(({ data }) => {
   toast.add({ severity: 'success', summary: t('profile.avatar'), detail: t('profile.successUpdate'), life: 3000 })
 })
 
-const onHandleFileUpload = async (event: FileUploadUploaderEvent) => {
-  const file = Array.isArray(event.files) ? event.files[0] : event.files
-  await uploadAvatarMutation({ file })
+const onHandleFileUpload = async (fileId: string | null) => {
+  console.log(fileId)
   visible.value = false
 }
 </script>

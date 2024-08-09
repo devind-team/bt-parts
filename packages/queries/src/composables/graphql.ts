@@ -368,8 +368,6 @@ export type File = {
   /** Name */
   name: Scalars['String']['output'];
   products?: Maybe<Array<Product>>;
-  /** Service url file */
-  serverUrl: Scalars['String']['output'];
   /** Updated data */
   updatedAt: Scalars['DateTime']['output'];
   /**
@@ -405,7 +403,6 @@ export type FileWhereInput = {
   key?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   products?: InputMaybe<ProductListRelationFilter>;
-  serverUrl?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserNullableRelationFilter>;
   userId?: InputMaybe<StringNullableFilter>;
