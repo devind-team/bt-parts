@@ -6,7 +6,6 @@
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { graphqlUploadExpress } from 'graphql-upload-ts'
 
 import { AppModule } from './app/app.module'
 import { PrismaService } from '@common/services/prisma.service'
@@ -32,8 +31,6 @@ async function bootstrap() {
       disableErrorMessages: true,
     }),
   )
-
-  app.use('/api/graphql', graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
 
   const config = new DocumentBuilder()
     .setTitle('bt-parts')

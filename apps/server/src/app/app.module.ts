@@ -3,7 +3,6 @@ import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
 import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs'
-import { GraphQLUpload } from 'graphql-upload-ts'
 // import GraphQLJSON from 'graphql-type-json'
 
 import { PrismaService } from '@common/services/prisma.service'
@@ -21,7 +20,7 @@ import { AppService } from './app.service'
       driver: YogaDriver,
       autoSchemaFile: join(process.cwd(), 'packages/queries/schema.graphql'),
       useGlobalPrefix: true,
-      resolvers: { Upload: GraphQLUpload },
+      // resolvers: { Upload: GraphQLUpload, JSON: GraphQLJSON },
     }),
     AuthModule,
     ItemsModule,

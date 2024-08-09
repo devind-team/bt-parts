@@ -1703,7 +1703,7 @@ enum ProductScalarFieldEnum {
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!): UserLoginType
-  uploadAvatar(file: Upload!): User!
+  uploadAvatar(fileId: String!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   addStatusItems(
     """Идентификатор заказа"""
@@ -1774,9 +1774,6 @@ input UserRegisterInput {
 A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address.
 """
 scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input UpdateUserInput {
   id: String

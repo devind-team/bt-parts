@@ -49,7 +49,8 @@ const toggleProfileMenu = (event: PointerEvent) => {
         <ToggleTheme />
         <template v-if="authStore.loginIn">
           <Avatar
-            :label="authStore.initials"
+            :label="authStore.avatarUrl ? undefined : authStore.initials"
+            :image="authStore.avatarUrl"
             class="my-auto"
             shape="circle"
             aria-haspopup="true"

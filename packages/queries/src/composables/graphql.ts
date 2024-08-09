@@ -22,8 +22,6 @@ export type Scalars = {
   Decimal: { input: any; output: any; }
   /** A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address. */
   EmailAddress: { input: any; output: any; }
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: { input: any; output: any; }
 };
 
 /** Attribute model */
@@ -773,7 +771,7 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationUploadAvatarArgs = {
-  file: Scalars['Upload']['input'];
+  fileId: Scalars['String']['input'];
 };
 
 export type NestedBoolFilter = {
@@ -1809,7 +1807,7 @@ export type UpdateUserMutationVariables = Exact<{
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
 
 export type UploadAvatarMutationVariables = Exact<{
-  file: Scalars['Upload']['input'];
+  fileId: Scalars['String']['input'];
 }>;
 
 
@@ -1934,8 +1932,8 @@ export function useUpdateUserMutation(options: VueApolloComposable.UseMutationOp
 }
 export type UpdateUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateUserMutation, UpdateUserMutationVariables>;
 export const UploadAvatarDocument = gql`
-    mutation uploadAvatar($file: Upload!) {
-  uploadAvatar(file: $file) {
+    mutation uploadAvatar($fileId: String!) {
+  uploadAvatar(fileId: $fileId) {
     ...UserFields
   }
 }
@@ -1954,7 +1952,7 @@ export const UploadAvatarDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useUploadAvatarMutation({
  *   variables: {
- *     file: // value for 'file'
+ *     fileId: // value for 'fileId'
  *   },
  * });
  */

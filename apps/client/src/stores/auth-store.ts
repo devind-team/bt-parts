@@ -9,6 +9,7 @@ export type AuthStoreGettersType = {
   loginIn: (state: AuthStoreStateType) => boolean
   initials: (state: AuthStoreStateType) => string
   fullName: (state: AuthStoreStateType) => string
+  avatarUrl: (state: AuthStoreStateType) => string | undefined
 }
 
 export type AuthStoreActionsType = {
@@ -26,6 +27,7 @@ export const useAuthStore = defineStore<string, AuthStoreStateType, AuthStoreGet
       initials: (state) => (state.user ? `${state.user.lastName[0]}${state.user.firstName[0]}` : ''),
       fullName: (state) =>
         state.user ? `${state.user.lastName} ${state.user.firstName} ${state.user.patronymic}` : '',
+      avatarUrl: (state) => (state.user?.avatar ? `/api/files/${state.user.avatar}` : undefined),
     },
     actions: {
       setAvatar(url: string | null): void {

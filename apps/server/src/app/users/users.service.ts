@@ -34,13 +34,27 @@ export class UsersService {
         extensions: { code: 'FORBIDDEN' },
       })
     }
-    const user = await this.prismaService.user.update({
+    return this.prismaService.user.update({
       where: { id },
       data: {
         ...userDto,
       },
     })
-    return user
+  }
+
+  async updateAvatar(fileId: string, user: User): Promise<User> {
+    const file = await this.prismaService.file.findUnique({
+      where: { id: fileId },
+    })
+    if (!file) {
+      throw new GraphQLError('Файл не найден', {
+        extensions: { code: 'NOT_FOUND' },
+      })
+    }
+    return this.prismaService.user.update({
+      where: { id: user.id },
+      data: { avatar: file.id },
+    })
   }
 
   async createJwtToken(user: User): Promise<string> {

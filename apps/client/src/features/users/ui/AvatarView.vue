@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FetchResult } from '@apollo/client/link/core'
-import type { File as FileType } from '@repo/queries/composables/graphql.ts'
 import { ApolloCache } from '@apollo/client/core'
 import FileChoiceUpload from '@/shared/common/ui/FileChoiceUpload.vue'
 import { useUploadAvatarMutation, type UploadAvatarMutation, type MeQuery, type User } from '@repo/queries/composables/graphql.js'
@@ -21,13 +20,16 @@ const { mutate: uploadAvatarMutation, onDone } = useUploadAvatarMutation({
 })
 
 onDone(({ data }) => {
-  const { avatar } = data!.uploadAvatar
-  authStore.setAvatar(avatar || null)
+  authStore.user = data!.uploadAvatar
   toast.add({ severity: 'success', summary: t('profile.avatar'), detail: t('profile.successUpdate'), life: 3000 })
 })
 
 const onHandleFileUpload = async (fileId: string | null) => {
-  console.log(fileId)
+  if (fileId) {
+    await uploadAvatarMutation({ fileId })
+  } else {
+    toast.add({ severity: 'error', summary: t('profile.avatar'), detail: t('profile.avatarError'), life: 3000 })
+  }
   visible.value = false
 }
 </script>
@@ -38,7 +40,8 @@ const onHandleFileUpload = async (fileId: string | null) => {
     </div>
     <div class="w-12 md:w-9 flex flex-column align-content-center align-items-center gap-4">
       <Avatar
-        :label="authStore.initials"
+        :image="authStore.avatarUrl"
+        :label="authStore.avatarUrl ? undefined : authStore.initials"
         class="w-10rem h-10rem"
         size="xlarge"
         shape="circle"
