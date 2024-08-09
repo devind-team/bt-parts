@@ -14,16 +14,12 @@ const items = ref([
   {
     label: t('profile.user'),
     icon: 'pi pi-user',
-    command: () => {
-      router.push(localePath({ name: 'profile-me' }))
-    }
+    command: () => router.push(localePath({ name: 'profile-me' })),
   },
   {
     label: t('auth.logout'),
     icon: 'pi pi-sign-out',
-    command: () => {
-      router.push(localePath({ name: 'auth-logout' }))
-    }
+    command: () => router.push(localePath({ name: 'auth-logout' })),
   }
 ])
 
@@ -41,7 +37,7 @@ const toggleProfileMenu = (event: PointerEvent) => {
       >
         <NuxtImg
           src="/icon.svg"
-          width="28"
+          width="32"
         />
         <span class="text-xl ml-3 font-medium">
           {{ $t('name') }}
@@ -53,10 +49,13 @@ const toggleProfileMenu = (event: PointerEvent) => {
         <ToggleTheme />
         <template v-if="authStore.loginIn">
           <Avatar
-            icon="pi pi-user"
+            :label="authStore.avatarUrl ? undefined : authStore.initials"
+            :image="authStore.avatarUrl"
+            class="my-auto"
             shape="circle"
             aria-haspopup="true"
             aria-controls="overlay_menu_profile"
+            style="width: 40px; height: 40px; cursor: pointer;"
             @click="toggleProfileMenu"
           />
           <Menu
@@ -68,8 +67,11 @@ const toggleProfileMenu = (event: PointerEvent) => {
         </template>
         <template v-else>
           <Button
-            as="router-link"
             :to="localePath({ name: 'auth-login' })"
+            as="router-link"
+            size="small"
+            text
+            plain
           >
             {{ $t('auth.login') }}
           </Button>

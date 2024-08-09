@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import PvApp from '@/widgets/common/ui/PvApp.vue'
-import PvAppMain from '@/widgets/common/ui/PvAppMain.vue'
-import PvAppToolBar from '@/widgets/common/ui/PvAppToolBar.vue'
-import PvAppFooter from '@/widgets/common/ui/PvAppFooter.vue'
+import PvApp from '@/widgets/layout/ui/PvApp.vue'
+import PvAppMain from '@/widgets/layout/ui/PvAppMain.vue'
+import PvAppToolBar from '@/widgets/layout/ui/PvAppToolBar.vue'
+import PvAppFooter from '@/widgets/layout/ui/PvAppFooter.vue'
 </script>
 
 <template>

@@ -16,15 +16,19 @@
     "defu",
     "devkit",
     "exceljs",
+    "fileupload",
     "nestjs",
     "Nuxt",
     "nuxtjs",
     "pinia",
+    "primeflex",
     "primeicons",
     "primevue",
     "singleline",
+    "usetoast",
     "vuetify",
-    "vueuse"
+    "vueuse",
+    "xlarge"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"

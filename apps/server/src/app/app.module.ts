@@ -20,7 +20,7 @@ import { AppService } from './app.service'
       driver: YogaDriver,
       autoSchemaFile: join(process.cwd(), 'packages/queries/schema.graphql'),
       useGlobalPrefix: true,
-      // resolvers: { JSON: GraphQLJSON },
+      // resolvers: { Upload: GraphQLUpload, JSON: GraphQLJSON },
     }),
     AuthModule,
     ItemsModule,

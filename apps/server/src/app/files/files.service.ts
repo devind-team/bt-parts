@@ -1,14 +1,13 @@
 import * as ExcelJS from 'exceljs'
 import { z } from 'zod'
 import { Readable as ReadableStream } from 'stream'
-import { Injectable, NotAcceptableException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@common/services/prisma.service'
 import { S3Service } from '@s3/s3.service'
-import { FileUploadType } from '@files/dto/file-upload.type'
-import { FileUploadInput } from '@files/dto/file-upload.input'
 import { ExcelReader } from '@common/utils/readers/excel.reader'
+import { File as FileType } from '@generated/file'
 import { User } from '@generated/user'
-import { File } from '@generated/file'
+import { FileInputType } from '@s3/s3.interfaces'
 
 @Injectable()
 export class FilesService {
@@ -28,24 +27,32 @@ export class FilesService {
    * @param uploadFile Загруженный с помощью S3 файл
    * @param user Пользователь
    */
-  async add(uploadFile: FileUploadInput, user?: User): Promise<File> {
+  async add(uploadFile: FileInputType, user: User): Promise<FileType> {
+    const key = await this.s3Service.uploadObject(uploadFile, user.id)
+    const name = Buffer.from(uploadFile.originalname, 'ascii').toString('utf-8')
     return this.prismaService.file.create({
       data: {
-        name: uploadFile.fileName,
-        serverUrl: this.s3Service.getServerUrl(),
+        name,
+        key,
         bucket: this.s3Service.getBucket(),
-        key: uploadFile.name,
-        userId: user?.id,
+        userId: user.id,
       },
     })
+  }
+
+  async getFileStreamById(fileId: string): Promise<ReadableStream> {
+    const file = await this.prismaService.file.findUnique({
+      where: { id: fileId },
+    })
+    return this.getFileStream(file)
   }
 
   /**
    * Получение файла для чтения
    * @param file
    */
-  async getFileStream(file: File): Promise<ReadableStream> {
-    return await this.s3Service.getFileObject(file.key)
+  async getFileStream(file: FileType): Promise<ReadableStream> {
+    return this.s3Service.getFileObject(file.key)
   }
   /**
    * Проверка правильности файлового имени
@@ -62,32 +69,15 @@ export class FilesService {
   }
 
   /**
-   * Получение ссылки на загрузку файла
-   * @param fileName - имя предполагаемого файла
-   */
-  async getPresignedPutUrl(fileName: string): Promise<FileUploadType> {
-    if (await this.checkFileName(fileName)) {
-      const [bucket, name, presignedUrl] = await this.s3Service.getPresignedPutUrl(fileName)
-      return {
-        fileName,
-        bucket,
-        name,
-        presignedUrl,
-      }
-    }
-    throw new NotAcceptableException('Неверное название файла')
-  }
-
-  /**
    * Получаем значения из первого листа Excel файла.
    * Первая строка является заголовочной, остальные строки представляют из себя набор данных.
    * @param file
    */
-  async getExcelValues(file: File): Promise<{ headers: string[]; values: Map<string, unknown>[] }> {
+  async getExcelValues(file: FileType): Promise<{ headers: string[]; values: Map<string, unknown>[] }> {
     const stream = await this.getFileStream(file)
     const excelReader = new ExcelReader()
     await excelReader.load(stream)
-    return await ExcelReader.getValues(excelReader.workSheet)
+    return ExcelReader.getValues(excelReader.workSheet)
   }
 
   /**
@@ -101,16 +91,20 @@ export class FilesService {
     sheetName: string,
     headers: Record<string, string>,
     values: Array<Record<string, unknown>>,
-    user?: User,
-  ): Promise<File> {
+    user: User,
+  ): Promise<FileType> {
     const workbook = await this.createAndFillWorkbook(sheetName, headers, values)
     const fileName = `UnloadOrder_${new Date().toJSON().slice(0, 10)}.xlsx`
-    const name = await this.s3Service.uploadObject({
-      fileName,
-      mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      buffer: await workbook.xlsx.writeBuffer(),
-    })
-    return await this.add({ fileName, name, bucket: this.s3Service.getBucket() }, user)
+    const buffer = await workbook.xlsx.writeBuffer()
+    return this.add(
+      {
+        originalname: fileName,
+        mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        buffer: buffer as Buffer,
+        size: buffer.byteLength,
+      },
+      user,
+    )
   }
 
   async createAndFillWorkbook(

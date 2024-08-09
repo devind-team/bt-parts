@@ -15,3 +15,10 @@ export interface S3ModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   useExisting?: Type<S3ModuleOptionsFactory>
   useFactory?: (...args: any[]) => Promise<ClientOptions> | ClientOptions
 }
+
+export interface FileInputType {
+  originalname: string
+  mimetype: string
+  buffer: Buffer
+  size: number
+}

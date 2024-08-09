@@ -1,18 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-
 $gutter: 1rem;
 
 @import './base.scss';
-
 @import 'primeflex/primeflex';
 @import 'primeicons/primeicons.css';
 
-
-@media (prefers-color-scheme: dark) {
-  @import 'primeflex/themes/primeone-dark.css';
-}
-
-@media (prefers-color-scheme: light) {
-  @import 'primeflex/themes/primeone-light.css';
-}
-
+@import './primeflex-themes.scss';

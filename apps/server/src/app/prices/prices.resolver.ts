@@ -47,13 +47,13 @@ export class PricesResolver {
    * @param user: пользователь
    * @param fileUpload: файл для загрузки
    */
-  @Mutation(() => CreateUploadPricesType)
-  async uploadPrices(
-    @CurrentUser() user: User,
-    @Args({ name: 'fileUpload', type: () => FileUploadInput }) fileUpload: FileUploadInput,
-  ): Promise<CreateUploadPricesType> {
-    const file = await this.fileService.add(fileUpload, user)
-    const { headers, values } = await this.fileService.getExcelValues(file)
-    return await this.pricesService.addPricesFromValues(headers.filter(Boolean), values)
-  }
+  // @Mutation(() => CreateUploadPricesType)
+  // async uploadPrices(
+  //   @CurrentUser() user: User,
+  //   @Args({ name: 'fileUpload', type: () => FileUploadInput }) fileUpload: FileUploadInput,
+  // ): Promise<CreateUploadPricesType> {
+  //   const file = await this.fileService.add(fileUpload, user)
+  //   const { headers, values } = await this.fileService.getExcelValues(file)
+  //   return await this.pricesService.addPricesFromValues(headers.filter(Boolean), values)
+  // }
 }

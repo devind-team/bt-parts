@@ -5,6 +5,7 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module'
 import { PrismaService } from '@common/services/prisma.service'
@@ -30,6 +31,14 @@ async function bootstrap() {
       disableErrorMessages: true,
     }),
   )
+
+  const config = new DocumentBuilder()
+    .setTitle('bt-parts')
+    .setDescription('Best trans parts api description')
+    .setVersion('1.0')
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api', app, document)
 
   const port = process.env.PORT || 4200
   await app.listen(port)

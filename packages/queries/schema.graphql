@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type FileUploadType {
-  fileName: String!
-  bucket: String!
-  name: String!
-  presignedUrl: String!
-}
-
 type UserCountAggregate {
   id: Int!
   username: Int!
@@ -692,7 +685,6 @@ type ProductConnectionType {
 
 type Query {
   me: User!
-  presignedPutUrl(fileName: String!): FileUploadType!
   items(where: ItemWhereInput, orderBy: [ItemOrderByWithRelationInput!], cursor: ItemWhereUniqueInput, take: Int, skip: Int, distinct: [ItemScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ItemConnectionType!
   itemsByLastStatus(
     """Текущий статус позиции"""
@@ -1096,7 +1088,6 @@ input FileWhereInput {
   NOT: [FileWhereInput!]
   id: StringFilter
   name: StringFilter
-  serverUrl: StringFilter
   bucket: StringFilter
   key: StringFilter
   createdAt: DateTimeFilter
@@ -1650,7 +1641,7 @@ enum ProductScalarFieldEnum {
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!): UserLoginType
-  uploadAvatar(fileUpload: FileUploadInput!): User!
+  uploadAvatar(fileId: String!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   addStatusItems(
     """Идентификатор заказа"""
@@ -1721,12 +1712,6 @@ input UserRegisterInput {
 A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address.
 """
 scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
-
-input FileUploadInput {
-  fileName: String!
-  bucket: String!
-  name: String!
-}
 
 input UpdateUserInput {
   id: String

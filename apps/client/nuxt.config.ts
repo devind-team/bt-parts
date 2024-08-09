@@ -73,7 +73,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     devProxy: {
-      '/api/graphql': `http://localhost:${process.env.SERVER_PORT || 3000}/api/graphql`,
+      '/api': `http://localhost:${process.env.SERVER_PORT || 3000}/api`,
     },
   },
   eslint: {
