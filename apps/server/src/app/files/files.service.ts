@@ -1,10 +1,9 @@
 import * as ExcelJS from 'exceljs'
 import { z } from 'zod'
 import { Readable as ReadableStream } from 'stream'
-import { Injectable, NotAcceptableException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@common/services/prisma.service'
 import { S3Service } from '@s3/s3.service'
-import { FileUploadType } from '@files/dto/file-upload.type'
 import { FileUploadInput } from '@files/dto/file-upload.input'
 import { ExcelReader } from '@common/utils/readers/excel.reader'
 import { User } from '@generated/user'
@@ -45,7 +44,7 @@ export class FilesService {
    * @param file
    */
   async getFileStream(file: File): Promise<ReadableStream> {
-    return await this.s3Service.getFileObject(file.key)
+    return this.s3Service.getFileObject(file.key)
   }
   /**
    * Проверка правильности файлового имени
@@ -62,23 +61,6 @@ export class FilesService {
   }
 
   /**
-   * Получение ссылки на загрузку файла
-   * @param fileName - имя предполагаемого файла
-   */
-  async getPresignedPutUrl(fileName: string): Promise<FileUploadType> {
-    if (await this.checkFileName(fileName)) {
-      const [bucket, name, presignedUrl] = await this.s3Service.getPresignedPutUrl(fileName)
-      return {
-        fileName,
-        bucket,
-        name,
-        presignedUrl,
-      }
-    }
-    throw new NotAcceptableException('Неверное название файла')
-  }
-
-  /**
    * Получаем значения из первого листа Excel файла.
    * Первая строка является заголовочной, остальные строки представляют из себя набор данных.
    * @param file
@@ -87,7 +69,7 @@ export class FilesService {
     const stream = await this.getFileStream(file)
     const excelReader = new ExcelReader()
     await excelReader.load(stream)
-    return await ExcelReader.getValues(excelReader.workSheet)
+    return ExcelReader.getValues(excelReader.workSheet)
   }
 
   /**
@@ -110,7 +92,7 @@ export class FilesService {
       mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       buffer: await workbook.xlsx.writeBuffer(),
     })
-    return await this.add({ fileName, name, bucket: this.s3Service.getBucket() }, user)
+    return this.add({ fileName, name, bucket: this.s3Service.getBucket() }, user)
   }
 
   async createAndFillWorkbook(

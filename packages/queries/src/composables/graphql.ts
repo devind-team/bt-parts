@@ -22,6 +22,8 @@ export type Scalars = {
   Decimal: { input: any; output: any; }
   /** A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address. */
   EmailAddress: { input: any; output: any; }
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: { input: any; output: any; }
 };
 
 /** Attribute model */
@@ -391,20 +393,6 @@ export type FileListRelationFilter = {
 
 export type FileOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
-};
-
-export type FileUploadInput = {
-  bucket: Scalars['String']['input'];
-  fileName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
-export type FileUploadType = {
-  __typename?: 'FileUploadType';
-  bucket: Scalars['String']['output'];
-  fileName: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  presignedUrl: Scalars['String']['output'];
 };
 
 export type FileWhereInput = {
@@ -788,7 +776,7 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationUploadAvatarArgs = {
-  fileUpload: FileUploadInput;
+  file: Scalars['Upload']['input'];
 };
 
 export type NestedBoolFilter = {
@@ -1363,7 +1351,6 @@ export type Query = {
   items: ItemConnectionType;
   itemsByLastStatus: ItemConnectionType;
   me: User;
-  presignedPutUrl: FileUploadType;
   products: ProductConnectionType;
 };
 
@@ -1394,11 +1381,6 @@ export type QueryItemsByLastStatusArgs = {
   status: ItemStatus;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ItemWhereInput>;
-};
-
-
-export type QueryPresignedPutUrlArgs = {
-  fileName: Scalars['String']['input'];
 };
 
 
@@ -1829,6 +1811,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
 
+export type UploadAvatarMutationVariables = Exact<{
+  file: Scalars['Upload']['input'];
+}>;
+
+
+export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1947,6 +1936,35 @@ export function useUpdateUserMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
 }
 export type UpdateUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UploadAvatarDocument = gql`
+    mutation uploadAvatar($file: Upload!) {
+  uploadAvatar(file: $file) {
+    ...UserFields
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+
+/**
+ * __useUploadAvatarMutation__
+ *
+ * To run a mutation, you first call `useUploadAvatarMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUploadAvatarMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUploadAvatarMutation({
+ *   variables: {
+ *     file: // value for 'file'
+ *   },
+ * });
+ */
+export function useUploadAvatarMutation(options: VueApolloComposable.UseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UploadAvatarMutation, UploadAvatarMutationVariables>(UploadAvatarDocument, options);
+}
+export type UploadAvatarMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UploadAvatarMutation, UploadAvatarMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

@@ -1,18 +1,22 @@
 <script lang="ts" setup>
+import type { FetchResult } from '@apollo/client/link/core'
+import { ApolloCache } from '@apollo/client/core'
 import * as z from 'zod'
 import { useToast } from 'primevue/usetoast'
-import { useCommonQuery } from '#imports'
-import { useUpdateUserMutation, type MeQuery, type MeQueryVariables, type UpdateUserInput } from '@repo/queries/composables/graphql'
-import meQuery from '@repo/queries/graphql/auth/queries/me.graphql'
+import { useUpdateUserMutation, type MeQuery, type UpdateUserInput, type UpdateUserMutation, type User } from '@repo/queries/composables/graphql'
+
 
 const authStore = useAuthStore()
 const toast = useToast()
 const { t } = useI18n()
 
-const { data: user, changeUpdate } = useCommonQuery<MeQuery, MeQueryVariables>({ document: meQuery })
+const props = defineProps<{
+  user: User
+  changeUpdate: (cache: ApolloCache<MeQuery>, result: Omit<FetchResult<UpdateUserMutation>, 'context'>) => void
+}>()
 
 const { mutate: updateUserMutation, onDone, loading } = useUpdateUserMutation({
-  update: (cache, result) => changeUpdate(cache, result)
+  update: (cache, result) => props.changeUpdate(cache, result),
 })
 
 onDone(({ data }) => {
@@ -21,7 +25,7 @@ onDone(({ data }) => {
 })
 
 const { defineField, handleSubmit, errors } = useForm<UpdateUserInput>({
-  initialValues: user.value,
+  initialValues: props.user,
   validationSchema: toTypedSchema(
     z.object({
       email: z.string().email(),
@@ -38,7 +42,7 @@ const [lastName] = defineField('lastName')
 const [patronymic] = defineField('patronymic')
 
 const onSubmit = handleSubmit(async (values) => {
-  await updateUserMutation({ updateUserInput: { id: user.value!.id, ...values } })
+  await updateUserMutation({ updateUserInput: { id: props.user.id, ...values } })
 })
 </script>
 

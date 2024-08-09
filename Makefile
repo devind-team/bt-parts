@@ -14,3 +14,11 @@ build-server:
 
 .PHONY: build
 build: build-client build-server
+
+
+.PHONY: update-avatar
+update-avatar:
+	curl localhost:4200/api/graphql \
+	-F operations='{ "query": "mutation ($file: Upload!) { uploadAvatar(file: $file) }", "variables": { "file": null } }' \
+	-F map='{ "0": ["variables.file"] }' \
+	-F 0=@Аватар.jpeg

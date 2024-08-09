@@ -12,7 +12,7 @@ export type AuthStoreGettersType = {
 }
 
 export type AuthStoreActionsType = {
-  setAvatar: (url: string) => void
+  setAvatar: (url: string | null) => void
 }
 
 export const useAuthStore = defineStore<string, AuthStoreStateType, AuthStoreGettersType, AuthStoreActionsType>(
@@ -28,7 +28,7 @@ export const useAuthStore = defineStore<string, AuthStoreStateType, AuthStoreGet
         state.user ? `${state.user.lastName} ${state.user.firstName} ${state.user.patronymic}` : '',
     },
     actions: {
-      setAvatar(url: string): void {
+      setAvatar(url: string | null): void {
         if (this.user) {
           this.user = { ...this.user, avatar: url }
         }

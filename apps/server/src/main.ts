@@ -5,6 +5,7 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { graphqlUploadExpress } from 'graphql-upload-ts'
 
 import { AppModule } from './app/app.module'
 import { PrismaService } from '@common/services/prisma.service'
@@ -30,6 +31,8 @@ async function bootstrap() {
       disableErrorMessages: true,
     }),
   )
+
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
 
   const port = process.env.PORT || 4200
   await app.listen(port)

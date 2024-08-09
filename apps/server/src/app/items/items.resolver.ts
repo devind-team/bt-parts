@@ -52,7 +52,7 @@ export class ItemsResolver {
   /**
    * Мутация для автоматического проценивания
    * @param user: пользователь
-   * @param orderId: идентификтор заказа
+   * @param orderId: идентификатор заказа
    * @param itemIds: идентификаторы позиций
    */
   @Mutation(() => [Item])
@@ -69,7 +69,7 @@ export class ItemsResolver {
    * @param user: Пользователь
    * @param orderId: Идентификатор заказа
    * @param itemIds: Идентификаторы позиций
-   * @param coefficient: Новое значение коэффицнета
+   * @param coefficient: Новое значение коэффициента
    */
   @Mutation(() => [Item])
   async changeCoefficientItems(

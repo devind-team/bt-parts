@@ -59,6 +59,6 @@ export class UsersService {
       username: user.username,
       sub: user.id,
     }
-    return await this.jwtService.signAsync(payload)
+    return this.jwtService.signAsync(payload)
   }
 }
