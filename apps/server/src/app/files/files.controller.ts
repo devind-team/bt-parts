@@ -1,7 +1,7 @@
 import 'multer'
-import { Express } from 'express'
+import { Express, Response } from 'express'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { Controller, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
+import { Controller, Get, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
 import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger'
 import { File as FileType } from '@generated/file'
 
@@ -14,6 +14,12 @@ import { CurrentRestUser } from '@auth/auth.decorators'
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
+
+  @Get(':fileId')
+  async getFile(@Res() res: Response, @Param('fileId') fileId: string) {
+    const fileStream = await this.filesService.getFileStreamById(fileId)
+    fileStream.pipe(res)
+  }
 
   @Post('upload')
   @UseGuards(AuthGuard('jwt'))
@@ -30,7 +36,7 @@ export class FilesController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  async getData(@CurrentRestUser() user: User, @UploadedFile() file: Express.Multer.File): Promise<FileType> {
+  async uploadFile(@CurrentRestUser() user: User, @UploadedFile() file: Express.Multer.File): Promise<FileType> {
     return this.filesService.add(file, user)
   }
 }

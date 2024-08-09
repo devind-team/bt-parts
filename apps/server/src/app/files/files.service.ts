@@ -40,6 +40,13 @@ export class FilesService {
     })
   }
 
+  async getFileStreamById(fileId: string): Promise<ReadableStream> {
+    const file = await this.prismaService.file.findUnique({
+      where: { id: fileId },
+    })
+    return this.getFileStream(file)
+  }
+
   /**
    * Получение файла для чтения
    * @param file

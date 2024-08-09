@@ -39,7 +39,7 @@ export class S3Service {
   }
 
   async listBuckets() {
-    return await this.s3Client.listBuckets()
+    return this.s3Client.listBuckets()
   }
 
   /**
@@ -47,7 +47,7 @@ export class S3Service {
    * @param objectName - имя объекта
    */
   async getFileObject(objectName: string): Promise<ReadableStream> {
-    return await this.s3Client.getObject(this.getBucket(), objectName)
+    return this.s3Client.getObject(this.getBucket(), objectName)
   }
 
   /**
