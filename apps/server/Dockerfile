@@ -27,6 +27,8 @@ WORKDIR /app
 
 RUN npm i -g pm2 pnpm
 
+COPY package.json package.json
+
 COPY --from=builder /build/node_modules ./node_modules
 COPY --from=builder /build/apps/server/prisma ./prisma
 COPY --from=builder /build/dist/apps/server ./dist
