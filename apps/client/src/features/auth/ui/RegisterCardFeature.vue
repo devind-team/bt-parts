@@ -69,7 +69,7 @@ const onSubmit = handleSubmit(async (userRegisterInput: UserRegisterInput, { set
         <div class="text-900 text-3xl font-medium mb-3">
           {{ $t('auth.registration') }}
         </div>
-        <span class="text-600 font-medium line-height-3">{{ $t('auth.accountExists') }}</span>
+        <span class="text-600 font-medium mr-1 line-height-3">{{ $t('auth.accountExists') }}</span>
         <nuxt-link
           :to="localePath({ name: 'auth-login' })"
           class="font-medium text-blue-500"
