@@ -46,8 +46,11 @@ onDone(async ({ data }) => {
   await router.push(localePath({ name: 'index' }))
 })
 
-const onSubmit = handleSubmit(async (userRegisterInput: UserRegisterInput, { setErrors }: FormActions<UserRegisterInput>) => {
+const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfirm: string }, { setErrors }: FormActions<UserRegisterInput>) => {
   try {
+    const userRegisterInput = Object.fromEntries(
+      Object.entries(values).filter(([key]) => key !== 'passwordConfirm')
+    ) as UserRegisterInput
     await mutate({ userRegisterInput })
   } catch (e) {
     setErrors({
