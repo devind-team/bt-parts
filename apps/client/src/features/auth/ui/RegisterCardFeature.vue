@@ -1,36 +1,42 @@
 <script lang="ts" setup>
-import { object, string } from 'zod'
+import { type FormActions } from 'vee-validate'
+import type { UserRegisterInput } from '@repo/queries/composables/graphql.ts'
+import * as z from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRegisterMutation } from '@repo/queries/composables/graphql'
-import type { UserRegisterInput } from '@repo/queries/composables/graphql.ts'
 import { useAuthStore } from '@/stores/auth-store'
-import { PrimeVueFieldConfig } from '@/shared/utils/PrimeVue.js'
-import { type FormActions } from 'vee-validate'
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+
 const { t } = useI18n()
 const { onLogin } = useApollo()
 const router = useRouter()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
-const { defineField, handleSubmit, errors } = useForm<UserRegisterInput>({
+
+const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string }>({
   validationSchema: toTypedSchema(
-    object({
-      username: string().min(2),
-      password: string().min(6),
-      email: string().email(),
-      firstName: string().min(2),
-      lastName: string().min(2),
-      patronymic: string().min(2),
+    z.object({
+      email: z.string().email(),
+      username: z.string().min(2),
+      lastName: z.string().min(2),
+      firstName: z.string().min(2),
+      patronymic: z.string().optional(),
+      password: z.string().min(6),
+      passwordConfirm: z.string().min(6),
+    }).partial().refine((data) => data.password === data.passwordConfirm, {
+      message: t('auth.notEqualsPasswords'),
+      path: ['passwordConfirm'],
     }),
   ),
 })
-const [username, usernameProps] = defineField('username', PrimeVueFieldConfig)
-const [password, passwordProps] = defineField('password', PrimeVueFieldConfig)
-const [email, emailProps] = defineField('email', PrimeVueFieldConfig)
-const [firstName, firstNameProps] = defineField('firstName', PrimeVueFieldConfig)
-const [lastName, lastNameProps] = defineField('lastName', PrimeVueFieldConfig)
-const [patronymic, patronymicProps] = defineField('patronymic', PrimeVueFieldConfig)
+
+const [email] = defineField('email')
+const [username] = defineField('username')
+const [firstName] = defineField('firstName')
+const [lastName] = defineField('lastName')
+const [patronymic] = defineField('patronymic')
+const [password] = defineField('password')
+const [passwordConfirm] = defineField('passwordConfirm')
+
 const { mutate, onDone } = useRegisterMutation()
 onDone(async ({ data }) => {
   if (!data || !data.register) return
@@ -39,11 +45,10 @@ onDone(async ({ data }) => {
   authStore.user = user
   await router.push(localePath({ name: 'index' }))
 })
-const onSubmit = handleSubmit(async (values: UserRegisterInput, { setErrors }: FormActions<UserRegisterInput>) => {
+
+const onSubmit = handleSubmit(async (userRegisterInput: UserRegisterInput, { setErrors }: FormActions<UserRegisterInput>) => {
   try {
-    await mutate({
-      userRegisterInput: values,
-    })
+    await mutate({ userRegisterInput })
   } catch (e) {
     setErrors({
       username: t('auth.error'),
@@ -58,56 +63,37 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput, { setErrors }: F
 </script>
 
 <template>
-  <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto">
-    <div class="text-center mb-5">
-      <img
-        src="/icon.svg"
-        alt="Image"
-        height="50"
-        class="mb-3"
-      >
-      <div class="text-900 text-3xl font-medium mb-3">
-        {{ $t('auth.welcome') }}
-      </div>
-      <span class="text-600 font-medium line-height-3">{{ $t('auth.not_account') }}</span>
-      <a
-        class="font-medium no-underline ml-2 text-blue-500 cursor-pointer"
-        :to="localePath({ name: 'auth-login' })"
-      >
-        {{ $t('auth.login') }}
-      </a>
-    </div>
-    <form @submit="onSubmit">
-      <div>
-        <div class="field">
-          <label
-            for="username"
-            class="block text-900 font-medium mb-2"
-          >{{ $t('auth.username') }}</label>
-          <InputText
-            v-model="username"
-            v-bind="usernameProps"
-            aria-describedby="username-help"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.username }"
-          />
-          <small
-            id="username-help"
-            class="p-error"
-          >{{ errors.username }}</small>
+  <Card class="pt-4 shadow-2 mx-auto md:w-6 xl:w-5">
+    <template #header>
+      <div class="text-center mb-5">
+        <div class="text-900 text-3xl font-medium mb-3">
+          {{ $t('auth.registration') }}
         </div>
+        <span class="text-600 font-medium line-height-3">{{ $t('auth.accountExists') }}</span>
+        <nuxt-link
+          :to="localePath({ name: 'auth-login' })"
+          class="font-medium text-blue-500"
+        >
+          {{ $t('auth.login') }}
+        </nuxt-link>
+      </div>
+    </template>
+    <template #content>
+      <form @submit="onSubmit">
         <div class="field">
           <label
             for="email"
             class="block text-900 font-medium mb-2"
           >{{ $t('auth.email') }}</label>
-          <InputText
-            v-model="email"
-            v-bind="emailProps"
-            aria-describedby="email-help"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.email }"
-          />
+          <client-only>
+            <InputText
+              id="email"
+              v-model="email"
+              aria-describedby="email-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.email }"
+            />
+          </client-only>
           <small
             id="email-help"
             class="p-error"
@@ -115,51 +101,37 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput, { setErrors }: F
         </div>
         <div class="field">
           <label
-            for="password"
+            for="username"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.password') }}</label>
-          <InputText
-            v-model="password"
-            v-bind="passwordProps"
-            aria-describedby="password-help"
-            type="password"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.password }"
-          />
+          >{{ $t('auth.username') }}</label>
+          <client-only>
+            <InputText
+              id="username"
+              v-model="username"
+              aria-describedby="username-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.username }"
+            />
+          </client-only>
           <small
-            id="password-help"
+            id="username-help"
             class="p-error"
-          >{{ errors.password }}</small>
-        </div>
-        <div class="field">
-          <label
-            for="firstName"
-            class="block text-900 font-medium mb-2"
-          >{{ $t('auth.firstName') }}</label>
-          <InputText
-            v-model="firstName"
-            v-bind="firstNameProps"
-            aria-describedby="firstName-help"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.firstName }"
-          />
-          <small
-            id="firstName-help"
-            class="p-error"
-          >{{ errors.firstName }}</small>
+          >{{ errors.username }}</small>
         </div>
         <div class="field">
           <label
             for="lastName"
             class="block text-900 font-medium mb-2"
           >{{ $t('auth.lastName') }}</label>
-          <InputText
-            v-model="lastName"
-            v-bind="lastNameProps"
-            aria-describedby="lastName-help"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.lastName }"
-          />
+          <client-only>
+            <InputText
+              id="lastName"
+              v-model="lastName"
+              aria-describedby="lastName-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.lastName }"
+            />
+          </client-only>
           <small
             id="lastName-help"
             class="p-error"
@@ -167,25 +139,81 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput, { setErrors }: F
         </div>
         <div class="field">
           <label
+            for="firstName"
+            class="block text-900 font-medium mb-2"
+          >{{ $t('auth.firstName') }}</label>
+          <client-only>
+            <InputText
+              id="firstName"
+              v-model="firstName"
+              aria-describedby="firstName-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.firstName }"
+            />
+          </client-only>
+          <small
+            id="firstName-help"
+            class="p-error"
+          >{{ errors.firstName }}</small>
+        </div>
+        <div class="field">
+          <label
             for="patronymic"
             class="block text-900 font-medium mb-2"
           >{{ $t('auth.patronymic') }}</label>
-          <InputText
-            v-model="patronymic"
-            v-bind="patronymicProps"
-            aria-describedby="patronymic-help"
-            class="w-full mb-3"
-            :class="{ 'p-invalid': errors.patronymic }"
-          />
+          <client-only>
+            <InputText
+              id="patronymic"
+              v-model="patronymic"
+              aria-describedby="patronymic-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.patronymic }"
+            />
+          </client-only>
           <small
             id="patronymic-help"
             class="p-error"
           >{{ errors.patronymic }}</small>
         </div>
-        <div class="flex align-items-center justify-content-between mb-6">
-          <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">{{
-            $t('auth.forgotPassword')
-          }}</a>
+        <div class="field">
+          <label
+            for="password"
+            class="block text-900 font-medium mb-2"
+          >{{ $t('auth.password') }}</label>
+          <client-only>
+            <InputText
+              id="password"
+              v-model="password"
+              aria-describedby="password-help"
+              type="password"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.password }"
+            />
+          </client-only>
+          <small
+            id="password-help"
+            class="p-error"
+          >{{ errors.password }}</small>
+        </div>
+        <div class="field">
+          <label
+            for="passwordConfirm"
+            class="block text-900 font-medium mb-2"
+          >{{ $t('auth.passwordConfirm') }}</label>
+          <client-only>
+            <InputText
+              id="passwordConfirm"
+              v-model="passwordConfirm"
+              aria-describedby="password-confirm-help"
+              type="password"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.passwordConfirm }"
+            />
+          </client-only>
+          <small
+            id="password-confirm-help"
+            class="p-error"
+          >{{ errors.passwordConfirm }}</small>
         </div>
         <Button
           icon="pi pi-user"
@@ -194,7 +222,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput, { setErrors }: F
         >
           {{ $t('auth.register') }}
         </Button>
-      </div>
-    </form>
-  </div>
+      </form>
+    </template>
+  </Card>
 </template>

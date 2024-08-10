@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import Card from 'primevue/card'
-import { object, string } from 'zod'
+import type { UserLoginInput, UserLoginType } from '@repo/queries/composables/graphql.ts'
+import * as z from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useLoginMutation } from '@repo/queries/composables/graphql'
-import type { UserLoginInput, UserLoginType } from '@repo/queries/composables/graphql.ts'
 import { useAuthStore } from '@/stores/auth-store'
 import { type FormActions } from 'vee-validate'
 
@@ -11,14 +10,13 @@ const { t } = useI18n()
 const { onLogin } = useApollo()
 const router = useRouter()
 const authStore = useAuthStore()
-
 const localePath = useLocalePath()
 
 const { defineField, handleSubmit, errors } = useForm<UserLoginInput>({
   validationSchema: toTypedSchema(
-    object({
-      username: string().min(2),
-      password: string().min(6),
+    z.object({
+      username: z.string().min(2),
+      password: z.string().min(6),
     })
   )
 })
@@ -37,13 +35,11 @@ onDone(async (result: { data?: { login: UserLoginType } | null }) => {
 })
 
 const onSubmit = handleSubmit(async (
-  values: UserLoginInput,
-  { setErrors }: FormActions<{ username: string; password: string }>,
+  userLoginInput: UserLoginInput,
+  { setErrors }: FormActions<UserLoginInput>,
 ) => {
   try {
-    await mutate({
-      userLoginInput: values
-    })
+    await mutate({ userLoginInput })
   } catch (e) {
     setErrors({ username: t('auth.error'), password: t('auth.error') })
   }
@@ -64,8 +60,11 @@ const onSubmit = handleSubmit(async (
         <div class="text-900 text-3xl font-medium mb-3">
           {{ $t('auth.welcome') }}
         </div>
-        <span class="mr-2">{{ $t('auth.not_account') }}</span>
-        <nuxt-link :to="localePath({ name: 'auth-register' })">
+        <span class="mr-2">{{ $t('auth.notAccount') }}</span>
+        <nuxt-link
+          :to="localePath({ name: 'auth-register' })"
+          class="font-medium text-blue-500"
+        >
           {{ $t('auth.create') }}
         </nuxt-link>
       </div>
@@ -79,12 +78,15 @@ const onSubmit = handleSubmit(async (
           >
             {{ $t('auth.username') }}
           </label>
-          <InputText
-            v-model="username"
-            aria-describedby="username-help"
-            class="w-full mb-3"
-            :invalid="!!errors.username"
-          />
+          <client-only>
+            <InputText
+              id="username"
+              v-model="username"
+              aria-describedby="username-help"
+              class="w-full mb-3"
+              :invalid="!!errors.username"
+            />
+          </client-only>
           <small
             id="username-help"
             class="p-error"
@@ -97,13 +99,16 @@ const onSubmit = handleSubmit(async (
             for="password"
             class="block text-900 font-medium mb-2"
           >{{ $t('auth.password') }}</label>
-          <InputText
-            v-model="password"
-            aria-describedby="password-help"
-            type="password"
-            class="w-full mb-3"
-            :invalid="!!errors.password"
-          />
+          <client-only>
+            <InputText
+              id="password"
+              v-model="password"
+              aria-describedby="password-help"
+              type="password"
+              class="w-full mb-3"
+              :invalid="!!errors.password"
+            />
+          </client-only>
           <small
             id="password-help"
             class="p-error"
