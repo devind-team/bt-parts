@@ -1,8 +1,4 @@
-import path from 'path'
-
 export function useFilters() {
-  const basename = (name: string): string => path.basename(name)
-
   const date = (rd: string): string => {
     if (rd) {
       const time = rd.split('T')
@@ -33,5 +29,5 @@ export function useFilters() {
     return formatter.format(new Date(rd))
   }
 
-  return { basename, date, dateTimeHM, timeHM, textLength }
+  return { date, dateTimeHM, timeHM, textLength }
 }

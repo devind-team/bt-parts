@@ -4,6 +4,13 @@ import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-07-06',
+  runtimeConfig: {
+    apiUrl: '',
+    public: {
+      apiUrlBrowser: '',
+      wsUrlBrowser: '',
+    },
+  },
   alias: {
     '@repo/queries': fileURLToPath(new URL('../../packages/queries/src', import.meta.url)),
   },
@@ -36,6 +43,7 @@ export default defineNuxtConfig({
   imports: {
     autoImport: true,
   },
+  // ---------- settings ----------
   app: {
     head: {
       title: 'Главная',
@@ -44,7 +52,11 @@ export default defineNuxtConfig({
   },
   apollo: {
     clients: {
-      default: './src/shared/graphql/client.ts',
+      default: {
+        httpEndpoint: process.env.NUXT_API_URL || 'http://localhost:3000/api/graphql',
+        browserHttpEndpoint: process.env.NUXT_PUBLIC_API_URL_BROWSER || 'http://localhost:3000/api/graphql',
+        wsEndpoint: process.env.NUXT_PUBLIC_WS_URL_BROWSER || 'ws://localhost:3000/api/graphql',
+      },
     },
   },
   i18n: {
@@ -68,6 +80,7 @@ export default defineNuxtConfig({
     },
     importTheme: { from: '@@/theme.ts' },
   },
+  // ---------- build ----------
   vite: {
     plugins: [nxViteTsPaths()],
   },
