@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import PvContainer from '@/widgets/layout/ui/PvContainer.vue'
-
 const { t } = useI18n()
 const localePath = useLocalePath()
 useHead({ title: t('title') })
-
 </script>
 
 <template>

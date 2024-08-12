@@ -10,8 +10,11 @@ const authStore = useAuthStore()
 const router = useRouter()
 const localePath = useLocalePath()
 
-await onLogout()
-authStore.user = null
+onUnmounted(async () => {
+  await onLogout()
+  authStore.user = null
+})
+
 router.push(localePath({ name: 'index' }))
 </script>
 

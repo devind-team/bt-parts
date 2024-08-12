@@ -26,7 +26,7 @@ WORKDIR /app
 
 RUN npm i -g pm2
 
-COPY --from=builder /build/apps/client/.output ./
+COPY --from=builder /build/apps/client ./
 
-CMD [ "pm2-runtime", "./server/index.mjs" ]
+CMD [ "pm2-runtime", ".output/server/index.mjs" ]
   
