@@ -48,7 +48,7 @@ const onSubmit = handleSubmit(async (
 </script>
 
 <template>
-  <Card class="pt-4 shadow-2 mx-auto w-30rem">
+  <Card class="pt-4 shadow-2 mx-auto md:w-6 xl:w-5">
     <template #header>
       <div class="text-center mb-5">
         <img
