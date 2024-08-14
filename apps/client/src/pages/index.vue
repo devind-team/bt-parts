@@ -18,14 +18,27 @@ useHead({ title: t('title') })
             <p class="mt-0 mb-4 text-700 line-height-3">
               {{ t('about') }}
             </p>
-            <Button
-              type="button"
-              class="p-button-outlined"
-              as="router-link"
-              :to="localePath({ name: 'auth-register' })"
-            >
-              {{ t('auth.doOrder') }}
-            </Button>
+            <div class="flex align-items-baseline align-content-between gap-3">
+              <Button
+                type="button"
+                class="p-button-outlined"
+                as="router-link"
+                :to="localePath({ name: 'products' })"
+              >
+                {{ t('products.doSearch') }}
+              </Button>
+              <div class="mt-0 mb-4 text-700 line-height-3">
+                {{ t('or') }}
+              </div>
+              <Button
+                type="button"
+                class="p-button-outlined"
+                as="router-link"
+                :to="localePath({ name: 'auth-register' })"
+              >
+                {{ t('auth.doOrder') }}
+              </Button>
+            </div>
           </section>
         </div>
         <div class="col-12 md:col-6 hidden md:block overflow-hidden">

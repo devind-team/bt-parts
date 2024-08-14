@@ -11,6 +11,7 @@
   "chose": "Выбрать",
   "emptyFile": "Файл не выбран",
   "cancel": "Отменить",
+  "or": "или",
   "auth": {
     "login": "Войти",
     "authorization": "Авторизация",
@@ -35,7 +36,7 @@
     "create": "Создать!",
     "welcome": "Добро пожаловать!",
     "forgotPassword": "Забыли пароль?",
-    "doOrder": "Зарегистрироваться и сделать заказ"
+    "doOrder": "Сделать заказ"
   },
   "features": {
     "original": "Оригинал",
@@ -71,7 +72,8 @@
     "successUpdate": "Данные успешно обновлены",
     "changeAvatar": "Изменить аватар"
   },
-  "search": {
-    "title": "Поиск"
+  "products": {
+    "title": "Поиск",
+    "doSearch": "Поискать товар"
   }
 }
