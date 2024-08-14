@@ -2,7 +2,7 @@
 #import "../fragments/product-fields.graphql"
 #import "../fragments/manufacturer-fields.graphql"
 
-query Products($search: String, $first: Int, $after: String, $skip: Int) {
+query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
   products(
     where: {
       OR: [{ vendorCode: { contains: $search } }, { nameRu: { contains: $search } }, { nameEn: { contains: $search } }]
@@ -23,7 +23,9 @@ query Products($search: String, $first: Int, $after: String, $skip: Int) {
     edges {
       node {
         ...ProductFields
-        ...ManufacturerFields
+        manufacturer {
+          ...ManufacturerFields
+        }
         prices {
           ...PriceFields
         }

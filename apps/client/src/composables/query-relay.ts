@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 import type { ComputedRef } from 'vue'
 import { computed, onMounted, watch } from 'vue'
 import { ApolloCache } from '@apollo/client'
