@@ -327,7 +327,7 @@ type Item {
 }
 
 type SupplierCount {
-  products: Int!
+  prices: Int!
 }
 
 """Supplier model"""
@@ -338,7 +338,7 @@ type Supplier {
   """Supplier name"""
   name: String!
   location: Location!
-  products: [Price!]
+  prices: [Price!]
   _count: SupplierCount!
 }
 
@@ -356,12 +356,6 @@ type Price {
 
   """Delivery time in days to the warehouse"""
   duration: Int
-
-  """Supplier name"""
-  supplierName: String!
-
-  """Supplier's country"""
-  country: String
 
   """Site"""
   site: String
@@ -386,7 +380,7 @@ type Price {
   """Product"""
   product: Product!
   item: [Item!]
-  Supplier: Supplier
+  supplier: Supplier
   _count: PriceCount!
 }
 
@@ -1176,8 +1170,6 @@ input PriceWhereInput {
   id: StringFilter
   price: DecimalFilter
   duration: IntNullableFilter
-  supplierName: StringFilter
-  country: StringNullableFilter
   site: StringNullableFilter
   comment: StringNullableFilter
   relevant: BoolNullableFilter
@@ -1188,7 +1180,7 @@ input PriceWhereInput {
   supplierId: StringNullableFilter
   product: ProductRelationFilter
   item: ItemListRelationFilter
-  Supplier: SupplierNullableRelationFilter
+  supplier: SupplierNullableRelationFilter
 }
 
 input DecimalFilter {
@@ -1268,7 +1260,7 @@ input SupplierWhereInput {
   id: StringFilter
   name: StringFilter
   location: EnumLocationFilter
-  products: PriceListRelationFilter
+  prices: PriceListRelationFilter
 }
 
 input AttributeValueListRelationFilter {
@@ -1601,8 +1593,6 @@ input PriceOrderByWithRelationInput {
   id: SortOrder
   price: SortOrder
   duration: SortOrderInput
-  supplierName: SortOrder
-  country: SortOrderInput
   site: SortOrderInput
   comment: SortOrderInput
   relevant: SortOrderInput
@@ -1613,14 +1603,14 @@ input PriceOrderByWithRelationInput {
   supplierId: SortOrderInput
   product: ProductOrderByWithRelationInput
   item: ItemOrderByRelationAggregateInput
-  Supplier: SupplierOrderByWithRelationInput
+  supplier: SupplierOrderByWithRelationInput
 }
 
 input SupplierOrderByWithRelationInput {
   id: SortOrder
   name: SortOrder
   location: SortOrder
-  products: PriceOrderByRelationAggregateInput
+  prices: PriceOrderByRelationAggregateInput
 }
 
 input ItemWhereUniqueInput {
