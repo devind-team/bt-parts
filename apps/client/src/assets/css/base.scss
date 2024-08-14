@@ -44,3 +44,8 @@ body {
   --p-toolbar-height: 66px;
   --p-toolbar-border-radius: 0px !important;
 }
+
+.title {
+  @extend .text-3xl;
+  @extend .my-2;
+}

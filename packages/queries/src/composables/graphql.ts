@@ -1818,6 +1818,22 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
 
+export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, supplierName: string, country?: string | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
+
+export type ManufacturerFieldsFragment = { __typename?: 'Manufacturer', id: string, name: string };
+
+export type ProductFieldsFragment = { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number };
+
+export type ProductsQueryVariables = Exact<{
+  search?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, supplierName: string, country?: string | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null }> | null } }> | null } };
+
 export const UserFieldsFragmentDoc = gql`
     fragment UserFields on User {
   id
@@ -1835,6 +1851,38 @@ export const UserFieldsFragmentDoc = gql`
   createdAt
   updatedAt
   tz
+  __typename
+}
+    `;
+export const PriceFieldsFragmentDoc = gql`
+    fragment PriceFields on Price {
+  id
+  price
+  duration
+  supplierName
+  country
+  site
+  comment
+  createdAt
+  validAt
+  __typename
+}
+    `;
+export const ManufacturerFieldsFragmentDoc = gql`
+    fragment ManufacturerFields on Manufacturer {
+  id
+  name
+}
+    `;
+export const ProductFieldsFragmentDoc = gql`
+    fragment ProductFields on Product {
+  id
+  vendorCode
+  nameEn
+  nameRu
+  aliases
+  original
+  stock
   __typename
 }
     `;
@@ -1987,3 +2035,58 @@ export function useMeLazyQuery(options: VueApolloComposable.UseQueryOptions<MeQu
   return VueApolloComposable.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export const ProductsDocument = gql`
+    query Products($search: String, $first: Int, $after: String, $skip: Int) {
+  products(
+    where: {OR: [{vendorCode: {contains: $search}}, {nameRu: {contains: $search}}, {nameEn: {contains: $search}}]}
+    orderBy: {id: desc}
+    first: $first
+    after: $after
+    skip: $skip
+  ) {
+    totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+      __typename
+    }
+    edges {
+      node {
+        ...ProductFields
+        prices {
+          ...PriceFields
+        }
+      }
+    }
+  }
+}
+    ${ProductFieldsFragmentDoc}
+${PriceFieldsFragmentDoc}`;
+
+/**
+ * __useProductsQuery__
+ *
+ * To run a query within a Vue component, call `useProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useProductsQuery({
+ *   search: // value for 'search'
+ *   first: // value for 'first'
+ *   after: // value for 'after'
+ *   skip: // value for 'skip'
+ * });
+ */
+export function useProductsQuery(variables: ProductsQueryVariables | VueCompositionApi.Ref<ProductsQueryVariables> | ReactiveFunction<ProductsQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<ProductsQuery, ProductsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<ProductsQuery, ProductsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<ProductsQuery, ProductsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, variables, options);
+}
+export function useProductsLazyQuery(variables: ProductsQueryVariables | VueCompositionApi.Ref<ProductsQueryVariables> | ReactiveFunction<ProductsQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<ProductsQuery, ProductsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<ProductsQuery, ProductsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<ProductsQuery, ProductsQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, variables, options);
+}
+export type ProductsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ProductsQuery, ProductsQueryVariables>;

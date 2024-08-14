@@ -1,0 +1,4 @@
+fragment ManufacturerFields on Manufacturer {
+  id
+  name
+}

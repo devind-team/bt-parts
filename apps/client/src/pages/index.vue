@@ -27,8 +27,8 @@ useHead({ title: t('title') })
               >
                 {{ t('products.doSearch') }}
               </Button>
-              <div class="mt-0 mb-4 text-700 line-height-3">
-                {{ t('or') }}
+              <div class="text-xl text-900 text-blue-600">
+                {{ t('and') }}
               </div>
               <Button
                 type="button"
