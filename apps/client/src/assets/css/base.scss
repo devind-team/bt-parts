@@ -5,6 +5,12 @@ html {
   line-height: 1.5;
   tab-size: 4;
   scroll-behavior: smooth;
+
+  body {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
 }
 
 *,
@@ -32,4 +38,9 @@ body {
 // ------------- AVATAR -------------
 .p-avatar img {
   object-fit: cover;
+}
+
+:root {
+  --p-toolbar-height: 66px;
+  --p-toolbar-border-radius: 0px !important;
 }

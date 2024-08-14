@@ -80,3 +80,15 @@ const toggleProfileMenu = (event: PointerEvent) => {
     </template>
   </Toolbar>
 </template>
+
+<style lang="scss">
+.p-toolbar {
+  height: var(--p-toolbar-height);
+  position: fixed;
+  border: none !important;
+  border-bottom: 1px solid var(--p-toolbar-border-color) !important;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+</style>
