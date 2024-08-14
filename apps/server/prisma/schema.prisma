@@ -172,11 +172,13 @@ model Manufacturer {
   id       String    @id @default(uuid())
   /// Manufacturer name
   /// @Validator.MinLength(3)
-  name     String    @db.VarChar(512)
+  name     String    @unique @db.VarChar(512)
   products Product[]
+
+  @@map("manufacturer")
 }
 
-///Supplier model
+/// Supplier model
 model Supplier {
   /// Supplier ID
   id       String   @id @default(uuid())
@@ -184,7 +186,9 @@ model Supplier {
   /// @Validator.MinLength(3)
   name     String   @db.VarChar(512)
   location Location @default(CHINA)
-  products Price[]
+  prices   Price[]
+
+  @@map("supplier")
 }
 
 /// List of available products
@@ -243,18 +247,12 @@ model Price {
   /// Delivery time in days to the warehouse
   duration Int?    @default(0)
 
-  /// Supplier name
-  /// @Validator.MinLength(2)
-  /// @Validator.MaxLength(200)
-  supplierName String   @map("supplier_name") @db.VarChar(200)
-  /// Supplier's country
-  country      String?  @db.VarChar(50)
   /// Site
-  site         String?  @db.VarChar(128)
+  site     String?  @db.VarChar(128)
   /// Comment
-  comment      String?
+  comment  String?
   /// Relevant
-  relevant     Boolean? @default(true)
+  relevant Boolean? @default(true)
 
   /// Created date
   createdAt DateTime  @default(now()) @map("created_at")
@@ -267,7 +265,7 @@ model Price {
   product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  String    @map("product_id")
   item       Item[]
-  Supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
   supplierId String?
 
   @@map("prices")
