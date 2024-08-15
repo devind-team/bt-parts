@@ -45,7 +45,7 @@ useHead({ title: t('title') })
           <img
             src="/icon.svg"
             alt="Image"
-            class="md:ml-auto block md:h-full"
+            class="md:ml-auto w-5 block md:h-full"
           >
         </div>
       </div>

@@ -17,6 +17,11 @@ const items = ref([
     command: () => router.push(localePath({ name: 'profile-me' })),
   },
   {
+    label: t('orders.title'),
+    icon: 'pi pi-shopping-cart',
+    command: () => router.push(localePath({ name: 'orders' })),
+  },
+  {
     label: t('auth.logout'),
     icon: 'pi pi-sign-out',
     command: () => router.push(localePath({ name: 'auth-logout' })),
