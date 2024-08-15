@@ -25,6 +25,9 @@
       "@items/*": [
         "apps/server/src/app/items/*"
       ],
+      "@orders/*": [
+        "apps/server/src/app/orders/*"
+      ],
       "@s3/*": [
         "apps/server/src/app/s3/*"
       ],

@@ -9,6 +9,7 @@ import { PrismaService } from '@common/services/prisma.service'
 import { AuthModule } from '@auth/auth.module'
 import { ItemsModule } from '@items/items.module'
 import { ProductsModule } from '@products/products.module'
+import { OrdersModule } from '@orders/orders.module'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -25,6 +26,7 @@ import { AppService } from './app.service'
     AuthModule,
     ItemsModule,
     ProductsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

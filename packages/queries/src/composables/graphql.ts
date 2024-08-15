@@ -267,6 +267,16 @@ export type CompaniesWhereInput = {
   name?: InputMaybe<StringFilter>;
 };
 
+export type CreateOrderInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  fileId: Scalars['String']['input'];
+};
+
+export type CreateOrderType = {
+  __typename?: 'CreateOrderType';
+  order: Order;
+};
+
 export type DateTimeFilter = {
   equals?: InputMaybe<Scalars['DateTime']['input']>;
   gt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -315,6 +325,12 @@ export type DeleteOrderItemsType = {
   __typename?: 'DeleteOrderItemsType';
   /** Идентификаторы удаленных записей */
   deleteIds: Array<Scalars['String']['output']>;
+};
+
+export type DeleteOrderType = {
+  __typename?: 'DeleteOrderType';
+  /** Идентификатор удаленного заказа */
+  id: Scalars['String']['output'];
 };
 
 export type EnumGenderFilter = {
@@ -381,10 +397,44 @@ export type FileCount = {
   products: Scalars['Int']['output'];
 };
 
+export type FileCountAggregate = {
+  __typename?: 'FileCountAggregate';
+  _all: Scalars['Int']['output'];
+  bucket: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['Int']['output'];
+  name: Scalars['Int']['output'];
+  updatedAt: Scalars['Int']['output'];
+  userId: Scalars['Int']['output'];
+};
+
 export type FileListRelationFilter = {
   every?: InputMaybe<FileWhereInput>;
   none?: InputMaybe<FileWhereInput>;
   some?: InputMaybe<FileWhereInput>;
+};
+
+export type FileMaxAggregate = {
+  __typename?: 'FileMaxAggregate';
+  bucket?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type FileMinAggregate = {
+  __typename?: 'FileMinAggregate';
+  bucket?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type FileOrderByRelationAggregateInput = {
@@ -705,13 +755,17 @@ export type ManufacturerWhereInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   addStatusItems: Array<Item>;
+  addStatusOrder: Status;
   changeCoefficientItems: Array<Item>;
   changeQuantityItem: Item;
   changeSellingPriceItem: Item;
+  createOrder: CreateOrderType;
+  deleteOrder: DeleteOrderType;
   deleteOrderItems: DeleteOrderItemsType;
   login: UserLoginType;
   recountPrices: Array<Item>;
   register?: Maybe<UserLoginType>;
+  unloadOrder: File;
   updateUser: User;
   uploadAvatar: User;
 };
@@ -721,6 +775,12 @@ export type MutationAddStatusItemsArgs = {
   itemIds: Array<Scalars['String']['input']>;
   orderId: Scalars['String']['input'];
   status: ItemStatus;
+};
+
+
+export type MutationAddStatusOrderArgs = {
+  orderId: Scalars['String']['input'];
+  status: OrderStatus;
 };
 
 
@@ -743,6 +803,16 @@ export type MutationChangeSellingPriceItemArgs = {
 };
 
 
+export type MutationCreateOrderArgs = {
+  order: CreateOrderInput;
+};
+
+
+export type MutationDeleteOrderArgs = {
+  orderId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteOrderItemsArgs = {
   orderId: Scalars['String']['input'];
   where?: InputMaybe<ItemWhereInput>;
@@ -762,6 +832,11 @@ export type MutationRecountPricesArgs = {
 
 export type MutationRegisterArgs = {
   userRegisterInput: UserRegisterInput;
+};
+
+
+export type MutationUnloadOrderArgs = {
+  orderId: Scalars['String']['input'];
 };
 
 
@@ -950,6 +1025,13 @@ export type Order = {
   userId: Scalars['String']['output'];
 };
 
+export type OrderConnectionType = {
+  __typename?: 'OrderConnectionType';
+  edges?: Maybe<Array<OrderEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type OrderCount = {
   __typename?: 'OrderCount';
   comments: Scalars['Int']['output'];
@@ -957,10 +1039,44 @@ export type OrderCount = {
   statuses: Scalars['Int']['output'];
 };
 
+export type OrderCountAggregate = {
+  __typename?: 'OrderCountAggregate';
+  _all: Scalars['Int']['output'];
+  address: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  managerId: Scalars['Int']['output'];
+  userId: Scalars['Int']['output'];
+};
+
+export type OrderEdge = {
+  __typename?: 'OrderEdge';
+  cursor: Scalars['String']['output'];
+  node: Order;
+};
+
 export type OrderListRelationFilter = {
   every?: InputMaybe<OrderWhereInput>;
   none?: InputMaybe<OrderWhereInput>;
   some?: InputMaybe<OrderWhereInput>;
+};
+
+export type OrderMaxAggregate = {
+  __typename?: 'OrderMaxAggregate';
+  address?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  managerId?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrderMinAggregate = {
+  __typename?: 'OrderMinAggregate';
+  address?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  managerId?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type OrderOrderByRelationAggregateInput = {
@@ -985,6 +1101,13 @@ export type OrderRelationFilter = {
   isNot?: InputMaybe<OrderWhereInput>;
 };
 
+export type OrderScalarFieldEnum =
+  | 'address'
+  | 'createdAt'
+  | 'id'
+  | 'managerId'
+  | 'userId';
+
 /** Order status list */
 export type OrderStatus =
   | 'ADOPTED'
@@ -1004,6 +1127,22 @@ export type OrderWhereInput = {
   comments?: InputMaybe<CommentListRelationFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
+  items?: InputMaybe<ItemListRelationFilter>;
+  manager?: InputMaybe<UserNullableRelationFilter>;
+  managerId?: InputMaybe<StringNullableFilter>;
+  statuses?: InputMaybe<StatusListRelationFilter>;
+  user?: InputMaybe<UserRelationFilter>;
+  userId?: InputMaybe<StringFilter>;
+};
+
+export type OrderWhereUniqueInput = {
+  AND?: InputMaybe<Array<OrderWhereInput>>;
+  NOT?: InputMaybe<Array<OrderWhereInput>>;
+  OR?: InputMaybe<Array<OrderWhereInput>>;
+  address?: InputMaybe<StringNullableFilter>;
+  comments?: InputMaybe<CommentListRelationFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<Scalars['String']['input']>;
   items?: InputMaybe<ItemListRelationFilter>;
   manager?: InputMaybe<UserNullableRelationFilter>;
   managerId?: InputMaybe<StringNullableFilter>;
@@ -1338,6 +1477,8 @@ export type Query = {
   items: ItemConnectionType;
   itemsByLastStatus: ItemConnectionType;
   me: User;
+  order: Order;
+  orders: OrderConnectionType;
   products: ProductConnectionType;
 };
 
@@ -1368,6 +1509,25 @@ export type QueryItemsByLastStatusArgs = {
   status: ItemStatus;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ItemWhereInput>;
+};
+
+
+export type QueryOrderArgs = {
+  orderId: Scalars['String']['input'];
+};
+
+
+export type QueryOrdersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  cursor?: InputMaybe<OrderWhereUniqueInput>;
+  distinct?: InputMaybe<Array<OrderScalarFieldEnum>>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OrderOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<OrderWhereInput>;
 };
 
 
@@ -1421,6 +1581,16 @@ export type Status = {
   userId?: Maybe<Scalars['String']['output']>;
 };
 
+export type StatusCountAggregate = {
+  __typename?: 'StatusCountAggregate';
+  _all: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  orderId: Scalars['Int']['output'];
+  status: Scalars['Int']['output'];
+  userId: Scalars['Int']['output'];
+};
+
 /** The model of the item statuses in the order */
 export type StatusItem = {
   __typename?: 'StatusItem';
@@ -1465,6 +1635,24 @@ export type StatusListRelationFilter = {
   every?: InputMaybe<StatusWhereInput>;
   none?: InputMaybe<StatusWhereInput>;
   some?: InputMaybe<StatusWhereInput>;
+};
+
+export type StatusMaxAggregate = {
+  __typename?: 'StatusMaxAggregate';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  orderId?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<OrderStatus>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type StatusMinAggregate = {
+  __typename?: 'StatusMinAggregate';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  orderId?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<OrderStatus>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type StatusOrderByRelationAggregateInput = {
