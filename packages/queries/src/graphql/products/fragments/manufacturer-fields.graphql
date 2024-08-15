@@ -1,4 +1,5 @@
 fragment ManufacturerFields on Manufacturer {
   id
   name
+  __typename
 }

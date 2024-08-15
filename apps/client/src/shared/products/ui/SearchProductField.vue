@@ -14,13 +14,14 @@ const handleSearch = () => {
 </script>
 
 <template>
-  <div class="flex flex-row gap-2 p-3">
+  <div class="flex gap-2 p-3">
     <InputText
       id="products-search"
       v-model="search"
       class="flex-1"
       :placeholder="$t('products.search')"
       size="large"
+      @keyup.enter="handleSearch"
     />
     <Button
       :label="$t('find')"

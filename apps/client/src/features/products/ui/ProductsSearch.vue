@@ -14,7 +14,7 @@ const handleSearch = (q: string) => {
 
 const search = computed(() => route.query.q || '')
 
-const { data: products } = useQueryRelay<SearchProductsQuery, SearchProductsQueryVariables>({
+const { data: products, loading, pagination } = useQueryRelay<SearchProductsQuery, SearchProductsQueryVariables>({
   document: searchProductsQuery,
   variables: () => ({
     search: search.value
@@ -27,12 +27,19 @@ const { data: products } = useQueryRelay<SearchProductsQuery, SearchProductsQuer
     <template #header>
       <SearchProductField
         :q="search"
+        help="Нашлось 10 записей"
         @search="handleSearch"
       />
     </template>
+    <template #subtitle>
+      {{ $t('count', { count: pagination.count.value }) }}
+    </template>
     <template #content>
-      <div>{{ products }}</div>
-      <ProductsDataView />
+      <ProgressSpinner v-if="loading" />
+      <ProductsDataView
+        v-else
+        :products="products"
+      />
     </template>
   </Card>
 </template>

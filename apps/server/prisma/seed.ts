@@ -61,7 +61,11 @@ async function main() {
     const vendorCode = String(price.vendorCode)
     if (!productsIds.has(vendorCode)) {
       const product = await prisma.product.create({
-        data: { vendorCode, aliases: String(price.aliases) },
+        data: {
+          vendorCode,
+          aliases: price.aliases ? String(price.aliases) : null,
+          manufacturerId: manufacturerIds.get(price.manufacturer),
+        },
       })
       productsIds.set(vendorCode, product.id)
     }

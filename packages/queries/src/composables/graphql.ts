@@ -1023,12 +1023,9 @@ export type PageInfo = {
 /** Products prices model */
 export type Price = {
   __typename?: 'Price';
-  Supplier?: Maybe<Supplier>;
   _count: PriceCount;
   /** Comment */
   comment?: Maybe<Scalars['String']['output']>;
-  /** Supplier's country */
-  country?: Maybe<Scalars['String']['output']>;
   /** Created date */
   createdAt: Scalars['DateTime']['output'];
   /** Delivery time in days to the warehouse */
@@ -1045,9 +1042,8 @@ export type Price = {
   relevant?: Maybe<Scalars['Boolean']['output']>;
   /** Site */
   site?: Maybe<Scalars['String']['output']>;
+  supplier?: Maybe<Supplier>;
   supplierId?: Maybe<Scalars['String']['output']>;
-  /** Supplier name */
-  supplierName: Scalars['String']['output'];
   /** Updated date */
   updatedAt: Scalars['DateTime']['output'];
   /** Price validity date */
@@ -1075,9 +1071,7 @@ export type PriceOrderByRelationAggregateInput = {
 };
 
 export type PriceOrderByWithRelationInput = {
-  Supplier?: InputMaybe<SupplierOrderByWithRelationInput>;
   comment?: InputMaybe<SortOrderInput>;
-  country?: InputMaybe<SortOrderInput>;
   createdAt?: InputMaybe<SortOrder>;
   duration?: InputMaybe<SortOrderInput>;
   id?: InputMaybe<SortOrder>;
@@ -1087,8 +1081,8 @@ export type PriceOrderByWithRelationInput = {
   productId?: InputMaybe<SortOrder>;
   relevant?: InputMaybe<SortOrderInput>;
   site?: InputMaybe<SortOrderInput>;
+  supplier?: InputMaybe<SupplierOrderByWithRelationInput>;
   supplierId?: InputMaybe<SortOrderInput>;
-  supplierName?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
   validAt?: InputMaybe<SortOrderInput>;
 };
@@ -1097,9 +1091,7 @@ export type PriceWhereInput = {
   AND?: InputMaybe<Array<PriceWhereInput>>;
   NOT?: InputMaybe<Array<PriceWhereInput>>;
   OR?: InputMaybe<Array<PriceWhereInput>>;
-  Supplier?: InputMaybe<SupplierNullableRelationFilter>;
   comment?: InputMaybe<StringNullableFilter>;
-  country?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   duration?: InputMaybe<IntNullableFilter>;
   id?: InputMaybe<StringFilter>;
@@ -1109,8 +1101,8 @@ export type PriceWhereInput = {
   productId?: InputMaybe<StringFilter>;
   relevant?: InputMaybe<BoolNullableFilter>;
   site?: InputMaybe<StringNullableFilter>;
+  supplier?: InputMaybe<SupplierNullableRelationFilter>;
   supplierId?: InputMaybe<StringNullableFilter>;
-  supplierName?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   validAt?: InputMaybe<DateTimeNullableFilter>;
 };
@@ -1531,12 +1523,12 @@ export type Supplier = {
   location: Location;
   /** Supplier name */
   name: Scalars['String']['output'];
-  products?: Maybe<Array<Price>>;
+  prices?: Maybe<Array<Price>>;
 };
 
 export type SupplierCount = {
   __typename?: 'SupplierCount';
-  products: Scalars['Int']['output'];
+  prices: Scalars['Int']['output'];
 };
 
 export type SupplierNullableRelationFilter = {
@@ -1548,7 +1540,7 @@ export type SupplierOrderByWithRelationInput = {
   id?: InputMaybe<SortOrder>;
   location?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
-  products?: InputMaybe<PriceOrderByRelationAggregateInput>;
+  prices?: InputMaybe<PriceOrderByRelationAggregateInput>;
 };
 
 export type SupplierWhereInput = {
@@ -1558,7 +1550,7 @@ export type SupplierWhereInput = {
   id?: InputMaybe<StringFilter>;
   location?: InputMaybe<EnumLocationFilter>;
   name?: InputMaybe<StringFilter>;
-  products?: InputMaybe<PriceListRelationFilter>;
+  prices?: InputMaybe<PriceListRelationFilter>;
 };
 
 export type UpdateUserInput = {
@@ -1818,11 +1810,11 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
 
-export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, supplierName: string, country?: string | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
+export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
 
-export type ManufacturerFieldsFragment = { __typename?: 'Manufacturer', id: string, name: string };
+export type ManufacturerFieldsFragment = { __typename: 'Manufacturer', id: string, name: string };
 
-export type ProductFieldsFragment = { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number };
+export type ProductFieldsFragment = { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null };
 
 export type SearchProductsQueryVariables = Exact<{
   search?: InputMaybe<Scalars['String']['input']>;
@@ -1832,7 +1824,7 @@ export type SearchProductsQueryVariables = Exact<{
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturer?: { __typename?: 'Manufacturer', id: string, name: string } | null, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, supplierName: string, country?: string | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null }> | null } }> | null } };
+export type SearchProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null }> | null } }> | null } };
 
 export const UserFieldsFragmentDoc = gql`
     fragment UserFields on User {
@@ -1859,8 +1851,6 @@ export const PriceFieldsFragmentDoc = gql`
   id
   price
   duration
-  supplierName
-  country
   site
   comment
   createdAt
@@ -1872,6 +1862,7 @@ export const ManufacturerFieldsFragmentDoc = gql`
     fragment ManufacturerFields on Manufacturer {
   id
   name
+  __typename
 }
     `;
 export const ProductFieldsFragmentDoc = gql`
@@ -1883,6 +1874,7 @@ export const ProductFieldsFragmentDoc = gql`
   aliases
   original
   stock
+  manufacturerId
   __typename
 }
     `;

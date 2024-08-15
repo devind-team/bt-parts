@@ -6,5 +6,6 @@ fragment ProductFields on Product {
   aliases
   original
   stock
+  manufacturerId
   __typename
 }
