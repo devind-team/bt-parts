@@ -17,6 +17,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/color-mode',
     '@primevue/nuxt-module',
+    '@nuxt/content',
     '@nuxtjs/apollo',
     '@pinia/nuxt',
     '@nuxtjs/i18n',
