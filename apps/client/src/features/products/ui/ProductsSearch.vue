@@ -27,7 +27,6 @@ const { data: products, loading, pagination } = useQueryRelay<SearchProductsQuer
     <template #header>
       <SearchProductField
         :q="search"
-        help="Нашлось 10 записей"
         @search="handleSearch"
       />
     </template>
