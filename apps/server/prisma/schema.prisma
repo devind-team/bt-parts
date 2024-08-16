@@ -364,6 +364,8 @@ model Status {
 enum OrderStatus {
   /// Order created
   CREATED
+  /// The order was request by the user
+  REQUEST
   /// The order was accepted by the manager
   ADOPTED
   /// The order has been priced
@@ -378,6 +380,8 @@ enum OrderStatus {
   PARTIALLY
   /// The order is closed
   CLOSED
+  /// The order is canceled
+  CANCEL
 }
 
 /// Comments on the order model
