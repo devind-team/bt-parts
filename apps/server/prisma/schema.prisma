@@ -492,6 +492,8 @@ model StatusItem {
 enum ItemStatus {
   /// The Item has been created
   CREATED
+  /// We can't deliver
+  UNABAIBLE
   /// ПРОЦЕНЕН
   PRICED
   /// The Item has been approved
@@ -506,4 +508,6 @@ enum ItemStatus {
   RUSTOCK
   /// Completed
   COMPLETED
+  /// Item cancel
+  CANCEL
 }
