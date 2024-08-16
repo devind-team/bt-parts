@@ -8,6 +8,7 @@ import { AuthResolver } from './auth.resolver'
 import { AuthService } from './auth.service'
 import { JwtStrategy, LocalStrategy } from './strategies'
 import { bcryptServiceProvider } from './providers'
+import { CompanyService } from '@company/company.service'
 
 @Module({
   imports: [
@@ -29,7 +30,15 @@ import { bcryptServiceProvider } from './providers'
     }),
     ConfigModule,
   ],
-  providers: [bcryptServiceProvider, PrismaService, AuthService, AuthResolver, JwtStrategy, LocalStrategy],
+  providers: [
+    bcryptServiceProvider,
+    PrismaService,
+    AuthService,
+    AuthResolver,
+    JwtStrategy,
+    LocalStrategy,
+    CompanyService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

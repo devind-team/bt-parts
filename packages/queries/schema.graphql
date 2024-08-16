@@ -94,7 +94,7 @@ type Companies {
   location: Location!
 
   """Address"""
-  address: String!
+  address: String
   User: [User!]
   _count: CompaniesCount!
 }
@@ -597,6 +597,28 @@ type UserLoginType {
   user: User!
 }
 
+type CompaniesCountAggregate {
+  id: Int!
+  name: Int!
+  location: Int!
+  address: Int!
+  _all: Int!
+}
+
+type CompaniesMinAggregate {
+  id: String
+  name: String
+  location: Location
+  address: String
+}
+
+type CompaniesMaxAggregate {
+  id: String
+  name: String
+  location: Location
+  address: String
+}
+
 type DeleteOrderItemsType {
   """Идентификаторы удаленных записей"""
   deleteIds: [String!]!
@@ -1047,7 +1069,7 @@ input CompaniesWhereInput {
   id: StringFilter
   name: StringFilter
   location: EnumLocationFilter
-  address: StringFilter
+  address: StringNullableFilter
   User: UserListRelationFilter
 }
 
@@ -1522,7 +1544,7 @@ input CompaniesOrderByWithRelationInput {
   id: SortOrder
   name: SortOrder
   location: SortOrder
-  address: SortOrder
+  address: SortOrderInput
   User: UserOrderByRelationAggregateInput
 }
 
@@ -1702,7 +1724,7 @@ enum ProductScalarFieldEnum {
 
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
-  register(userRegisterInput: UserRegisterInput!): UserLoginType
+  register(userRegisterInput: UserRegisterInput!, companyInput: CompanyInput): UserLoginType
   uploadAvatar(fileId: String!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   addStatusItems(
@@ -1765,15 +1787,23 @@ input UserRegisterInput {
   lastName: String!
   firstName: String!
   patronymic: String
+  phone: String
 
   """Date of birthday """
   birthday: DateTime
+  companyName: String
 }
 
 """
 A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address.
 """
 scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
+
+input CompanyInput {
+  name: String!
+  location: Location
+  address: String
+}
 
 input UpdateUserInput {
   id: String

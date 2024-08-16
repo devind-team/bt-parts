@@ -5,6 +5,7 @@ import { AuthService } from '@auth/auth.service'
 import { LocalAuthGuard } from '@auth/auth.guard'
 import { UserLoginInput, UserLoginType, UserRegisterInput } from '@auth/dto'
 import { CurrentUser } from '@auth/auth.decorators'
+import { CompanyInput } from '@company/dto'
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -23,7 +24,10 @@ export class AuthResolver {
   }
 
   @Mutation(() => UserLoginType, { nullable: true })
-  async register(@Args('userRegisterInput') userRegisterInput: UserRegisterInput): Promise<UserLoginType> {
-    return await this.authService.register(userRegisterInput)
+  async register(
+    @Args('userRegisterInput') userRegisterInput: UserRegisterInput,
+    @Args('companyInput', { nullable: true }) companyInput?: CompanyInput,
+  ): Promise<UserLoginType> {
+    return await this.authService.register(userRegisterInput, companyInput)
   }
 }

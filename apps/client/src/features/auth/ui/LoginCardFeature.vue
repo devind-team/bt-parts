@@ -17,8 +17,8 @@ const { defineField, handleSubmit, errors } = useForm<UserLoginInput>({
     z.object({
       username: z.string().min(2),
       password: z.string().min(6),
-    })
-  )
+    }),
+  ),
 })
 
 const [username] = defineField('username')
@@ -34,16 +34,12 @@ onDone(async (result: { data?: { login: UserLoginType } | null }) => {
   await router.push(localePath({ name: 'index' }))
 })
 
-const onSubmit = handleSubmit(async (
-  userLoginInput: UserLoginInput,
-  { setErrors }: FormActions<UserLoginInput>,
-) => {
+const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors }: FormActions<UserLoginInput>) => {
   try {
     await mutate({ userLoginInput })
   } catch (e) {
     setErrors({ username: t('auth.error'), password: t('auth.error') })
   }
-
 })
 </script>
 

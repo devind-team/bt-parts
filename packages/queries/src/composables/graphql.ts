@@ -229,7 +229,7 @@ export type Companies = {
   User?: Maybe<Array<User>>;
   _count: CompaniesCount;
   /** Address */
-  address: Scalars['String']['output'];
+  address?: Maybe<Scalars['String']['output']>;
   /** Companies ID */
   id: Scalars['ID']['output'];
   /** Location */
@@ -243,6 +243,31 @@ export type CompaniesCount = {
   User: Scalars['Int']['output'];
 };
 
+export type CompaniesCountAggregate = {
+  __typename?: 'CompaniesCountAggregate';
+  _all: Scalars['Int']['output'];
+  address: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  location: Scalars['Int']['output'];
+  name: Scalars['Int']['output'];
+};
+
+export type CompaniesMaxAggregate = {
+  __typename?: 'CompaniesMaxAggregate';
+  address?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  location?: Maybe<Location>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type CompaniesMinAggregate = {
+  __typename?: 'CompaniesMinAggregate';
+  address?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  location?: Maybe<Location>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
 export type CompaniesNullableRelationFilter = {
   is?: InputMaybe<CompaniesWhereInput>;
   isNot?: InputMaybe<CompaniesWhereInput>;
@@ -250,7 +275,7 @@ export type CompaniesNullableRelationFilter = {
 
 export type CompaniesOrderByWithRelationInput = {
   User?: InputMaybe<UserOrderByRelationAggregateInput>;
-  address?: InputMaybe<SortOrder>;
+  address?: InputMaybe<SortOrderInput>;
   id?: InputMaybe<SortOrder>;
   location?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
@@ -261,10 +286,16 @@ export type CompaniesWhereInput = {
   NOT?: InputMaybe<Array<CompaniesWhereInput>>;
   OR?: InputMaybe<Array<CompaniesWhereInput>>;
   User?: InputMaybe<UserListRelationFilter>;
-  address?: InputMaybe<StringFilter>;
+  address?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   location?: InputMaybe<EnumLocationFilter>;
   name?: InputMaybe<StringFilter>;
+};
+
+export type CompanyInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Location>;
+  name: Scalars['String']['input'];
 };
 
 export type DateTimeFilter = {
@@ -761,6 +792,7 @@ export type MutationRecountPricesArgs = {
 
 
 export type MutationRegisterArgs = {
+  companyInput?: InputMaybe<CompanyInput>;
   userRegisterInput: UserRegisterInput;
 };
 
@@ -1738,11 +1770,13 @@ export type UserOrderByWithRelationInput = {
 export type UserRegisterInput = {
   /** Date of birthday  */
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['EmailAddress']['input'];
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
   patronymic?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
 };
 
@@ -1794,6 +1828,7 @@ export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Us
 
 export type RegisterMutationVariables = Exact<{
   userRegisterInput: UserRegisterInput;
+  companyInput: CompanyInput;
 }>;
 
 
@@ -1871,8 +1906,8 @@ export function useLoginMutation(options: VueApolloComposable.UseMutationOptions
 }
 export type LoginMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($userRegisterInput: UserRegisterInput!) {
-  register(userRegisterInput: $userRegisterInput) {
+    mutation Register($userRegisterInput: UserRegisterInput!, $companyInput: CompanyInput!) {
+  register(userRegisterInput: $userRegisterInput, companyInput: $companyInput) {
     accessToken
     user {
       ...UserFields
@@ -1895,6 +1930,7 @@ export const RegisterDocument = gql`
  * const { mutate, loading, error, onDone } = useRegisterMutation({
  *   variables: {
  *     userRegisterInput: // value for 'userRegisterInput'
+ *     companyInput: // value for 'companyInput'
  *   },
  * });
  */

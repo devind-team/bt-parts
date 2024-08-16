@@ -7,11 +7,14 @@ import { User } from '@generated/user'
 import type { Bcrypt } from '@auth/providers'
 import { BCRYPT } from '@auth/providers'
 import { JwtPayload } from '@auth/strategies'
+import { CompanyService } from '@company/company.service'
+import { CompanyInput } from '@company/dto'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly companyService: CompanyService,
     private readonly jwtService: JwtService,
     @Inject(BCRYPT) private readonly bcryptService: Bcrypt,
   ) {}
@@ -27,15 +30,18 @@ export class AuthService {
     return { accessToken, user }
   }
 
-  async register(userDto: UserRegisterInput): Promise<UserLoginType> {
+  async register(userDto: UserRegisterInput, companyDto: CompanyInput): Promise<UserLoginType> {
     const saltRounds = 10
     const password = await this.bcryptService.hash(userDto.password, saltRounds)
+    const company = await this.companyService.getCompany(companyDto)
     const user = await this.prismaService.user.create({
       data: {
         ...userDto,
         password,
+        companies: company ? { connect: { id: company.id } } : undefined,
       },
     })
+
     const accessToken = await this.createJwtToken(user)
     return { accessToken, user }
   }

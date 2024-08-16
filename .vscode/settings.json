@@ -1,6 +1,6 @@
 {
   "editor.tabSize": 2,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": null,
   "eslint.format.enable": false,
   "editor.detectIndentation": true,
   "typescript.validate.enable": true,
@@ -36,5 +36,10 @@
   },
   "html.format.wrapAttributes": "force-expand-multiline",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.debug": true
+  "eslint.debug": false,
+  "files.autoSave": "onFocusChange",
+  "prettier.endOfLine": "lf",
+  "prettier.embeddedLanguageFormatting": "auto",
+  "eslint.enable": true,
+  "eslint.useFlatConfig": false
 }

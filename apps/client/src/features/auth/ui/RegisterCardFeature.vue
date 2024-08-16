@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { type FormActions } from 'vee-validate'
-import type { UserRegisterInput } from '@repo/queries/composables/graphql.ts'
+import type { CompanyInput, UserRegisterInput } from '@repo/queries/composables/graphql.ts'
 import * as z from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRegisterMutation } from '@repo/queries/composables/graphql'
@@ -12,30 +12,42 @@ const router = useRouter()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
 
-const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string }>({
+const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string, agreeToPrivacyPolicy: boolean }>({
   validationSchema: toTypedSchema(
-    z.object({
-      email: z.string().email(),
-      username: z.string().min(2),
-      lastName: z.string().min(2),
-      firstName: z.string().min(2),
-      patronymic: z.string().optional(),
-      password: z.string().min(6),
-      passwordConfirm: z.string().min(6),
-    }).partial().refine((data) => data.password === data.passwordConfirm, {
-      message: t('auth.notEqualsPasswords'),
-      path: ['passwordConfirm'],
-    }),
+    z
+      .object({
+        email: z.string().email(),
+        username: z.string().min(2),
+        lastName: z.string().min(2),
+        firstName: z.string().min(2),
+        patronymic: z.string().optional(),
+        phone: z.string().min(9),
+        companyName: z.string().optional(),
+        password: z.string().min(6),
+        passwordConfirm: z.string().min(6),
+        agreeToPrivacyPolicy: z.boolean().refine(val => val === true, {
+          message: t('auth.agreeToPrivacyPolicyRequired')
+        }),
+      })
+      .partial()
+      .refine((data) => data.password === data.passwordConfirm, {
+        message: t('auth.notEqualsPasswords'),
+        path: ['passwordConfirm'],
+      }),
   ),
-})
+});
+
 
 const [email] = defineField('email')
 const [username] = defineField('username')
 const [firstName] = defineField('firstName')
 const [lastName] = defineField('lastName')
 const [patronymic] = defineField('patronymic')
+const [phone] = defineField('phone')
+const [companyName] = defineField('companyName')
 const [password] = defineField('password')
 const [passwordConfirm] = defineField('passwordConfirm')
+const [agreeToPrivacyPolicy] = defineField('agreeToPrivacyPolicy')
 
 const { mutate, onDone } = useRegisterMutation()
 onDone(async ({ data }) => {
@@ -46,23 +58,30 @@ onDone(async ({ data }) => {
   await router.push(localePath({ name: 'index' }))
 })
 
-const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfirm: string }, { setErrors }: FormActions<UserRegisterInput>) => {
-  try {
-    const userRegisterInput = Object.fromEntries(
-      Object.entries(values).filter(([key]) => key !== 'passwordConfirm')
-    ) as UserRegisterInput
-    await mutate({ userRegisterInput })
-  } catch (e) {
-    setErrors({
-      username: t('auth.error'),
-      email: t('auth.error'),
-      firstName: t('auth.error'),
-      lastName: t('auth.error'),
-      patronymic: t('auth.error'),
-      password: t('auth.error'),
-    })
-  }
-})
+const onSubmit = handleSubmit(
+  async (values: UserRegisterInput & { passwordConfirm: string }, { setErrors }: FormActions<UserRegisterInput>) => {
+    try {
+      const userRegisterInput = Object.fromEntries(
+        Object.entries(values).filter(([key]) => key !== ('passwordConfirm' || 'companyName')),
+      ) as UserRegisterInput
+      const companyInput = Object.fromEntries(
+        Object.entries(values).filter(([key]) => key == 'companyName' as 'name'),
+      ) as CompanyInput
+      await mutate({ userRegisterInput, companyInput })
+    } catch (e) {
+      setErrors({
+        username: t('auth.error.username'),
+        email: t('auth.error.email'),
+        firstName: t('auth.error.firstName'),
+        lastName: t('auth.error.lastName'),
+        patronymic: t('auth.error.patronymic'),
+        phone: t('auth.error.phone'),
+        companyName: t('auth.error.companyName'),
+        password: t('auth.error.password'),
+      })
+    }
+  },
+)
 </script>
 
 <template>
@@ -180,6 +199,48 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
         </div>
         <div class="field">
           <label
+            for="companyName"
+            class="block text-900 font-medium mb-2"
+          >{{ $t('auth.companyName') }}</label>
+          <client-only>
+            <InputText
+              id="companyName"
+              v-model="companyName"
+              aria-describedby="companyName-help"
+              class="w-full mb-3"
+              :class="{ 'p-invalid': errors.companyName }"
+            />
+          </client-only>
+          <small
+            id="companyName-help"
+            class="p-error"
+          >{{ errors.companyName }}</small>
+        </div>
+        <div class="field">
+          <label
+            for="phone"
+            class="block text-900 font-medium mb-2"
+          >{{ $t('auth.phone') }}</label>
+          <client-only>
+            <div class="flex-auto">
+              <InputMask
+                id="phone"
+                v-model="phone as string | undefined"
+                mask="+7 (999) 999-9999"
+                placeholder="+7 (999) 999-9999"
+                fluid
+                aria-describedby="phone-help"
+                :class="{ 'p-invalid': errors.phone }"
+              />
+            </div>
+          </client-only>
+          <small
+            id="phone-help"
+            class="p-error"
+          >{{ errors.phone }}</small>
+        </div>
+        <div class="field">
+          <label
             for="password"
             class="block text-900 font-medium mb-2"
           >{{ $t('auth.password') }}</label>
@@ -217,6 +278,29 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
             id="password-confirm-help"
             class="p-error"
           >{{ errors.passwordConfirm }}</small>
+        </div>
+        <div class="field-checkbox">
+          <input
+            id="agreeToPrivacyPolicy"
+            v-model="agreeToPrivacyPolicy"
+            type="checkbox"
+            :class="{ 'p-invalid': errors.agreeToPrivacyPolicy }"
+          >
+          <label for="agreeToPrivacyPolicy">
+            {{ $t('auth.agreeToPrivacyPolicy') }}
+            <nuxt-link
+              :to="localePath({ name: 'policy' })"
+              class="font-medium text-blue-500"
+            >
+              {{ $t('auth.privacyPolicy') }}
+            </nuxt-link>
+          </label>
+        </div>
+        <div>
+          <small
+            id="agreeToPrivacyPolicy-help"
+            class="p-error"
+          >{{ errors.agreeToPrivacyPolicy }}</small>
         </div>
         <Button
           icon="pi pi-user"
