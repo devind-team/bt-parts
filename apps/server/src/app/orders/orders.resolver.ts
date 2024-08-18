@@ -8,6 +8,7 @@ import { CreateOrderType } from '@orders/dto/create-order.type'
 import { OrderConnectionType } from '@orders/dto/order-connection.type'
 import { OrderConnectionArgs } from '@orders/dto/order-connection.args'
 import { DeleteOrderType } from '@orders/dto/delete-order.type'
+import { AddProductInput } from '@orders/dto/add-product.input'
 import { User } from '@generated/user'
 import { File } from '@generated/file'
 import { Order } from '@generated/order'
@@ -46,6 +47,22 @@ export class OrdersResolver {
     order: CreateOrderInput,
   ): Promise<CreateOrderType> {
     return this.ordersService.createOrder(user, order)
+  }
+  /**
+   *
+   * @param user пользователь
+   * @param product добавляемая запчасть
+   */
+  @Mutation(() => CreateOrderType)
+  async addProductToOrder(
+    @CurrentUser() user: User,
+    @Args({
+      name: 'product',
+      type: () => AddProductInput,
+    })
+    product: AddProductInput,
+  ): Promise<CreateOrderType> {
+    return this.ordersService.addProduct(user, product)
   }
   /**
    * Мутация для удаления заказа

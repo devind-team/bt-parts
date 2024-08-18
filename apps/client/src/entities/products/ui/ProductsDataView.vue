@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Product } from '@repo/queries/composables/graphql.js'
 import DataView from 'primevue/dataview'
-import AddProductToOrder from '@/features/products/ui/AddProductToOrder.vue'
+import AddProductToOrder from '@/features/orders/ui/AddProductToOrder.vue'
 
 const authStore = useAuthStore()
 const localePath = useLocalePath()

@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import type { Product } from '@repo/queries/composables/graphql.js'
+import { type FormActions } from 'vee-validate'
+import { type Product as ProductType, type AddProductInput, useAddProductToOrderMutation } from '@repo/queries/composables/graphql.js'
 import * as z from 'zod'
+import { useToast } from 'primevue/usetoast'
 
-const product = defineModel<Product | null>()
+const product = defineModel<ProductType | null>()
+
+const toast = useToast()
+const { t } = useI18n()
 
 const visible = computed({
   get() {
@@ -13,7 +18,14 @@ const visible = computed({
   }
 })
 
-const { defineField, handleSubmit, errors } = useForm({
+const { mutate, onDone } = useAddProductToOrderMutation()
+
+onDone(() => {
+  toast.add({ severity: 'success', summary: t('success'), detail: t('orders.added', { vendorCode: product.value?.vendorCode }), life: 3000 })
+  visible.value = false
+})
+
+const { defineField, handleSubmit, errors } = useForm<AddProductInput>({
   initialValues: { quantity: 1 },
   validationSchema: toTypedSchema(z.object({
     quantity: z.number().positive(),
@@ -22,9 +34,13 @@ const { defineField, handleSubmit, errors } = useForm({
 
 const [quantity] = defineField('quantity')
 
-const onSubmit = handleSubmit(async (values) => {
-  console.log(values)
-  visible.value = false
+const onSubmit = handleSubmit(async (values: AddProductInput, { setErrors }: FormActions<AddProductInput>) => {
+  try {
+    await mutate({ product: { productId: product.value!.id, quantity: values.quantity } })
+  } catch (e) {
+    setErrors({ quantity: 'Ошибка добавления в корзину' })
+  }
+  quantity.value = 1
 })
 </script>
 

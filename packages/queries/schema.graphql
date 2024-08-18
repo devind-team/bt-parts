@@ -143,6 +143,7 @@ type Status {
 """Order status list"""
 enum OrderStatus {
   CREATED
+  REQUEST
   ADOPTED
   PRICED
   OFFER
@@ -150,6 +151,7 @@ enum OrderStatus {
   PURCHASING
   PARTIALLY
   CLOSED
+  CANCEL
 }
 
 type CommentCount {
@@ -244,6 +246,8 @@ enum ItemStatus {
   DELIVERY
   RUSTOCK
   COMPLETED
+  UNAVAILABLE
+  CANCEL
 }
 
 type CommentItemCount {
@@ -1718,6 +1722,7 @@ input SupplierOrderByWithRelationInput {
 
 input ItemWhereUniqueInput {
   id: String
+  orderId_productId_userId: ItemOrderIdProductIdUserIdCompoundUniqueInput
   AND: [ItemWhereInput!]
   OR: [ItemWhereInput!]
   NOT: [ItemWhereInput!]
@@ -1737,6 +1742,12 @@ input ItemWhereUniqueInput {
   user: UserNullableRelationFilter
   statuses: StatusItemListRelationFilter
   commentItem: CommentItemListRelationFilter
+}
+
+input ItemOrderIdProductIdUserIdCompoundUniqueInput {
+  orderId: String!
+  productId: String!
+  userId: String!
 }
 
 enum ItemScalarFieldEnum {
@@ -1869,6 +1880,7 @@ type Mutation {
     where: ItemWhereInput
   ): DeleteOrderItemsType!
   createOrder(order: CreateOrderInput!): CreateOrderType!
+  addProductToOrder(product: AddProductInput!): CreateOrderType!
   deleteOrder(
     """Идентификатор заказа"""
     orderId: String!
@@ -1922,4 +1934,9 @@ input UpdateUserInput {
 input CreateOrderInput {
   address: String
   fileId: String!
+}
+
+input AddProductInput {
+  productId: String!
+  quantity: Float!
 }

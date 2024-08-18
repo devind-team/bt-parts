@@ -24,6 +24,11 @@ export type Scalars = {
   EmailAddress: { input: any; output: any; }
 };
 
+export type AddProductInput = {
+  productId: Scalars['String']['input'];
+  quantity: Scalars['Float']['input'];
+};
+
 /** Attribute model */
 export type Attribute = {
   __typename?: 'Attribute';
@@ -630,6 +635,12 @@ export type ItemOrderByWithRelationInput = {
   userId?: InputMaybe<SortOrderInput>;
 };
 
+export type ItemOrderIdProductIdUserIdCompoundUniqueInput = {
+  orderId: Scalars['String']['input'];
+  productId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
 export type ItemRelationFilter = {
   is?: InputMaybe<ItemWhereInput>;
   isNot?: InputMaybe<ItemWhereInput>;
@@ -651,13 +662,15 @@ export type ItemScalarFieldEnum =
 /** Item statuses in the order */
 export type ItemStatus =
   | 'APPROVED'
+  | 'CANCEL'
   | 'COMPLETED'
   | 'CREATED'
   | 'DELIVERY'
   | 'PRICED'
   | 'RUSTOCK'
   | 'SUSTOCK'
-  | 'TRSTOCK';
+  | 'TRSTOCK'
+  | 'UNAVAILABLE';
 
 export type ItemSumAggregate = {
   __typename?: 'ItemSumAggregate';
@@ -699,6 +712,7 @@ export type ItemWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<OrderRelationFilter>;
   orderId?: InputMaybe<StringFilter>;
+  orderId_productId_userId?: InputMaybe<ItemOrderIdProductIdUserIdCompoundUniqueInput>;
   price?: InputMaybe<PriceNullableRelationFilter>;
   priceId?: InputMaybe<StringNullableFilter>;
   product?: InputMaybe<ProductRelationFilter>;
@@ -754,6 +768,7 @@ export type ManufacturerWhereInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addProductToOrder: CreateOrderType;
   addStatusItems: Array<Item>;
   addStatusOrder: Status;
   changeCoefficientItems: Array<Item>;
@@ -768,6 +783,11 @@ export type Mutation = {
   unloadOrder: File;
   updateUser: User;
   uploadAvatar: User;
+};
+
+
+export type MutationAddProductToOrderArgs = {
+  product: AddProductInput;
 };
 
 
@@ -1112,12 +1132,14 @@ export type OrderScalarFieldEnum =
 export type OrderStatus =
   | 'ADOPTED'
   | 'APPROVED'
+  | 'CANCEL'
   | 'CLOSED'
   | 'CREATED'
   | 'OFFER'
   | 'PARTIALLY'
   | 'PRICED'
-  | 'PURCHASING';
+  | 'PURCHASING'
+  | 'REQUEST';
 
 export type OrderWhereInput = {
   AND?: InputMaybe<Array<OrderWhereInput>>;
@@ -2054,6 +2076,13 @@ export type OrderFieldsFragment = { __typename: 'Order', id: string, address?: s
 
 export type StatusFieldsFragment = { __typename: 'Status', id: string, status: OrderStatus, createdAt: any };
 
+export type AddProductToOrderMutationVariables = Exact<{
+  product: AddProductInput;
+}>;
+
+
+export type AddProductToOrderMutation = { __typename?: 'Mutation', addProductToOrder: { __typename?: 'CreateOrderType', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any } } };
+
 export type AddStatusOrderMutationVariables = Exact<{
   orderId: Scalars['String']['input'];
   status: OrderStatus;
@@ -2575,6 +2604,37 @@ export function useItemsLazyQuery(variables: ItemsQueryVariables | VueCompositio
   return VueApolloComposable.useLazyQuery<ItemsQuery, ItemsQueryVariables>(ItemsDocument, variables, options);
 }
 export type ItemsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ItemsQuery, ItemsQueryVariables>;
+export const AddProductToOrderDocument = gql`
+    mutation AddProductToOrder($product: AddProductInput!) {
+  addProductToOrder(product: $product) {
+    order {
+      ...OrderFields
+    }
+  }
+}
+    ${OrderFieldsFragmentDoc}`;
+
+/**
+ * __useAddProductToOrderMutation__
+ *
+ * To run a mutation, you first call `useAddProductToOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useAddProductToOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useAddProductToOrderMutation({
+ *   variables: {
+ *     product: // value for 'product'
+ *   },
+ * });
+ */
+export function useAddProductToOrderMutation(options: VueApolloComposable.UseMutationOptions<AddProductToOrderMutation, AddProductToOrderMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddProductToOrderMutation, AddProductToOrderMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<AddProductToOrderMutation, AddProductToOrderMutationVariables>(AddProductToOrderDocument, options);
+}
+export type AddProductToOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddProductToOrderMutation, AddProductToOrderMutationVariables>;
 export const AddStatusOrderDocument = gql`
     mutation AddStatusOrder($orderId: String!, $status: OrderStatus!) {
   addStatusOrder(orderId: $orderId, status: $status) {

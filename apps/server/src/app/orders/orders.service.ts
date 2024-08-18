@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
+import { Prisma, OrderStatus as OrderStatusEnum } from '@prisma/client'
 import { CreateOrderInput } from '@orders/dto/create-order.input'
 import { PrismaService } from '@common/services/prisma.service'
 import { FilesService } from '@files/files.service'
@@ -8,6 +8,7 @@ import { OrderConnectionArgs } from '@orders/dto/order-connection.args'
 import { OrderConnectionType } from '@orders/dto/order-connection.type'
 import { findManyCursorConnection } from '@common/relay/find-many-cursor-connection'
 import { ProductsService } from '@products/products.service'
+import { AddProductInput } from '@orders/dto/add-product.input'
 import { orderItemValidator } from '@items/validators'
 import { Order } from '@generated/order'
 import { ItemStatus, OrderStatus, Role } from '@generated/prisma'
@@ -119,6 +120,72 @@ export class OrdersService {
       })),
     })
     return { order }
+  }
+  /**
+   * Добавляем товар в заказ со статусом CREATED
+   * @param user пользователь
+   * @param product выбранный продукт
+   */
+  async addProduct(user: User, product: AddProductInput): Promise<CreateOrderType> {
+    const order = await this.getOrCreateOrder(user)
+    await this.prismaService.item.upsert({
+      where: {
+        orderId_productId_userId: {
+          userId: user.id,
+          productId: product.productId,
+          orderId: order.id,
+        },
+      },
+      update: {
+        quantity: {
+          increment: product.quantity,
+        },
+      },
+      create: {
+        userId: user.id,
+        productId: product.productId,
+        orderId: order.id,
+        quantity: product.quantity,
+      },
+    })
+    return { order }
+  }
+  /**
+   * Получаем последний заказ пользователя со статусом CREATED или создаем новый
+   * @param user пользователь
+   * @returns заказ
+   */
+  async getOrCreateOrder(user: User): Promise<Order> {
+    const existsOrder = await this.prismaService.order.findFirst({
+      where: {
+        userId: user.id,
+        statuses: {
+          every: {
+            status: OrderStatusEnum.CREATED,
+          },
+        },
+      },
+      include: {
+        statuses: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+    if (existsOrder) {
+      return existsOrder
+    }
+    return this.prismaService.order.create({
+      data: {
+        userId: user.id,
+        statuses: {
+          create: {
+            userId: user.id,
+          },
+        },
+      },
+    })
   }
 
   /**
