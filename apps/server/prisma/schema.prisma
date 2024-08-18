@@ -199,6 +199,10 @@ model Product {
   /// @Validator.MinLength(3)
   /// @Validator.MaxLength(30)
   vendorCode     String           @unique @map("verndor_code") @db.VarChar(128)
+  /// VIN number
+  /// @Validator.MinLength(3)
+  /// @Validator.MaxLength(30)
+  vinNumber      String?          @map("vin_number") @db.VarChar(128)
   /// English name
   /// @Validator.MinLength(2)
   /// @Validator.MaxLength(30)
