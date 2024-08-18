@@ -23,6 +23,7 @@ const { mutate, onDone } = useAddProductToOrderMutation()
 onDone(() => {
   toast.add({ severity: 'success', summary: t('success'), detail: t('orders.added', { vendorCode: product.value?.vendorCode }), life: 3000 })
   visible.value = false
+  quantity.value = 1
 })
 
 const { defineField, handleSubmit, errors } = useForm<AddProductInput>({
@@ -40,7 +41,6 @@ const onSubmit = handleSubmit(async (values: AddProductInput, { setErrors }: For
   } catch (e) {
     setErrors({ quantity: 'Ошибка добавления в корзину' })
   }
-  quantity.value = 1
 })
 </script>
 
