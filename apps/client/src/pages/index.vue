@@ -25,18 +25,7 @@ useHead({ title: t('title') })
                 as="router-link"
                 :to="localePath({ name: 'products' })"
               >
-                {{ t('products.doSearch') }}
-              </Button>
-              <div class="text-xl text-900 text-blue-600">
-                {{ t('and') }}
-              </div>
-              <Button
-                type="button"
-                class="p-button-outlined"
-                as="router-link"
-                :to="localePath({ name: 'auth-register' })"
-              >
-                {{ t('auth.doOrder') }}
+                {{ t('products.doSearch') }} {{ t('and') }} {{ t('auth.doOrder') }}
               </Button>
             </div>
           </section>

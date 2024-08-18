@@ -1998,6 +1998,100 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } };
 
+export type CommentItemFieldsFragment = { __typename: 'CommentItem', id: string, text: string, createdAt: any };
+
+export type ItemFieldsFragment = { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any };
+
+export type StatusItemFieldsFragment = { __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any };
+
+export type ChangeCoefficientItemsMutationVariables = Exact<{
+  orderId: Scalars['String']['input'];
+  itemIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  coefficient: Scalars['Float']['input'];
+}>;
+
+
+export type ChangeCoefficientItemsMutation = { __typename?: 'Mutation', changeCoefficientItems: Array<{ __typename: 'Item', id: string, coefficient: number }> };
+
+export type ChangeQuantityItemMutationVariables = Exact<{
+  itemId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type ChangeQuantityItemMutation = { __typename?: 'Mutation', changeQuantityItem: { __typename: 'Item', id: string, quantity: number } };
+
+export type ChangeSellingPriceItemMutationVariables = Exact<{
+  itemId: Scalars['String']['input'];
+  price: Scalars['Float']['input'];
+}>;
+
+
+export type ChangeSellingPriceItemMutation = { __typename?: 'Mutation', changeSellingPriceItem: { __typename: 'Item', id: string, coefficient: number } };
+
+export type RecountPricesMutationVariables = Exact<{
+  orderId: Scalars['String']['input'];
+  itemIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type RecountPricesMutation = { __typename?: 'Mutation', recountPrices: Array<{ __typename?: 'Item', id: string, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null }> };
+
+export type ItemsQueryVariables = Exact<{
+  filter?: InputMaybe<Array<ItemStatus> | ItemStatus>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ItemsQuery = { __typename?: 'Query', items: { __typename: 'ItemConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename: 'ItemEdge', node: { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, order: { __typename: 'Order', id: string, address?: string | null, createdAt: any }, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null }, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null, commentItem?: Array<{ __typename: 'CommentItem', id: string, text: string, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null } }> | null } };
+
+export type CommentFieldsFragment = { __typename: 'Comment', id: string, text: string, createdAt: any };
+
+export type OrderFieldsFragment = { __typename: 'Order', id: string, address?: string | null, createdAt: any };
+
+export type StatusFieldsFragment = { __typename: 'Status', id: string, status: OrderStatus, createdAt: any };
+
+export type AddStatusOrderMutationVariables = Exact<{
+  orderId: Scalars['String']['input'];
+  status: OrderStatus;
+}>;
+
+
+export type AddStatusOrderMutation = { __typename?: 'Mutation', addStatusOrder: { __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null } };
+
+export type CreateOrderMutationVariables = Exact<{
+  address?: InputMaybe<Scalars['String']['input']>;
+  fileId: Scalars['String']['input'];
+}>;
+
+
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'CreateOrderType', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any } } };
+
+export type DeleteOrderItemsMutationVariables = Exact<{
+  orderId: Scalars['String']['input'];
+  where?: InputMaybe<ItemWhereInput>;
+}>;
+
+
+export type DeleteOrderItemsMutation = { __typename?: 'Mutation', deleteOrderItems: { __typename: 'DeleteOrderItemsType', deleteIds: Array<string> } };
+
+export type DeleteOrderMutationVariables = Exact<{
+  orderId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteOrderMutation = { __typename?: 'Mutation', deleteOrder: { __typename: 'DeleteOrderType', id: string } };
+
+export type OrderQueryVariables = Exact<{
+  orderId: Scalars['String']['input'];
+}>;
+
+
+export type OrderQuery = { __typename?: 'Query', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null, comments?: Array<{ __typename: 'Comment', id: string, text: string, createdAt: any }> | null, items?: Array<{ __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null }, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null }> | null, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } } };
+
 export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
 
 export type ManufacturerFieldsFragment = { __typename: 'Manufacturer', id: string, name: string };
@@ -2031,6 +2125,57 @@ export const UserFieldsFragmentDoc = gql`
   createdAt
   updatedAt
   tz
+  __typename
+}
+    `;
+export const CommentItemFieldsFragmentDoc = gql`
+    fragment CommentItemFields on CommentItem {
+  id
+  text
+  createdAt
+  __typename
+}
+    `;
+export const ItemFieldsFragmentDoc = gql`
+    fragment ItemFields on Item {
+  id
+  quantity
+  coefficient
+  carNo
+  routeNo
+  createdAt
+  __typename
+}
+    `;
+export const StatusItemFieldsFragmentDoc = gql`
+    fragment StatusItemFields on StatusItem {
+  id
+  status
+  createdAt
+  __typename
+}
+    `;
+export const CommentFieldsFragmentDoc = gql`
+    fragment CommentFields on Comment {
+  id
+  text
+  createdAt
+  __typename
+}
+    `;
+export const OrderFieldsFragmentDoc = gql`
+    fragment OrderFields on Order {
+  id
+  address
+  createdAt
+  __typename
+}
+    `;
+export const StatusFieldsFragmentDoc = gql`
+    fragment StatusFields on Status {
+  id
+  status
+  createdAt
   __typename
 }
     `;
@@ -2215,6 +2360,418 @@ export function useMeLazyQuery(options: VueApolloComposable.UseQueryOptions<MeQu
   return VueApolloComposable.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export const ChangeCoefficientItemsDocument = gql`
+    mutation ChangeCoefficientItems($orderId: String!, $itemIds: [String!]!, $coefficient: Float!) {
+  changeCoefficientItems(
+    orderId: $orderId
+    itemIds: $itemIds
+    coefficient: $coefficient
+  ) {
+    id
+    coefficient
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useChangeCoefficientItemsMutation__
+ *
+ * To run a mutation, you first call `useChangeCoefficientItemsMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useChangeCoefficientItemsMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useChangeCoefficientItemsMutation({
+ *   variables: {
+ *     orderId: // value for 'orderId'
+ *     itemIds: // value for 'itemIds'
+ *     coefficient: // value for 'coefficient'
+ *   },
+ * });
+ */
+export function useChangeCoefficientItemsMutation(options: VueApolloComposable.UseMutationOptions<ChangeCoefficientItemsMutation, ChangeCoefficientItemsMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<ChangeCoefficientItemsMutation, ChangeCoefficientItemsMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<ChangeCoefficientItemsMutation, ChangeCoefficientItemsMutationVariables>(ChangeCoefficientItemsDocument, options);
+}
+export type ChangeCoefficientItemsMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ChangeCoefficientItemsMutation, ChangeCoefficientItemsMutationVariables>;
+export const ChangeQuantityItemDocument = gql`
+    mutation ChangeQuantityItem($itemId: String!, $quantity: Int!) {
+  changeQuantityItem(itemId: $itemId, quantity: $quantity) {
+    id
+    quantity
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useChangeQuantityItemMutation__
+ *
+ * To run a mutation, you first call `useChangeQuantityItemMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useChangeQuantityItemMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useChangeQuantityItemMutation({
+ *   variables: {
+ *     itemId: // value for 'itemId'
+ *     quantity: // value for 'quantity'
+ *   },
+ * });
+ */
+export function useChangeQuantityItemMutation(options: VueApolloComposable.UseMutationOptions<ChangeQuantityItemMutation, ChangeQuantityItemMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<ChangeQuantityItemMutation, ChangeQuantityItemMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<ChangeQuantityItemMutation, ChangeQuantityItemMutationVariables>(ChangeQuantityItemDocument, options);
+}
+export type ChangeQuantityItemMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ChangeQuantityItemMutation, ChangeQuantityItemMutationVariables>;
+export const ChangeSellingPriceItemDocument = gql`
+    mutation ChangeSellingPriceItem($itemId: String!, $price: Float!) {
+  changeSellingPriceItem(itemId: $itemId, price: $price) {
+    id
+    coefficient
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useChangeSellingPriceItemMutation__
+ *
+ * To run a mutation, you first call `useChangeSellingPriceItemMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useChangeSellingPriceItemMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useChangeSellingPriceItemMutation({
+ *   variables: {
+ *     itemId: // value for 'itemId'
+ *     price: // value for 'price'
+ *   },
+ * });
+ */
+export function useChangeSellingPriceItemMutation(options: VueApolloComposable.UseMutationOptions<ChangeSellingPriceItemMutation, ChangeSellingPriceItemMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<ChangeSellingPriceItemMutation, ChangeSellingPriceItemMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<ChangeSellingPriceItemMutation, ChangeSellingPriceItemMutationVariables>(ChangeSellingPriceItemDocument, options);
+}
+export type ChangeSellingPriceItemMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ChangeSellingPriceItemMutation, ChangeSellingPriceItemMutationVariables>;
+export const RecountPricesDocument = gql`
+    mutation RecountPrices($orderId: String!, $itemIds: [String!]!) {
+  recountPrices(orderId: $orderId, itemIds: $itemIds) {
+    id
+    price {
+      ...PriceFields
+    }
+  }
+}
+    ${PriceFieldsFragmentDoc}`;
+
+/**
+ * __useRecountPricesMutation__
+ *
+ * To run a mutation, you first call `useRecountPricesMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useRecountPricesMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useRecountPricesMutation({
+ *   variables: {
+ *     orderId: // value for 'orderId'
+ *     itemIds: // value for 'itemIds'
+ *   },
+ * });
+ */
+export function useRecountPricesMutation(options: VueApolloComposable.UseMutationOptions<RecountPricesMutation, RecountPricesMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<RecountPricesMutation, RecountPricesMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<RecountPricesMutation, RecountPricesMutationVariables>(RecountPricesDocument, options);
+}
+export type RecountPricesMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RecountPricesMutation, RecountPricesMutationVariables>;
+export const ItemsDocument = gql`
+    query Items($filter: [ItemStatus!], $search: String, $first: Int, $after: String, $skip: Int) {
+  items(
+    where: {statuses: {some: {status: {in: $filter}}}, OR: [{product: {is: {vendorCode: {contains: $search}}}}]}
+    first: $first
+    after: $after
+    skip: $skip
+  ) {
+    totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+      __typename
+    }
+    edges {
+      node {
+        ...ItemFields
+        order {
+          ...OrderFields
+        }
+        product {
+          ...ProductFields
+        }
+        price {
+          ...PriceFields
+        }
+        statuses {
+          ...StatusItemFields
+          user {
+            ...UserFields
+          }
+        }
+        commentItem {
+          ...CommentItemFields
+          user {
+            ...UserFields
+          }
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+    ${ItemFieldsFragmentDoc}
+${OrderFieldsFragmentDoc}
+${ProductFieldsFragmentDoc}
+${PriceFieldsFragmentDoc}
+${StatusItemFieldsFragmentDoc}
+${UserFieldsFragmentDoc}
+${CommentItemFieldsFragmentDoc}`;
+
+/**
+ * __useItemsQuery__
+ *
+ * To run a query within a Vue component, call `useItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useItemsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useItemsQuery({
+ *   filter: // value for 'filter'
+ *   search: // value for 'search'
+ *   first: // value for 'first'
+ *   after: // value for 'after'
+ *   skip: // value for 'skip'
+ * });
+ */
+export function useItemsQuery(variables: ItemsQueryVariables | VueCompositionApi.Ref<ItemsQueryVariables> | ReactiveFunction<ItemsQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<ItemsQuery, ItemsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<ItemsQuery, ItemsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<ItemsQuery, ItemsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<ItemsQuery, ItemsQueryVariables>(ItemsDocument, variables, options);
+}
+export function useItemsLazyQuery(variables: ItemsQueryVariables | VueCompositionApi.Ref<ItemsQueryVariables> | ReactiveFunction<ItemsQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<ItemsQuery, ItemsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<ItemsQuery, ItemsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<ItemsQuery, ItemsQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<ItemsQuery, ItemsQueryVariables>(ItemsDocument, variables, options);
+}
+export type ItemsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ItemsQuery, ItemsQueryVariables>;
+export const AddStatusOrderDocument = gql`
+    mutation AddStatusOrder($orderId: String!, $status: OrderStatus!) {
+  addStatusOrder(orderId: $orderId, status: $status) {
+    ...StatusFields
+    user {
+      ...UserFields
+    }
+  }
+}
+    ${StatusFieldsFragmentDoc}
+${UserFieldsFragmentDoc}`;
+
+/**
+ * __useAddStatusOrderMutation__
+ *
+ * To run a mutation, you first call `useAddStatusOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useAddStatusOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useAddStatusOrderMutation({
+ *   variables: {
+ *     orderId: // value for 'orderId'
+ *     status: // value for 'status'
+ *   },
+ * });
+ */
+export function useAddStatusOrderMutation(options: VueApolloComposable.UseMutationOptions<AddStatusOrderMutation, AddStatusOrderMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddStatusOrderMutation, AddStatusOrderMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<AddStatusOrderMutation, AddStatusOrderMutationVariables>(AddStatusOrderDocument, options);
+}
+export type AddStatusOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddStatusOrderMutation, AddStatusOrderMutationVariables>;
+export const CreateOrderDocument = gql`
+    mutation CreateOrder($address: String, $fileId: String!) {
+  createOrder(order: {address: $address, fileId: $fileId}) {
+    order {
+      ...OrderFields
+    }
+  }
+}
+    ${OrderFieldsFragmentDoc}`;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreateOrderMutation({
+ *   variables: {
+ *     address: // value for 'address'
+ *     fileId: // value for 'fileId'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(options: VueApolloComposable.UseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+}
+export type CreateOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateOrderMutation, CreateOrderMutationVariables>;
+export const DeleteOrderItemsDocument = gql`
+    mutation DeleteOrderItems($orderId: String!, $where: ItemWhereInput) {
+  deleteOrderItems(orderId: $orderId, where: $where) {
+    deleteIds
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useDeleteOrderItemsMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderItemsMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderItemsMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteOrderItemsMutation({
+ *   variables: {
+ *     orderId: // value for 'orderId'
+ *     where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteOrderItemsMutation(options: VueApolloComposable.UseMutationOptions<DeleteOrderItemsMutation, DeleteOrderItemsMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteOrderItemsMutation, DeleteOrderItemsMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<DeleteOrderItemsMutation, DeleteOrderItemsMutationVariables>(DeleteOrderItemsDocument, options);
+}
+export type DeleteOrderItemsMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteOrderItemsMutation, DeleteOrderItemsMutationVariables>;
+export const DeleteOrderDocument = gql`
+    mutation DeleteOrder($orderId: String!) {
+  deleteOrder(orderId: $orderId) {
+    id
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useDeleteOrderMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteOrderMutation({
+ *   variables: {
+ *     orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useDeleteOrderMutation(options: VueApolloComposable.UseMutationOptions<DeleteOrderMutation, DeleteOrderMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteOrderMutation, DeleteOrderMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<DeleteOrderMutation, DeleteOrderMutationVariables>(DeleteOrderDocument, options);
+}
+export type DeleteOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteOrderMutation, DeleteOrderMutationVariables>;
+export const OrderDocument = gql`
+    query Order($orderId: String!) {
+  order(orderId: $orderId) {
+    ...OrderFields
+    statuses {
+      ...StatusFields
+      user {
+        ...UserFields
+      }
+    }
+    comments {
+      ...CommentFields
+    }
+    items {
+      ...ItemFields
+      user {
+        ...UserFields
+      }
+      product {
+        ...ProductFields
+      }
+      statuses {
+        ...StatusItemFields
+        user {
+          ...UserFields
+        }
+      }
+      price {
+        ...PriceFields
+      }
+    }
+    manager {
+      ...UserFields
+    }
+    user {
+      ...UserFields
+    }
+  }
+}
+    ${OrderFieldsFragmentDoc}
+${StatusFieldsFragmentDoc}
+${UserFieldsFragmentDoc}
+${CommentFieldsFragmentDoc}
+${ItemFieldsFragmentDoc}
+${ProductFieldsFragmentDoc}
+${StatusItemFieldsFragmentDoc}
+${PriceFieldsFragmentDoc}`;
+
+/**
+ * __useOrderQuery__
+ *
+ * To run a query within a Vue component, call `useOrderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useOrderQuery({
+ *   orderId: // value for 'orderId'
+ * });
+ */
+export function useOrderQuery(variables: OrderQueryVariables | VueCompositionApi.Ref<OrderQueryVariables> | ReactiveFunction<OrderQueryVariables>, options: VueApolloComposable.UseQueryOptions<OrderQuery, OrderQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<OrderQuery, OrderQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<OrderQuery, OrderQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<OrderQuery, OrderQueryVariables>(OrderDocument, variables, options);
+}
+export function useOrderLazyQuery(variables?: OrderQueryVariables | VueCompositionApi.Ref<OrderQueryVariables> | ReactiveFunction<OrderQueryVariables>, options: VueApolloComposable.UseQueryOptions<OrderQuery, OrderQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<OrderQuery, OrderQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<OrderQuery, OrderQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<OrderQuery, OrderQueryVariables>(OrderDocument, variables, options);
+}
+export type OrderQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<OrderQuery, OrderQueryVariables>;
 export const SearchProductsDocument = gql`
     query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
   products(

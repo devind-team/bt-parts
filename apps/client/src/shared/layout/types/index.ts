@@ -10,4 +10,5 @@ export interface BreadCrumbsItem {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   label?: string | ((...args: any) => string)
   name: string
+  params?: Record<string, unknown>
 }

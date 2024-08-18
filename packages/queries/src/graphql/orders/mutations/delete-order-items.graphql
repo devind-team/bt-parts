@@ -1,0 +1,6 @@
+mutation DeleteOrderItems($orderId: String!, $where: ItemWhereInput) {
+  deleteOrderItems(orderId: $orderId, where: $where) {
+    deleteIds
+    __typename
+  }
+}
