@@ -17,6 +17,22 @@
   "and": "и",
   "count": "По запросу нашлось {count} записей.",
   "success": "Успех",
+  "status": "Статус",
+  "users": {
+    "name": "Пользователь"
+  },
+  "orderStatuses": {
+    "CREATED": "Создан",
+    "REQUEST": "Запрос",
+    "ADOPTED": "Принят",
+    "PRICED": "Проценен",
+    "OFFER": "Оффер",
+    "APPROVED": "Подтвержден",
+    "PURCHASING": "Оплачен",
+    "PARTIALLY": "Выдача",
+    "CLOSED": "Закрыт",
+    "CANCEL": "Отменен"
+  },
   "auth": {
     "login": "Войти",
     "authorization": "Авторизация",
@@ -91,9 +107,11 @@
     "quantity": "Количество"
   },
   "orders": {
+    "name": "Заказ",
     "title": "Заказы",
     "create": "Создать заказ",
     "detail": "Детализация заказа {orderId}",
-    "added": "Товар {vendorCode} успешно добавлен в заказ"
+    "added": "Товар {vendorCode} успешно добавлен в заказ",
+    "from": "Заказ от {dateTime}"
   }
 }

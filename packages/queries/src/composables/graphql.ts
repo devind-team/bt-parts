@@ -2121,6 +2121,14 @@ export type OrderQueryVariables = Exact<{
 
 export type OrderQuery = { __typename?: 'Query', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null, comments?: Array<{ __typename: 'Comment', id: string, text: string, createdAt: any }> | null, items?: Array<{ __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null }, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null }> | null, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } } };
 
+export type OrdersQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean }, edges?: Array<{ __typename: 'OrderEdge', node: { __typename: 'Order', id: string, address?: string | null, createdAt: any, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string }, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone?: string | null, role: Role, gender: Gender, createdAt: any, updatedAt: any, tz: string } | null }> | null } }> | null } };
+
 export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
 
 export type ManufacturerFieldsFragment = { __typename: 'Manufacturer', id: string, name: string };
@@ -2832,6 +2840,64 @@ export function useOrderLazyQuery(variables?: OrderQueryVariables | VueCompositi
   return VueApolloComposable.useLazyQuery<OrderQuery, OrderQueryVariables>(OrderDocument, variables, options);
 }
 export type OrderQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<OrderQuery, OrderQueryVariables>;
+export const OrdersDocument = gql`
+    query Orders($first: Int, $skip: Int) {
+  orders(first: $first, skip: $skip, orderBy: {createdAt: desc}) {
+    totalCount
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      __typename
+    }
+    edges {
+      node {
+        ...OrderFields
+        manager {
+          ...UserFields
+        }
+        user {
+          ...UserFields
+        }
+        statuses {
+          ...StatusFields
+          user {
+            ...UserFields
+          }
+        }
+      }
+      __typename
+    }
+  }
+}
+    ${OrderFieldsFragmentDoc}
+${UserFieldsFragmentDoc}
+${StatusFieldsFragmentDoc}`;
+
+/**
+ * __useOrdersQuery__
+ *
+ * To run a query within a Vue component, call `useOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrdersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useOrdersQuery({
+ *   first: // value for 'first'
+ *   skip: // value for 'skip'
+ * });
+ */
+export function useOrdersQuery(variables: OrdersQueryVariables | VueCompositionApi.Ref<OrdersQueryVariables> | ReactiveFunction<OrdersQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<OrdersQuery, OrdersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<OrdersQuery, OrdersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<OrdersQuery, OrdersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<OrdersQuery, OrdersQueryVariables>(OrdersDocument, variables, options);
+}
+export function useOrdersLazyQuery(variables: OrdersQueryVariables | VueCompositionApi.Ref<OrdersQueryVariables> | ReactiveFunction<OrdersQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<OrdersQuery, OrdersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<OrdersQuery, OrdersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<OrdersQuery, OrdersQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<OrdersQuery, OrdersQueryVariables>(OrdersDocument, variables, options);
+}
+export type OrdersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<OrdersQuery, OrdersQueryVariables>;
 export const SearchProductsDocument = gql`
     query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
   products(
