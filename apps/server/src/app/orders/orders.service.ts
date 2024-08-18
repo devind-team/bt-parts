@@ -146,6 +146,12 @@ export class OrdersService {
         productId: product.productId,
         orderId: order.id,
         quantity: product.quantity,
+        statuses: {
+          create: {
+            status: ItemStatus.CREATED,
+            userId: user.id,
+          },
+        },
       },
     })
     return { order }

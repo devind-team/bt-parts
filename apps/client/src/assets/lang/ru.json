@@ -33,6 +33,18 @@
     "CLOSED": "Закрыт",
     "CANCEL": "Отменен"
   },
+  "itemStatuses": {
+    "CREATED": "Создан",
+    "PRICED": "Проценен",
+    "APPROVED": "Принят",
+    "SUSTOCK": "На складе",
+    "TRSTOCK": "На складе",
+    "DELIVERY": "В пути",
+    "RUSTOCK": "На складе в РФ",
+    "COMPLETED": "Реализован",
+    "UNAVAILABLE": "Не доступен к заказу",
+    "CANCEL": "Отменен"
+  },
   "auth": {
     "login": "Войти",
     "authorization": "Авторизация",
@@ -113,5 +125,9 @@
     "detail": "Детализация заказа {orderId}",
     "added": "Товар {vendorCode} успешно добавлен в заказ",
     "from": "Заказ от {dateTime}"
+  },
+  "prices": {
+    "name": "Цена",
+    "none": "Товар еще не проценен"
   }
 }

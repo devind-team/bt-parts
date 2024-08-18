@@ -3,10 +3,11 @@ import type { BreadCrumbsItem } from '@/shared/layout/types'
 import OrdersView from '@/widgets/orders/ui/OrdersView.vue'
 import BreadCrumbs from '@/shared/layout/ui/BreadCrumbs.vue'
 
+const { t } = useI18n()
+
 const props = defineProps<{
   links: BreadCrumbsItem[]
 }>()
-const { t } = useI18n()
 
 useHead({ title: t('orders.title') })
 </script>
