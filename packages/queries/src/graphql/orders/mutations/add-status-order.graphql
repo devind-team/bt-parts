@@ -1,0 +1,11 @@
+#import "../../auth/fragments/user-fields.graphql"
+#import "../fragments/status-fields.graphql"
+
+mutation AddStatusOrder($orderId: String!, $status: OrderStatus!) {
+  addStatusOrder(orderId: $orderId, status: $status) {
+    ...StatusFields
+    user {
+      ...UserFields
+    }
+  }
+}

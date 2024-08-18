@@ -1,0 +1,35 @@
+#import "../../prices/fragments/price-fields.graphql"
+#import "../fragments/product-fields.graphql"
+#import "../fragments/manufacturer-fields.graphql"
+
+query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
+  products(
+    where: {
+      OR: [{ vendorCode: { contains: $search } }, { nameRu: { contains: $search } }, { nameEn: { contains: $search } }]
+    }
+    orderBy: { id: desc }
+    first: $first
+    after: $after
+    skip: $skip
+  ) {
+    totalCount
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+      __typename
+    }
+    edges {
+      node {
+        ...ProductFields
+        manufacturer {
+          ...ManufacturerFields
+        }
+        prices {
+          ...PriceFields
+        }
+      }
+    }
+  }
+}

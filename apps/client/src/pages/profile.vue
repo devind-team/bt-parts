@@ -9,8 +9,8 @@ definePageMeta({ middleware: 'auth' })
 
 const items = ref<LinksType[]>([
   { label: t('profile.name'), icon: PrimeIcons.USER, name: 'profile-me' },
-  { label: t('profile.settings'), icon: PrimeIcons.USER, name: 'profile-settings' },
-  { label: t('profile.security'), icon: PrimeIcons.COG, name: 'profile-security' },
+  { label: t('profile.settings'), icon: PrimeIcons.SHIELD, name: 'profile-settings' },
+  { label: t('profile.security'), icon: `${PrimeIcons.COG} pi-spin`, name: 'profile-security' },
 ])
 
 const links = ref<BreadCrumbsItem[]>([

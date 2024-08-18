@@ -143,6 +143,7 @@ type Status {
 """Order status list"""
 enum OrderStatus {
   CREATED
+  REQUEST
   ADOPTED
   PRICED
   OFFER
@@ -150,6 +151,7 @@ enum OrderStatus {
   PURCHASING
   PARTIALLY
   CLOSED
+  CANCEL
 }
 
 type CommentCount {
@@ -244,6 +246,8 @@ enum ItemStatus {
   DELIVERY
   RUSTOCK
   COMPLETED
+  UNAVAILABLE
+  CANCEL
 }
 
 type CommentItemCount {
@@ -327,7 +331,7 @@ type Item {
 }
 
 type SupplierCount {
-  products: Int!
+  prices: Int!
 }
 
 """Supplier model"""
@@ -338,7 +342,7 @@ type Supplier {
   """Supplier name"""
   name: String!
   location: Location!
-  products: [Price!]
+  prices: [Price!]
   _count: SupplierCount!
 }
 
@@ -356,12 +360,6 @@ type Price {
 
   """Delivery time in days to the warehouse"""
   duration: Int
-
-  """Supplier name"""
-  supplierName: String!
-
-  """Supplier's country"""
-  country: String
 
   """Site"""
   site: String
@@ -386,7 +384,7 @@ type Price {
   """Product"""
   product: Product!
   item: [Item!]
-  Supplier: Supplier
+  supplier: Supplier
   _count: PriceCount!
 }
 
@@ -745,6 +743,107 @@ type ProductConnectionType {
   totalCount: Int!
 }
 
+type OrderCountAggregate {
+  id: Int!
+  address: Int!
+  createdAt: Int!
+  userId: Int!
+  managerId: Int!
+  _all: Int!
+}
+
+type OrderMinAggregate {
+  id: String
+  address: String
+  createdAt: DateTime
+  userId: String
+  managerId: String
+}
+
+type OrderMaxAggregate {
+  id: String
+  address: String
+  createdAt: DateTime
+  userId: String
+  managerId: String
+}
+
+type CreateOrderType {
+  order: Order!
+}
+
+type OrderEdge {
+  cursor: String!
+  node: Order!
+}
+
+type OrderConnectionType {
+  edges: [OrderEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type DeleteOrderType {
+  """Идентификатор удаленного заказа"""
+  id: String!
+}
+
+type FileCountAggregate {
+  id: Int!
+  name: Int!
+  bucket: Int!
+  key: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  userId: Int!
+  _all: Int!
+}
+
+type FileMinAggregate {
+  id: String
+  name: String
+  bucket: String
+  key: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  userId: String
+}
+
+type FileMaxAggregate {
+  id: String
+  name: String
+  bucket: String
+  key: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  userId: String
+}
+
+type StatusCountAggregate {
+  id: Int!
+  status: Int!
+  createdAt: Int!
+  orderId: Int!
+  userId: Int!
+  _all: Int!
+}
+
+type StatusMinAggregate {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  orderId: String
+  userId: String
+}
+
+type StatusMaxAggregate {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  orderId: String
+  userId: String
+}
+
 type Query {
   me: User!
   items(where: ItemWhereInput, orderBy: [ItemOrderByWithRelationInput!], cursor: ItemWhereUniqueInput, take: Int, skip: Int, distinct: [ItemScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ItemConnectionType!
@@ -763,6 +862,8 @@ type Query {
     last: Int
   ): ItemConnectionType!
   products(where: ProductWhereInput, orderBy: [ProductOrderByWithRelationInput!], cursor: ProductWhereUniqueInput, take: Int, skip: Int, distinct: [ProductScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ProductConnectionType!
+  order(orderId: String!): Order!
+  orders(where: OrderWhereInput, orderBy: [OrderOrderByWithRelationInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderScalarFieldEnum!], after: String, before: String, first: Int, last: Int): OrderConnectionType!
 }
 
 input ItemWhereInput {
@@ -1176,8 +1277,6 @@ input PriceWhereInput {
   id: StringFilter
   price: DecimalFilter
   duration: IntNullableFilter
-  supplierName: StringFilter
-  country: StringNullableFilter
   site: StringNullableFilter
   comment: StringNullableFilter
   relevant: BoolNullableFilter
@@ -1188,7 +1287,7 @@ input PriceWhereInput {
   supplierId: StringNullableFilter
   product: ProductRelationFilter
   item: ItemListRelationFilter
-  Supplier: SupplierNullableRelationFilter
+  supplier: SupplierNullableRelationFilter
 }
 
 input DecimalFilter {
@@ -1268,7 +1367,7 @@ input SupplierWhereInput {
   id: StringFilter
   name: StringFilter
   location: EnumLocationFilter
-  products: PriceListRelationFilter
+  prices: PriceListRelationFilter
 }
 
 input AttributeValueListRelationFilter {
@@ -1601,8 +1700,6 @@ input PriceOrderByWithRelationInput {
   id: SortOrder
   price: SortOrder
   duration: SortOrderInput
-  supplierName: SortOrder
-  country: SortOrderInput
   site: SortOrderInput
   comment: SortOrderInput
   relevant: SortOrderInput
@@ -1613,18 +1710,19 @@ input PriceOrderByWithRelationInput {
   supplierId: SortOrderInput
   product: ProductOrderByWithRelationInput
   item: ItemOrderByRelationAggregateInput
-  Supplier: SupplierOrderByWithRelationInput
+  supplier: SupplierOrderByWithRelationInput
 }
 
 input SupplierOrderByWithRelationInput {
   id: SortOrder
   name: SortOrder
   location: SortOrder
-  products: PriceOrderByRelationAggregateInput
+  prices: PriceOrderByRelationAggregateInput
 }
 
 input ItemWhereUniqueInput {
   id: String
+  orderId_productId_userId: ItemOrderIdProductIdUserIdCompoundUniqueInput
   AND: [ItemWhereInput!]
   OR: [ItemWhereInput!]
   NOT: [ItemWhereInput!]
@@ -1644,6 +1742,12 @@ input ItemWhereUniqueInput {
   user: UserNullableRelationFilter
   statuses: StatusItemListRelationFilter
   commentItem: CommentItemListRelationFilter
+}
+
+input ItemOrderIdProductIdUserIdCompoundUniqueInput {
+  orderId: String!
+  productId: String!
+  userId: String!
 }
 
 enum ItemScalarFieldEnum {
@@ -1700,6 +1804,30 @@ enum ProductScalarFieldEnum {
   manufacturerId
 }
 
+input OrderWhereUniqueInput {
+  id: String
+  AND: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  address: StringNullableFilter
+  createdAt: DateTimeFilter
+  userId: StringFilter
+  managerId: StringNullableFilter
+  user: UserRelationFilter
+  manager: UserNullableRelationFilter
+  statuses: StatusListRelationFilter
+  items: ItemListRelationFilter
+  comments: CommentListRelationFilter
+}
+
+enum OrderScalarFieldEnum {
+  id
+  address
+  createdAt
+  userId
+  managerId
+}
+
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!): UserLoginType
@@ -1751,6 +1879,23 @@ type Mutation {
     orderId: String!
     where: ItemWhereInput
   ): DeleteOrderItemsType!
+  createOrder(order: CreateOrderInput!): CreateOrderType!
+  addProductToOrder(product: AddProductInput!): CreateOrderType!
+  deleteOrder(
+    """Идентификатор заказа"""
+    orderId: String!
+  ): DeleteOrderType!
+  addStatusOrder(
+    """Идентификатор заказа"""
+    orderId: String!
+
+    """Статус заказа"""
+    status: OrderStatus!
+  ): Status!
+  unloadOrder(
+    """Идентификатор заказа"""
+    orderId: String!
+  ): File!
 }
 
 input UserLoginInput {
@@ -1784,4 +1929,14 @@ input UpdateUserInput {
 
   """Date of birthday """
   birthday: DateTime
+}
+
+input CreateOrderInput {
+  address: String
+  fileId: String!
+}
+
+input AddProductInput {
+  productId: String!
+  quantity: Float!
 }

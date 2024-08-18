@@ -42,7 +42,6 @@ const modelItems = computed<MenuItem[]>(() => {
     <Breadcrumb
       :home="home"
       :model="modelItems"
-      class="pb-4"
     />
     <slot />
   </pv-container>

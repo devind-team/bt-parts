@@ -18,7 +18,7 @@ export class ProductsService {
     return await findManyCursorConnection(
       (args) =>
         this.prismaService.product.findMany({
-          include: { prices: { orderBy: { updatedAt: 'desc' } } },
+          include: { prices: { orderBy: { updatedAt: 'desc' } }, manufacturer: true },
           where: params.where,
           orderBy: params.orderBy,
           ...args,

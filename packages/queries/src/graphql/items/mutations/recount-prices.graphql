@@ -1,0 +1,10 @@
+#import "../../prices/fragments/price-fields.graphql"
+
+mutation RecountPrices($orderId: String!, $itemIds: [String!]!) {
+  recountPrices(orderId: $orderId, itemIds: $itemIds) {
+    id
+    price {
+      ...PriceFields
+    }
+  }
+}

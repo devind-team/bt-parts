@@ -1,5 +1,5 @@
 <template>
-  <div class="flex overflow-hidden relative flex-column flex-auto gap-3">
+  <div class="flex overflow-hidden relative flex-column flex-auto">
     <slot />
   </div>
 </template>

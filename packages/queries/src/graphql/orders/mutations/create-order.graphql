@@ -1,0 +1,9 @@
+#import "../fragments/order-fields.graphql"
+
+mutation CreateOrder($address: String, $fileId: String!) {
+  createOrder(order: { address: $address, fileId: $fileId }) {
+    order {
+      ...OrderFields
+    }
+  }
+}
