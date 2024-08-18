@@ -12,7 +12,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
 
-const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string, agreeToPrivacyPolicy: boolean }>({
+const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string, agreeToPrivacyPolicy: boolean , companyName: string}>({
   validationSchema: toTypedSchema(
     z
       .object({
@@ -59,14 +59,17 @@ onDone(async ({ data }) => {
 })
 
 const onSubmit = handleSubmit(
-  async (values: UserRegisterInput & { passwordConfirm: string }, { setErrors }: FormActions<UserRegisterInput>) => {
+  async (values: UserRegisterInput & { passwordConfirm: string, companyName?: string }, { setErrors }: FormActions<UserRegisterInput>) => {
     try {
       const userRegisterInput = Object.fromEntries(
-        Object.entries(values).filter(([key]) => key !== ('passwordConfirm' || 'companyName')),
+        Object.entries(values).filter(([key]) => key !== 'passwordConfirm' && key !== 'companyName' && key!== 'agreeToPrivacyPolicy'),
       ) as UserRegisterInput
-      const companyInput = Object.fromEntries(
-        Object.entries(values).filter(([key]) => key == 'companyName' as 'name'),
-      ) as CompanyInput
+      console.log(userRegisterInput)
+      // Create companyInput only if companyName is provided
+      const companyInput: CompanyInput = values.companyName
+        ? { name: values.companyName }
+        : { name: '' };
+      console.log(companyInput)
       await mutate({ userRegisterInput, companyInput })
     } catch (e) {
       setErrors({
@@ -76,7 +79,6 @@ const onSubmit = handleSubmit(
         lastName: t('auth.error.lastName'),
         patronymic: t('auth.error.patronymic'),
         phone: t('auth.error.phone'),
-        companyName: t('auth.error.companyName'),
         password: t('auth.error.password'),
       })
     }
@@ -208,13 +210,8 @@ const onSubmit = handleSubmit(
               v-model="companyName"
               aria-describedby="companyName-help"
               class="w-full mb-3"
-              :class="{ 'p-invalid': errors.companyName }"
             />
           </client-only>
-          <small
-            id="companyName-help"
-            class="p-error"
-          >{{ errors.companyName }}</small>
         </div>
         <div class="field">
           <label

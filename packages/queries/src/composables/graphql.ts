@@ -1770,7 +1770,6 @@ export type UserOrderByWithRelationInput = {
 export type UserRegisterInput = {
   /** Date of birthday  */
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['EmailAddress']['input'];
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];

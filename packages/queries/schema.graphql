@@ -1791,7 +1791,6 @@ input UserRegisterInput {
 
   """Date of birthday """
   birthday: DateTime
-  companyName: String
 }
 
 """
