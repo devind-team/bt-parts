@@ -16,7 +16,7 @@
       "@s3/*": ["apps/server/src/app/s3/*"],
       "@products/*": ["apps/server/src/app/products/*"],
       "@prices/*": ["apps/server/src/app/prices/*"],
-      "@orders/*": ["apps/server/src/app/prices/*"],
+      "@orders/*": ["apps/server/src/app/orders/*"],
       "@generated/*": ["apps/server/src/@generated/*"]
     }
   },
