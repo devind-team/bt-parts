@@ -219,7 +219,7 @@ const onSubmit = handleSubmit(
             <div class="flex-auto">
               <InputMask
                 id="phone"
-                v-model="phone as string | undefined"
+                v-model="phone"
                 mask="+7 (999) 999-9999"
                 placeholder="+7 (999) 999-9999"
                 fluid
