@@ -45,7 +45,10 @@
       "executor": "@nx-tools/nx-prisma:resolve"
     },
     "prisma-seed": {
-      "executor": "@nx-tools/nx-prisma:seed"
+      "executor": "@nx-tools/nx-prisma:seed",
+      "options": {
+        "script": "apps/server/prisma/seed.ts"
+      }
     },
     "prisma-status": {
       "executor": "@nx-tools/nx-prisma:status"

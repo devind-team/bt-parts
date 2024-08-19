@@ -1,4 +1,10 @@
 -- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'SELLER', 'BUYER', 'LOGIST', 'ADMIN');
+
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('UNKNOWN', 'MALE', 'FEMALE');
+
+-- CreateEnum
 CREATE TYPE "Location" AS ENUM ('CHINA', 'EUROPE', 'RUSSIA');
 
 -- CreateEnum
@@ -7,8 +13,28 @@ CREATE TYPE "OrderStatus" AS ENUM ('CREATED', 'ADOPTED', 'PRICED', 'OFFER', 'APP
 -- CreateEnum
 CREATE TYPE "ItemStatus" AS ENUM ('CREATED', 'PRICED', 'APPROVED', 'SUSTOCK', 'TRSTOCK', 'DELIVERY', 'RUSTOCK', 'COMPLETED');
 
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "companiesId" TEXT;
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "username" VARCHAR(50) NOT NULL,
+    "password" VARCHAR(256) NOT NULL,
+    "email" VARCHAR(50) NOT NULL,
+    "avatar" TEXT,
+    "last_name" VARCHAR(50) NOT NULL,
+    "first_name" VARCHAR(50) NOT NULL,
+    "patronymic" VARCHAR(50),
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "tz" VARCHAR(30) NOT NULL DEFAULT 'Europe/Moscow',
+    "phone" VARCHAR(20),
+    "birthday" TIMESTAMP(3),
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "gender" "Gender" NOT NULL DEFAULT 'UNKNOWN',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "companiesId" TEXT,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "companies" (
@@ -21,20 +47,33 @@ CREATE TABLE "companies" (
 );
 
 -- CreateTable
-CREATE TABLE "Manufacturer" (
+CREATE TABLE "files" (
     "id" TEXT NOT NULL,
     "name" VARCHAR(512) NOT NULL,
+    "bucket" VARCHAR(64) NOT NULL,
+    "key" VARCHAR(512) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "user_id" TEXT,
 
-    CONSTRAINT "Manufacturer_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "files_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Supplier" (
+CREATE TABLE "manufacturer" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(512) NOT NULL,
+
+    CONSTRAINT "manufacturer_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "supplier" (
     "id" TEXT NOT NULL,
     "name" VARCHAR(512) NOT NULL,
     "location" "Location" NOT NULL DEFAULT 'CHINA',
 
-    CONSTRAINT "Supplier_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "supplier_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -61,8 +100,6 @@ CREATE TABLE "prices" (
     "id" TEXT NOT NULL,
     "price" DECIMAL(9,2) NOT NULL,
     "duration" INTEGER DEFAULT 0,
-    "supplier_name" VARCHAR(200) NOT NULL,
-    "country" VARCHAR(50),
     "site" VARCHAR(128),
     "comment" TEXT,
     "relevant" BOOLEAN DEFAULT true,
@@ -176,6 +213,18 @@ CREATE TABLE "_FileToProduct" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE INDEX "users_username_email_idx" ON "users"("username", "email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "manufacturer_name_key" ON "manufacturer"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "products_verndor_code_key" ON "products"("verndor_code");
 
 -- CreateIndex
@@ -188,13 +237,16 @@ CREATE INDEX "_FileToProduct_B_index" ON "_FileToProduct"("B");
 ALTER TABLE "users" ADD CONSTRAINT "users_companiesId_fkey" FOREIGN KEY ("companiesId") REFERENCES "companies"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "products" ADD CONSTRAINT "products_manufacturerId_fkey" FOREIGN KEY ("manufacturerId") REFERENCES "Manufacturer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "files" ADD CONSTRAINT "files_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "products_manufacturerId_fkey" FOREIGN KEY ("manufacturerId") REFERENCES "manufacturer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "prices" ADD CONSTRAINT "prices_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "prices" ADD CONSTRAINT "prices_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "prices" ADD CONSTRAINT "prices_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "attribute_values" ADD CONSTRAINT "attribute_values_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

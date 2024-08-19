@@ -5,8 +5,6 @@ import { PriceCreateInput } from '@generated/price'
 export class CreatePriceInput extends PickType(PriceCreateInput, [
   'price',
   'duration',
-  'supplierName',
-  'country',
   'site',
   'comment',
   'validAt',

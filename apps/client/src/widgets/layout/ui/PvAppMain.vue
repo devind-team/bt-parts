@@ -8,13 +8,14 @@
 
 <style lang="scss">
 .pv-app-main {
+  margin-top: calc(var(--p-toolbar-height) + 10px);
+
   display: flex;
   flex: 1 0 auto;
   max-width: 100%;
-  transition: .2s cubic-bezier(.4, 0, .2, 1);
 
   & .pv-app-wrap {
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     max-width: 100%;
   }
 }
