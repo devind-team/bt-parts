@@ -37,7 +37,7 @@ export class AuthService {
       data: {
         ...userDto,
         password,
-        companiesId: companyDto.name ? await this.getCompany(companyDto) : undefined,
+        companiesId: companyDto.name ? await this.companyService.getCompany(companyDto) : undefined,
       },
     })
 
@@ -62,25 +62,5 @@ export class AuthService {
     }
     const valid = await this.bcryptService.compare(password, user.password)
     return valid ? user : null
-  }
-
-  /// Извините за этот код, но это единственный вариант как оно заработало, почему-то
-  /// в comand.service не хочет работать prismaService.companies
-  async getCompany(companyDto: CompanyInput): Promise<string> {
-    console.log(companyDto)
-    const company = await this.prismaService.companies.findUnique({
-      where: {
-        name: companyDto.name,
-      },
-    })
-    if (!company) {
-      const newCompany = await this.prismaService.companies.create({
-        data: {
-          ...companyDto,
-        },
-      })
-      return newCompany.id
-    }
-    return company.id
   }
 }

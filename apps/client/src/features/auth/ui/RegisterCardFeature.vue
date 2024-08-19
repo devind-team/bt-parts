@@ -64,22 +64,19 @@ const onSubmit = handleSubmit(
       const userRegisterInput = Object.fromEntries(
         Object.entries(values).filter(([key]) => key !== 'passwordConfirm' && key !== 'companyName' && key!== 'agreeToPrivacyPolicy'),
       ) as UserRegisterInput
-      console.log(userRegisterInput)
-      // Create companyInput only if companyName is provided
       const companyInput: CompanyInput = values.companyName
         ? { name: values.companyName }
-        : { name: '' };
-      console.log(companyInput)
+        : { name: '' }
       await mutate({ userRegisterInput, companyInput })
     } catch (e) {
       setErrors({
-        username: t('auth.error.username'),
-        email: t('auth.error.email'),
-        firstName: t('auth.error.firstName'),
-        lastName: t('auth.error.lastName'),
-        patronymic: t('auth.error.patronymic'),
-        phone: t('auth.error.phone'),
-        password: t('auth.error.password'),
+        username: t('auth.error.error'),
+        email: t('auth.error.error'),
+        firstName: t('auth.error.error'),
+        lastName: t('auth.error.error'),
+        patronymic: t('auth.error.error'),
+        phone: t('auth.error.error'),
+        password: t('auth.error.error'),
       })
     }
   },
@@ -285,13 +282,13 @@ const onSubmit = handleSubmit(
           >
           <label for="agreeToPrivacyPolicy">
             {{ $t('auth.agreeToPrivacyPolicy') }}
-            <nuxt-link
-              :to="localePath({ name: 'policy' })"
-              class="font-medium text-blue-500"
-            >
-              {{ $t('auth.privacyPolicy') }}
-            </nuxt-link>
           </label>
+          <nuxt-link
+            :to="localePath({ name: 'policy' })"
+            class="font-medium text-blue-500"
+          >
+            {{ $t('auth.privacyPolicy') }}
+          </nuxt-link>
         </div>
         <div>
           <small
