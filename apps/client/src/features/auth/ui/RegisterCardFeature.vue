@@ -21,7 +21,7 @@ const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { pass
         lastName: z.string().min(2),
         firstName: z.string().min(2),
         patronymic: z.string().optional(),
-        phone: z.string().min(9),
+        phone: z.string().length(17,{ message: t('auth.error.invalidPhoneNumber') }),
         companyName: z.string().optional(),
         password: z.string().min(6),
         passwordConfirm: z.string().min(6),
@@ -29,7 +29,6 @@ const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { pass
           message: t('auth.agreeToPrivacyPolicyRequired')
         }),
       })
-      .partial()
       .refine((data) => data.password === data.passwordConfirm, {
         message: t('auth.notEqualsPasswords'),
         path: ['passwordConfirm'],
@@ -282,13 +281,14 @@ const onSubmit = handleSubmit(
           >
           <label for="agreeToPrivacyPolicy">
             {{ $t('auth.agreeToPrivacyPolicy') }}
+          
+            <nuxt-link
+              :to="localePath({ name: 'policy' })"
+              class="font-medium text-blue-500"
+            >
+              {{ $t('auth.privacyPolicy') }}
+            </nuxt-link>
           </label>
-          <nuxt-link
-            :to="localePath({ name: 'policy' })"
-            class="font-medium text-blue-500"
-          >
-            {{ $t('auth.privacyPolicy') }}
-          </nuxt-link>
         </div>
         <div>
           <small

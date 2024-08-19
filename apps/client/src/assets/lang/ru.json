@@ -78,7 +78,8 @@
       "phone": "Неправильный номер телефона",
       "companyName": "Неправильное название компании",
       "password": "Неправильный пароль",
-      "passwordConfirm": "Пароли не совпадают"
+      "passwordConfirm": "Пароли не совпадают",
+      "invalidPhoneNumber": "Поле не должно быть пустым"
     },
     "accountExists": "Уже есть аккаунт?",
     "notAccount": "Нет аккаунта?",

@@ -71,7 +71,7 @@ model User {
   /// Phone number
   /// @Validator.MinLength(3)
   /// @Validator.MaxLength(20)
-  phone    String?   @unique @db.VarChar(20)
+  phone    String    @unique @db.VarChar(20)
   /// Birthday datetime
   /// @Validator.IsDate()
   birthday DateTime?
