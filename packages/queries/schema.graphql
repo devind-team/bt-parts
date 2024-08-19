@@ -446,6 +446,9 @@ type Product {
   """Article number"""
   vendorCode: String!
 
+  """VIN number"""
+  vinNumber: String
+
   """English name"""
   nameEn: String
 
@@ -696,6 +699,7 @@ type ItemConnectionType {
 type ProductCountAggregate {
   id: Int!
   vendorCode: Int!
+  vinNumber: Int!
   nameEn: Int!
   nameRu: Int!
   aliases: Int!
@@ -725,6 +729,7 @@ type ProductSumAggregate {
 type ProductMinAggregate {
   id: String
   vendorCode: String
+  vinNumber: String
   nameEn: String
   nameRu: String
   aliases: String
@@ -741,6 +746,7 @@ type ProductMinAggregate {
 type ProductMaxAggregate {
   id: String
   vendorCode: String
+  vinNumber: String
   nameEn: String
   nameRu: String
   aliases: String
@@ -1232,6 +1238,7 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: StringFilter
   vendorCode: StringFilter
+  vinNumber: StringNullableFilter
   nameEn: StringNullableFilter
   nameRu: StringNullableFilter
   aliases: StringNullableFilter
@@ -1682,6 +1689,7 @@ input CommentItemOrderByRelationAggregateInput {
 input ProductOrderByWithRelationInput {
   id: SortOrder
   vendorCode: SortOrder
+  vinNumber: SortOrderInput
   nameEn: SortOrderInput
   nameRu: SortOrderInput
   aliases: SortOrderInput
@@ -1792,6 +1800,7 @@ input ProductWhereUniqueInput {
   AND: [ProductWhereInput!]
   OR: [ProductWhereInput!]
   NOT: [ProductWhereInput!]
+  vinNumber: StringNullableFilter
   nameEn: StringNullableFilter
   nameRu: StringNullableFilter
   aliases: StringNullableFilter
@@ -1813,6 +1822,7 @@ input ProductWhereUniqueInput {
 enum ProductScalarFieldEnum {
   id
   vendorCode
+  vinNumber
   nameEn
   nameRu
   aliases

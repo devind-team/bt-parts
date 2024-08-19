@@ -1338,6 +1338,8 @@ export type Product = {
   updatedAt: Scalars['DateTime']['output'];
   /** Article number */
   vendorCode: Scalars['String']['output'];
+  /** VIN number */
+  vinNumber?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductAvgAggregate = {
@@ -1378,6 +1380,7 @@ export type ProductCountAggregate = {
   tnved: Scalars['Int']['output'];
   updatedAt: Scalars['Int']['output'];
   vendorCode: Scalars['Int']['output'];
+  vinNumber: Scalars['Int']['output'];
 };
 
 export type ProductEdge = {
@@ -1407,6 +1410,7 @@ export type ProductMaxAggregate = {
   tnved?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   vendorCode?: Maybe<Scalars['String']['output']>;
+  vinNumber?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductMinAggregate = {
@@ -1424,6 +1428,7 @@ export type ProductMinAggregate = {
   tnved?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   vendorCode?: Maybe<Scalars['String']['output']>;
+  vinNumber?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductOrderByRelationAggregateInput = {
@@ -1449,6 +1454,7 @@ export type ProductOrderByWithRelationInput = {
   tnved?: InputMaybe<SortOrderInput>;
   updatedAt?: InputMaybe<SortOrder>;
   vendorCode?: InputMaybe<SortOrder>;
+  vinNumber?: InputMaybe<SortOrderInput>;
 };
 
 export type ProductRelationFilter = {
@@ -1469,7 +1475,8 @@ export type ProductScalarFieldEnum =
   | 'stock'
   | 'tnved'
   | 'updatedAt'
-  | 'vendorCode';
+  | 'vendorCode'
+  | 'vinNumber';
 
 export type ProductSumAggregate = {
   __typename?: 'ProductSumAggregate';
@@ -1500,6 +1507,7 @@ export type ProductWhereInput = {
   tnved?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   vendorCode?: InputMaybe<StringFilter>;
+  vinNumber?: InputMaybe<StringNullableFilter>;
 };
 
 export type ProductWhereUniqueInput = {
@@ -1524,6 +1532,7 @@ export type ProductWhereUniqueInput = {
   tnved?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   vendorCode?: InputMaybe<Scalars['String']['input']>;
+  vinNumber?: InputMaybe<StringNullableFilter>;
 };
 
 export type Query = {
