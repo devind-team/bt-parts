@@ -11,6 +11,7 @@ type UserCountAggregate {
   firstName: Int!
   patronymic: Int!
   isActive: Int!
+  companyName: Int!
   tz: Int!
   phone: Int!
   birthday: Int!
@@ -31,6 +32,7 @@ type UserMinAggregate {
   firstName: String
   patronymic: String
   isActive: Boolean
+  companyName: String
   tz: String
   phone: String
   birthday: DateTime
@@ -69,6 +71,7 @@ type UserMaxAggregate {
   firstName: String
   patronymic: String
   isActive: Boolean
+  companyName: String
   tz: String
   phone: String
   birthday: DateTime
@@ -552,6 +555,9 @@ type User {
 
   """Active user"""
   isActive: Boolean!
+
+  """Company name"""
+  companyName: String!
 
   """TimeZone"""
   tz: String!
@@ -1085,6 +1091,7 @@ input UserWhereInput {
   firstName: StringFilter
   patronymic: StringNullableFilter
   isActive: BoolFilter
+  companyName: StringFilter
   tz: StringFilter
   phone: StringFilter
   birthday: DateTimeNullableFilter
@@ -1627,6 +1634,7 @@ input UserOrderByWithRelationInput {
   firstName: SortOrder
   patronymic: SortOrderInput
   isActive: SortOrder
+  companyName: SortOrder
   tz: SortOrder
   phone: SortOrder
   birthday: SortOrderInput

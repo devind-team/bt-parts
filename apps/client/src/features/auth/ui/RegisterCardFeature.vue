@@ -66,7 +66,6 @@ const onSubmit = handleSubmit(
       if (!values.patronymic) {
         userRegisterInput.patronymic = "";
       }
-      console.log(userRegisterInput);
       const companyInput: CompanyInput = values.companyName
         ? { name: values.companyName }
         : { name: '' }
@@ -283,6 +282,11 @@ const onSubmit = handleSubmit(
             class="p-error"
           >{{ errors.passwordConfirm }}</small>
         </div>
+        <div>
+          <label>
+            {{ t('auth.requiredFields') }}
+          </label>
+        </div> 
         <div class="field-checkbox">
           <input
             id="agreeToPrivacyPolicy"

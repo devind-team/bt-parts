@@ -64,10 +64,11 @@
     "patronymic": "Отчество",
     "gender": "Пол",
     "agreeToPrivacyPolicyRequired": "Подтвердите согласие с политикой в отношении обработки персональных данных",
-    "agreeToPrivacyPolicy": "* Согласен с",
+    "agreeToPrivacyPolicy": "Согласен с",
     "privacyPolicy": "Политикой в отношении обработки персональных данных",
     "passwordConfirmation": "Повторите пароль",
     "doRegister": "Зарегистрироваться",
+    "requiredFields": "* - обязательные поля",
     "error":{
       "error": "Ошибка авторизации",
       "username": "Неправильныей логин",

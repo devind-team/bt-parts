@@ -31,7 +31,6 @@ export class AuthService {
   }
 
   async register(userDto: UserRegisterInput, companyDto: CompanyInput): Promise<UserLoginType> {
-    console.log(userDto)
     const existingUser = await this.prismaService.user.findFirst({
       where: {
         OR: [{ username: userDto.username }, { email: userDto.email }, { phone: userDto.phone }],
@@ -50,12 +49,12 @@ export class AuthService {
 
     const saltRounds = 10
     const password = await this.bcryptService.hash(userDto.password, saltRounds)
-
+    const companyName = companyDto.name
     const user = await this.prismaService.user.create({
       data: {
         ...userDto,
         password,
-        companiesId: companyDto.name ? await this.companyService.getCompany(companyDto) : undefined,
+        companyName,
       },
     })
 

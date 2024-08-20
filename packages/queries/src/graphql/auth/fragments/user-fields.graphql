@@ -13,6 +13,7 @@ fragment UserFields on User {
   gender
   createdAt
   updatedAt
+  companyName
   tz
   __typename
 }
