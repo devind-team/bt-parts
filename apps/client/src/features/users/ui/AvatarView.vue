@@ -36,7 +36,7 @@ const onHandleFileUpload = async (fileId: string | null) => {
 <template>
   <div class="flex flex-wrap">
     <div class="w-12 md:w-3 text-500">
-      {{ $t('profile.avatar') }}
+      {{ t('profile.avatar') }}
     </div>
     <div class="w-12 md:w-9 flex flex-column align-content-center align-items-center gap-4">
       <Avatar
@@ -47,13 +47,13 @@ const onHandleFileUpload = async (fileId: string | null) => {
         shape="circle"
       />
       <Button
-        :label="$t('profile.changeAvatar')"
+        :label="t('profile.changeAvatar')"
         @click="visible = true"
       />
       <Dialog
         v-model:visible="visible"
         modal
-        :header="$t('profile.changeAvatar')"
+        :header="t('profile.changeAvatar')"
       >
         <FileChoiceUpload
           accept="image/*"

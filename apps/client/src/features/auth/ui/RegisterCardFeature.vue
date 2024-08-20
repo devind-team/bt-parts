@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { type FormActions } from 'vee-validate'
-import type { UserRegisterInput } from '@repo/queries/composables/graphql.ts'
+import type { CompanyInput, UserRegisterInput } from '@repo/queries/composables/graphql.ts'
 import * as z from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRegisterMutation } from '@repo/queries/composables/graphql'
@@ -12,30 +12,41 @@ const router = useRouter()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
 
-const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string }>({
+const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { passwordConfirm: string, agreeToPrivacyPolicy: boolean , companyName: string}>({
   validationSchema: toTypedSchema(
-    z.object({
-      email: z.string().email(),
-      username: z.string().min(2),
-      lastName: z.string().min(2),
-      firstName: z.string().min(2),
-      patronymic: z.string().optional(),
-      password: z.string().min(6),
-      passwordConfirm: z.string().min(6),
-    }).partial().refine((data) => data.password === data.passwordConfirm, {
-      message: t('auth.notEqualsPasswords'),
-      path: ['passwordConfirm'],
-    }),
+    z
+      .object({
+        email: z.string().email({ message: t('auth.error.invalidEmail') }),
+        username: z.string().min(3, { message: t('auth.error.invalidUsername') }),
+        lastName: z.string().min(2, { message: t('auth.error.invalidLastName') }),
+        firstName: z.string().min(2, { message: t('auth.error.invalidFirstName') }),
+        patronymic: z.string().optional(),
+        phone: z.string().length(17,{ message: t('auth.error.invalidPhoneNumber') }),
+        companyName: z.string().min(2, { message: t('auth.error.invalidCompanyName') }),
+        password: z.string().min(6, { message: t('auth.error.invalidPassword') }),
+        passwordConfirm: z.string().min(6, { message: t('auth.error.invalidPassword') }),
+        agreeToPrivacyPolicy: z.boolean().refine(val => val === true, {
+          message: t('auth.agreeToPrivacyPolicyRequired')
+        }),
+      })
+      .refine((data) => data.password === data.passwordConfirm, {
+        message: t('auth.notEqualsPasswords'),
+        path: ['passwordConfirm'],
+      }),
   ),
-})
+});
+
 
 const [email] = defineField('email')
 const [username] = defineField('username')
 const [firstName] = defineField('firstName')
 const [lastName] = defineField('lastName')
 const [patronymic] = defineField('patronymic')
+const [phone] = defineField('phone')
+const [companyName] = defineField('companyName')
 const [password] = defineField('password')
 const [passwordConfirm] = defineField('passwordConfirm')
+const [agreeToPrivacyPolicy] = defineField('agreeToPrivacyPolicy')
 
 const { mutate, onDone } = useRegisterMutation()
 onDone(async ({ data }) => {
@@ -46,23 +57,39 @@ onDone(async ({ data }) => {
   await router.push(localePath({ name: 'index' }))
 })
 
-const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfirm: string }, { setErrors }: FormActions<UserRegisterInput>) => {
-  try {
-    const userRegisterInput = Object.fromEntries(
-      Object.entries(values).filter(([key]) => key !== 'passwordConfirm')
-    ) as UserRegisterInput
-    await mutate({ userRegisterInput })
-  } catch (e) {
-    setErrors({
-      username: t('auth.error'),
-      email: t('auth.error'),
-      firstName: t('auth.error'),
-      lastName: t('auth.error'),
-      patronymic: t('auth.error'),
-      password: t('auth.error'),
-    })
-  }
-})
+const onSubmit = handleSubmit(
+  async (values: UserRegisterInput & { passwordConfirm: string, companyName?: string }, { setErrors }: FormActions<UserRegisterInput>) => {
+    try {
+      const userRegisterInput = Object.fromEntries(
+        Object.entries(values).filter(([key]) => key !== 'passwordConfirm' && key !== 'companyName' && key!== 'agreeToPrivacyPolicy'),
+      ) as UserRegisterInput
+      if (!values.patronymic) {
+        userRegisterInput.patronymic = "";
+      }
+      const companyInput: CompanyInput = values.companyName
+        ? { name: values.companyName }
+        : { name: '' }
+      await mutate({ userRegisterInput, companyInput })
+    } catch (e) {
+      if (e instanceof Error) {
+        const errorType = e.message;
+        switch (errorType) {
+          case 'username':
+            setErrors({ username: t('auth.error.usernameTaken') });
+            break;
+          case 'email':
+            setErrors({ email: t('auth.error.emailTaken') });
+            break;
+          case 'phone':
+            setErrors({ phone: t('auth.error.phoneTaken') });
+            break;
+        }
+      } else {
+        console.log(e);
+      }
+    }
+  },
+)
 </script>
 
 <template>
@@ -70,14 +97,14 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
     <template #header>
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">
-          {{ $t('auth.registration') }}
+          {{ t('auth.registration') }}
         </div>
-        <span class="text-600 font-medium mr-1 line-height-3">{{ $t('auth.accountExists') }}</span>
+        <span class="text-600 font-medium mr-1 line-height-3">{{ t('auth.accountExists') }}</span>
         <nuxt-link
           :to="localePath({ name: 'auth-login' })"
           class="font-medium text-blue-500"
         >
-          {{ $t('auth.login') }}
+          {{ t('auth.login') }}
         </nuxt-link>
       </div>
     </template>
@@ -87,7 +114,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
           <label
             for="email"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.email') }}</label>
+          >{{ t('auth.email') }}</label>
           <client-only>
             <InputText
               id="email"
@@ -106,7 +133,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
           <label
             for="username"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.username') }}</label>
+          >{{ t('auth.username') }}</label>
           <client-only>
             <InputText
               id="username"
@@ -125,7 +152,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
           <label
             for="lastName"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.lastName') }}</label>
+          >{{ t('auth.lastName') }}</label>
           <client-only>
             <InputText
               id="lastName"
@@ -144,7 +171,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
           <label
             for="firstName"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.firstName') }}</label>
+          >{{ t('auth.firstName') }}</label>
           <client-only>
             <InputText
               id="firstName"
@@ -163,7 +190,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
           <label
             for="patronymic"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.patronymic') }}</label>
+          >{{ t('auth.patronymic') }}</label>
           <client-only>
             <InputText
               id="patronymic"
@@ -180,9 +207,46 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
         </div>
         <div class="field">
           <label
+            for="companyName"
+            class="block text-900 font-medium mb-2"
+          >{{ t('auth.companyName') }}</label>
+          <client-only>
+            <InputText
+              id="companyName"
+              v-model="companyName"
+              aria-describedby="companyName-help"
+              class="w-full mb-3"
+            />
+          </client-only>
+        </div>
+        <div class="field">
+          <label
+            for="phone"
+            class="block text-900 font-medium mb-2"
+          >{{ t('auth.phone') }}</label>
+          <client-only>
+            <div class="flex-auto">
+              <InputMask
+                id="phone"
+                v-model="phone"
+                mask="+7 (999) 999-9999"
+                placeholder="+7 (999) 999-9999"
+                fluid
+                aria-describedby="phone-help"
+                :class="{ 'p-invalid': errors.phone }"
+              />
+            </div>
+          </client-only>
+          <small
+            id="phone-help"
+            class="p-error"
+          >{{ errors.phone }}</small>
+        </div>
+        <div class="field">
+          <label
             for="password"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.password') }}</label>
+          >{{ t('auth.password') }}</label>
           <client-only>
             <InputText
               id="password"
@@ -202,7 +266,7 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
           <label
             for="passwordConfirm"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.passwordConfirm') }}</label>
+          >{{ t('auth.passwordConfirm') }}</label>
           <client-only>
             <InputText
               id="passwordConfirm"
@@ -218,12 +282,41 @@ const onSubmit = handleSubmit(async (values: UserRegisterInput & { passwordConfi
             class="p-error"
           >{{ errors.passwordConfirm }}</small>
         </div>
+        <div>
+          <label>
+            {{ t('auth.requiredFields') }}
+          </label>
+        </div> 
+        <div class="field-checkbox">
+          <input
+            id="agreeToPrivacyPolicy"
+            v-model="agreeToPrivacyPolicy"
+            type="checkbox"
+            :class="{ 'p-invalid': errors.agreeToPrivacyPolicy }"
+          >
+          <label for="agreeToPrivacyPolicy">
+            {{ t('auth.agreeToPrivacyPolicy') }}
+          
+            <nuxt-link
+              :to="localePath({ name: 'policy' })"
+              class="font-medium text-blue-500"
+            >
+              {{ t('auth.privacyPolicy') }}
+            </nuxt-link>
+          </label>
+        </div>
+        <div>
+          <small
+            id="agreeToPrivacyPolicy-help"
+            class="p-error"
+          >{{ errors.agreeToPrivacyPolicy }}</small>
+        </div>
         <Button
           icon="pi pi-user"
           class="w-full"
           type="submit"
         >
-          {{ $t('auth.register') }}
+          {{ t('auth.register') }}
         </Button>
       </form>
     </template>

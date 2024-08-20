@@ -5,7 +5,7 @@ import AddProductToOrder from '@/features/orders/ui/AddProductToOrder.vue'
 
 const authStore = useAuthStore()
 const localePath = useLocalePath()
-
+const { t } = useI18n()
 const { date } = useFilters()
 
 const selectProduct = ref<Product>()
@@ -33,7 +33,7 @@ const props = defineProps<{
               </div>
               <i
                 v-if="item.original"
-                v-tooltip="$t('products.original')"
+                v-tooltip="t('products.original')"
                 class="pi pi-check-circle text-primary-600 ml-2"
               />
             </div>
@@ -42,24 +42,24 @@ const props = defineProps<{
                 v-if="authStore.loginIn"
                 @click="selectProduct = item"
               >
-                {{ $t('products.add') }}
+                {{ t('products.add') }}
               </Button>
               <nuxt-link
                 v-else
                 :to="localePath({ name: 'auth-login' })"
               >
-                {{ $t('products.doOrder') }}
+                {{ t('products.doOrder') }}
               </nuxt-link>
             </div>
           </div>
           <div class="flex align-content-center justify-content-between text-xs">
             <div class="flex flex-wrap gap-2">
-              <Chip :label="`${$t('products.manufacturer')}: ${item.manufacturer.name}`" />
+              <Chip :label="`${t('products.manufacturer')}: ${item.manufacturer.name}`" />
               <Chip
                 v-if="item.aliases"
-                :label="`${$t('products.aliases')}: ${item.aliases}`"
+                :label="`${t('products.aliases')}: ${item.aliases}`"
               />
-              <Chip :label="`${$t('products.inStock')}: ${item.stock}`" />
+              <Chip :label="`${t('products.inStock')}: ${item.stock}`" />
             </div>
             <div class="flex gap-2">
               <Tag

@@ -65,13 +65,16 @@ model User {
   /// Active user
   isActive   Boolean @default(true) @map("is_active")
 
+  /// Company name
+  /// @Validator.MaxLength(50)
+  companyName String @default("BT_Parts") @map("company_name") @db.VarChar(50)
   /// TimeZone
-  tz String @default("Europe/Moscow") @db.VarChar(30)
+  tz          String @default("Europe/Moscow") @db.VarChar(30)
 
   /// Phone number
   /// @Validator.MinLength(3)
   /// @Validator.MaxLength(20)
-  phone    String?   @db.VarChar(20)
+  phone    String    @unique @db.VarChar(20)
   /// Birthday datetime
   /// @Validator.IsDate()
   birthday DateTime?
@@ -127,11 +130,11 @@ model Companies {
   id       String   @id @default(uuid())
   /// Companies Name
   /// @Validator.MinLength(3)
-  name     String   @db.VarChar(512)
+  name     String   @unique @db.VarChar(512)
   /// Location
   location Location @default(RUSSIA)
   /// Address
-  address  String   @db.VarChar(512)
+  address  String?  @db.VarChar(512)
 
   User User[]
 

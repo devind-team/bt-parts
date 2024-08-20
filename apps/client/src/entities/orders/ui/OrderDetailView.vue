@@ -4,6 +4,7 @@ import ItemsDataView from '@/entities/items/ui/ItemsDataView.vue'
 import orderQuery from '@repo/queries/graphql/orders/queries/order.graphql'
 
 const { dateTimeHM } = useFilters()
+const { t } = useI18n()
 
 const props = defineProps<{
   orderId: String
@@ -30,7 +31,7 @@ const { data: order, loading } = useCommonQuery<OrderQuery, OrderQueryVariables>
             v-for="status in order!.statuses"
             :key="status.id"
             v-tooltip="dateTimeHM(status.createdAt)"
-            :value="$t(`orderStatuses.${status.status}`)"
+            :value="t(`orderStatuses.${status.status}`)"
           />
         </div>
       </div>

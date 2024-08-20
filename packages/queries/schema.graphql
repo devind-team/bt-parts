@@ -11,6 +11,7 @@ type UserCountAggregate {
   firstName: Int!
   patronymic: Int!
   isActive: Int!
+  companyName: Int!
   tz: Int!
   phone: Int!
   birthday: Int!
@@ -31,6 +32,7 @@ type UserMinAggregate {
   firstName: String
   patronymic: String
   isActive: Boolean
+  companyName: String
   tz: String
   phone: String
   birthday: DateTime
@@ -69,6 +71,7 @@ type UserMaxAggregate {
   firstName: String
   patronymic: String
   isActive: Boolean
+  companyName: String
   tz: String
   phone: String
   birthday: DateTime
@@ -94,7 +97,7 @@ type Companies {
   location: Location!
 
   """Address"""
-  address: String!
+  address: String
   User: [User!]
   _count: CompaniesCount!
 }
@@ -446,6 +449,9 @@ type Product {
   """Article number"""
   vendorCode: String!
 
+  """VIN number"""
+  vinNumber: String
+
   """English name"""
   nameEn: String
 
@@ -550,11 +556,14 @@ type User {
   """Active user"""
   isActive: Boolean!
 
+  """Company name"""
+  companyName: String!
+
   """TimeZone"""
   tz: String!
 
   """Phone number"""
-  phone: String
+  phone: String!
 
   """Birthday datetime"""
   birthday: DateTime
@@ -593,6 +602,28 @@ type User {
 type UserLoginType {
   accessToken: String!
   user: User!
+}
+
+type CompaniesCountAggregate {
+  id: Int!
+  name: Int!
+  location: Int!
+  address: Int!
+  _all: Int!
+}
+
+type CompaniesMinAggregate {
+  id: String
+  name: String
+  location: Location
+  address: String
+}
+
+type CompaniesMaxAggregate {
+  id: String
+  name: String
+  location: Location
+  address: String
 }
 
 type DeleteOrderItemsType {
@@ -674,6 +705,7 @@ type ItemConnectionType {
 type ProductCountAggregate {
   id: Int!
   vendorCode: Int!
+  vinNumber: Int!
   nameEn: Int!
   nameRu: Int!
   aliases: Int!
@@ -703,6 +735,7 @@ type ProductSumAggregate {
 type ProductMinAggregate {
   id: String
   vendorCode: String
+  vinNumber: String
   nameEn: String
   nameRu: String
   aliases: String
@@ -719,6 +752,7 @@ type ProductMinAggregate {
 type ProductMaxAggregate {
   id: String
   vendorCode: String
+  vinNumber: String
   nameEn: String
   nameRu: String
   aliases: String
@@ -1057,8 +1091,9 @@ input UserWhereInput {
   firstName: StringFilter
   patronymic: StringNullableFilter
   isActive: BoolFilter
+  companyName: StringFilter
   tz: StringFilter
-  phone: StringNullableFilter
+  phone: StringFilter
   birthday: DateTimeNullableFilter
   role: EnumRoleFilter
   gender: EnumGenderFilter
@@ -1148,7 +1183,7 @@ input CompaniesWhereInput {
   id: StringFilter
   name: StringFilter
   location: EnumLocationFilter
-  address: StringFilter
+  address: StringNullableFilter
   User: UserListRelationFilter
 }
 
@@ -1210,6 +1245,7 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: StringFilter
   vendorCode: StringFilter
+  vinNumber: StringNullableFilter
   nameEn: StringNullableFilter
   nameRu: StringNullableFilter
   aliases: StringNullableFilter
@@ -1598,8 +1634,9 @@ input UserOrderByWithRelationInput {
   firstName: SortOrder
   patronymic: SortOrderInput
   isActive: SortOrder
+  companyName: SortOrder
   tz: SortOrder
-  phone: SortOrderInput
+  phone: SortOrder
   birthday: SortOrderInput
   role: SortOrder
   gender: SortOrder
@@ -1621,7 +1658,7 @@ input CompaniesOrderByWithRelationInput {
   id: SortOrder
   name: SortOrder
   location: SortOrder
-  address: SortOrder
+  address: SortOrderInput
   User: UserOrderByRelationAggregateInput
 }
 
@@ -1660,6 +1697,7 @@ input CommentItemOrderByRelationAggregateInput {
 input ProductOrderByWithRelationInput {
   id: SortOrder
   vendorCode: SortOrder
+  vinNumber: SortOrderInput
   nameEn: SortOrderInput
   nameRu: SortOrderInput
   aliases: SortOrderInput
@@ -1770,6 +1808,7 @@ input ProductWhereUniqueInput {
   AND: [ProductWhereInput!]
   OR: [ProductWhereInput!]
   NOT: [ProductWhereInput!]
+  vinNumber: StringNullableFilter
   nameEn: StringNullableFilter
   nameRu: StringNullableFilter
   aliases: StringNullableFilter
@@ -1791,6 +1830,7 @@ input ProductWhereUniqueInput {
 enum ProductScalarFieldEnum {
   id
   vendorCode
+  vinNumber
   nameEn
   nameRu
   aliases
@@ -1830,7 +1870,7 @@ enum OrderScalarFieldEnum {
 
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
-  register(userRegisterInput: UserRegisterInput!): UserLoginType
+  register(userRegisterInput: UserRegisterInput!, companyInput: CompanyInput): UserLoginType
   uploadAvatar(fileId: String!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   addStatusItems(
@@ -1913,12 +1953,21 @@ input UserRegisterInput {
 
   """Date of birthday """
   birthday: DateTime
+
+  """Phone number """
+  phone: String!
 }
 
 """
 A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address.
 """
 scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
+
+input CompanyInput {
+  name: String!
+  location: Location
+  address: String
+}
 
 input UpdateUserInput {
   id: String

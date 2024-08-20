@@ -6,7 +6,7 @@ useHead({ title: t('profile.settings') })
 <template>
   <Card>
     <template #title>
-      {{ $t('profile.settings') }}
+      {{ t('profile.settings') }}
     </template>
     <template #content>
       Для изменения настроек обратитесь к администратору.

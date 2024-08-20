@@ -17,8 +17,8 @@ const { defineField, handleSubmit, errors } = useForm<UserLoginInput>({
     z.object({
       username: z.string().min(2),
       password: z.string().min(6),
-    })
-  )
+    }),
+  ),
 })
 
 const [username] = defineField('username')
@@ -34,16 +34,12 @@ onDone(async (result: { data?: { login: UserLoginType } | null }) => {
   await router.push(localePath({ name: 'index' }))
 })
 
-const onSubmit = handleSubmit(async (
-  userLoginInput: UserLoginInput,
-  { setErrors }: FormActions<UserLoginInput>,
-) => {
+const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors }: FormActions<UserLoginInput>) => {
   try {
     await mutate({ userLoginInput })
   } catch (e) {
     setErrors({ username: t('auth.error'), password: t('auth.error') })
   }
-
 })
 </script>
 
@@ -58,14 +54,14 @@ const onSubmit = handleSubmit(async (
           class="mb-3"
         >
         <div class="text-900 text-3xl font-medium mb-3">
-          {{ $t('auth.welcome') }}
+          {{ t('auth.welcome') }}
         </div>
-        <span class="mr-2">{{ $t('auth.notAccount') }}</span>
+        <span class="mr-2">{{ t('auth.notAccount') }}</span>
         <nuxt-link
           :to="localePath({ name: 'auth-register' })"
           class="font-medium text-blue-500"
         >
-          {{ $t('auth.create') }}
+          {{ t('auth.create') }}
         </nuxt-link>
       </div>
     </template>
@@ -76,7 +72,7 @@ const onSubmit = handleSubmit(async (
             for="username"
             class="block text-900 font-medium mb-2"
           >
-            {{ $t('auth.username') }}
+            {{ t('auth.username') }}
           </label>
           <client-only>
             <InputText
@@ -98,7 +94,7 @@ const onSubmit = handleSubmit(async (
           <label
             for="password"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.password') }}</label>
+          >{{ t('auth.password') }}</label>
           <client-only>
             <InputText
               id="password"
@@ -119,7 +115,7 @@ const onSubmit = handleSubmit(async (
 
         <div class="flex align-items-center justify-content-between mb-6">
           <nuxt-link :to="localePath({ name: 'index' })">
-            {{ $t('auth.forgotPassword') }}
+            {{ t('auth.forgotPassword') }}
           </nuxt-link>
         </div>
 
@@ -128,7 +124,7 @@ const onSubmit = handleSubmit(async (
           class="w-full"
           type="submit"
         >
-          {{ $t('auth.login') }}
+          {{ t('auth.login') }}
         </Button>
       </form>
     </template>

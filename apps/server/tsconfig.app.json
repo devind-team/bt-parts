@@ -3,51 +3,23 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": [
-      "node",
-      "Multer"
-    ],
+    "types": ["node", "Multer"],
     "emitDecoratorMetadata": true,
     "target": "es2021",
     "paths": {
-      "@common/*": [
-        "apps/server/src/app/common/*"
-      ],
-      "@auth/*": [
-        "apps/server/src/app/auth/*"
-      ],
-      "@users/*": [
-        "apps/server/src/app/users/*"
-      ],
-      "@files/*": [
-        "apps/server/src/app/files/*"
-      ],
-      "@items/*": [
-        "apps/server/src/app/items/*"
-      ],
-      "@orders/*": [
-        "apps/server/src/app/orders/*"
-      ],
-      "@s3/*": [
-        "apps/server/src/app/s3/*"
-      ],
-      "@products/*": [
-        "apps/server/src/app/products/*"
-      ],
-      "@prices/*": [
-        "apps/server/src/app/prices/*"
-      ],
-      "@generated/*": [
-        "apps/server/src/@generated/*"
-      ]
+      "@common/*": ["apps/server/src/app/common/*"],
+      "@auth/*": ["apps/server/src/app/auth/*"],
+      "@company/*": ["apps/server/src/app/company/*"],
+      "@users/*": ["apps/server/src/app/users/*"],
+      "@files/*": ["apps/server/src/app/files/*"],
+      "@items/*": ["apps/server/src/app/items/*"],
+      "@s3/*": ["apps/server/src/app/s3/*"],
+      "@products/*": ["apps/server/src/app/products/*"],
+      "@prices/*": ["apps/server/src/app/prices/*"],
+      "@orders/*": ["apps/server/src/app/orders/*"],
+      "@generated/*": ["apps/server/src/@generated/*"]
     }
   },
-  "exclude": [
-    "jest.config.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ],
-  "include": [
-    "src/**/*.ts"
-  ]
+  "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
+  "include": ["src/**/*.ts"]
 }

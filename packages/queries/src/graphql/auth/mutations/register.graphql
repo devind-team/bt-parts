@@ -1,10 +1,11 @@
 #import "../fragments/user-fields.graphql"
 
-mutation Register($userRegisterInput: UserRegisterInput!) {
-  register(userRegisterInput: $userRegisterInput) {
+mutation Register($userRegisterInput: UserRegisterInput!, $companyInput: CompanyInput!) {
+  register(userRegisterInput: $userRegisterInput, companyInput: $companyInput) {
     accessToken
     user {
       ...UserFields
     }
   }
 }
+

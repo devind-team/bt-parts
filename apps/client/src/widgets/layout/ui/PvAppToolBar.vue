@@ -45,7 +45,7 @@ const toggleProfileMenu = (event: PointerEvent) => {
           width="32"
         />
         <span class="text-xl ml-3 font-medium">
-          {{ $t('name') }}
+          {{ t('name') }}
         </span>
       </NuxtLink>
     </template>
@@ -78,7 +78,7 @@ const toggleProfileMenu = (event: PointerEvent) => {
             text
             plain
           >
-            {{ $t('auth.login') }}
+            {{ t('auth.login') }}
           </Button>
         </template>
       </div>
