@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { getToken } = useApollo()
-
+const { t } = useI18n()
 const props = withDefaults(defineProps<{
   accept?: string
   name?: string
@@ -34,9 +34,9 @@ const onHandleUpload = async (event: { files: File | File[] }) => {
 
 <template>
   <FileUpload
-    :choose-label="$t('chose')"
-    :upload-label="$t('upload')"
-    :cancel-label="$t('cancel')"
+    :choose-label="t('chose')"
+    :upload-label="t('upload')"
+    :cancel-label="t('cancel')"
     :max-file-size="1000000"
     :file-limit="props.fileLimit"
     :name="props.name"
@@ -46,7 +46,7 @@ const onHandleUpload = async (event: { files: File | File[] }) => {
     @uploader="onHandleUpload"
   >
     <template #empty>
-      <span>{{ $t('emptyFile') }}</span>
+      <span>{{ t('emptyFile') }}</span>
     </template>
   </FileUpload>
 </template>

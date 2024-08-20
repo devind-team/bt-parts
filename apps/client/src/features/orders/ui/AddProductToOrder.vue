@@ -47,7 +47,7 @@ const onSubmit = handleSubmit(async (values: AddProductInput, { setErrors }: For
 <template>
   <Dialog
     v-model:visible="visible"
-    :header="`${$t('products.part')} ${product?.vendorCode}`"
+    :header="`${t('products.part')} ${product?.vendorCode}`"
     :style="{ width: '50rem' }"
     modal
   >
@@ -57,7 +57,7 @@ const onSubmit = handleSubmit(async (values: AddProductInput, { setErrors }: For
           for="quantity"
           class="block text-900 font-medium mb-2"
         >
-          {{ $t('products.quantity') }}
+          {{ t('products.quantity') }}
         </label>
         <client-only>
           <InputNumber
@@ -77,7 +77,7 @@ const onSubmit = handleSubmit(async (values: AddProductInput, { setErrors }: For
       </div>
       <div class="flex justify-end">
         <Button
-          :label="$t('products.add')"
+          :label="t('products.add')"
           type="submit"
         />
       </div>

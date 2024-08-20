@@ -54,14 +54,14 @@ const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors
           class="mb-3"
         >
         <div class="text-900 text-3xl font-medium mb-3">
-          {{ $t('auth.welcome') }}
+          {{ t('auth.welcome') }}
         </div>
-        <span class="mr-2">{{ $t('auth.notAccount') }}</span>
+        <span class="mr-2">{{ t('auth.notAccount') }}</span>
         <nuxt-link
           :to="localePath({ name: 'auth-register' })"
           class="font-medium text-blue-500"
         >
-          {{ $t('auth.create') }}
+          {{ t('auth.create') }}
         </nuxt-link>
       </div>
     </template>
@@ -72,7 +72,7 @@ const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors
             for="username"
             class="block text-900 font-medium mb-2"
           >
-            {{ $t('auth.username') }}
+            {{ t('auth.username') }}
           </label>
           <client-only>
             <InputText
@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors
           <label
             for="password"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.password') }}</label>
+          >{{ t('auth.password') }}</label>
           <client-only>
             <InputText
               id="password"
@@ -115,7 +115,7 @@ const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors
 
         <div class="flex align-items-center justify-content-between mb-6">
           <nuxt-link :to="localePath({ name: 'index' })">
-            {{ $t('auth.forgotPassword') }}
+            {{ t('auth.forgotPassword') }}
           </nuxt-link>
         </div>
 
@@ -124,7 +124,7 @@ const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors
           class="w-full"
           type="submit"
         >
-          {{ $t('auth.login') }}
+          {{ t('auth.login') }}
         </Button>
       </form>
     </template>

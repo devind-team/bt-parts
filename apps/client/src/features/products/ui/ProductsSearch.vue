@@ -7,7 +7,7 @@ import ProductsDataView from '@/entities/products/ui/ProductsDataView.vue'
 const router = useRouter()
 const route = useRoute()
 const localePath = useLocalePath()
-
+const { t } = useI18n()
 const handleSearch = (q: string) => {
   router.push(localePath({ query: { q } }))
 }
@@ -31,7 +31,7 @@ const { data: products, loading, pagination } = useQueryRelay<SearchProductsQuer
       />
     </template>
     <template #subtitle>
-      {{ $t('count', { count: pagination.count.value }) }}
+      {{ t('count', { count: pagination.count.value }) }}
     </template>
     <template #content>
       <ProgressSpinner v-if="loading" />

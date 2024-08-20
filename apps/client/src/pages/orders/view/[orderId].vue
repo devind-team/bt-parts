@@ -16,7 +16,7 @@ useHead({ title: t('orders.detail', { orderId: route.params.orderId }) })
 <template>
   <bread-crumbs :items="props.links">
     <div class="title">
-      {{ $t('orders.detail', { orderId: route.params.orderId }) }}
+      {{ t('orders.detail', { orderId: route.params.orderId }) }}
     </div>
     <order-detail-view :order-id="String(route.params.orderId)" />
   </bread-crumbs>

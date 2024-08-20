@@ -557,7 +557,7 @@ type User {
   tz: String!
 
   """Phone number"""
-  phone: String
+  phone: String!
 
   """Birthday datetime"""
   birthday: DateTime
@@ -1086,7 +1086,7 @@ input UserWhereInput {
   patronymic: StringNullableFilter
   isActive: BoolFilter
   tz: StringFilter
-  phone: StringNullableFilter
+  phone: StringFilter
   birthday: DateTimeNullableFilter
   role: EnumRoleFilter
   gender: EnumGenderFilter
@@ -1628,7 +1628,7 @@ input UserOrderByWithRelationInput {
   patronymic: SortOrderInput
   isActive: SortOrder
   tz: SortOrder
-  phone: SortOrderInput
+  phone: SortOrder
   birthday: SortOrderInput
   role: SortOrder
   gender: SortOrder
@@ -1942,10 +1942,12 @@ input UserRegisterInput {
   lastName: String!
   firstName: String!
   patronymic: String
-  phone: String
 
   """Date of birthday """
   birthday: DateTime
+
+  """Phone number """
+  phone: String!
 }
 
 """

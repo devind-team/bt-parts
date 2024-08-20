@@ -2,7 +2,7 @@
 import ordersQuery from '@repo/queries/graphql/orders/queries/orders.graphql'
 const { dateTimeHM } = useFilters()
 const localePath = useLocalePath()
-
+const { t } = useI18n()
 const { data: orders, loading } = useQueryRelay({
   document: ordersQuery,
 })
@@ -14,17 +14,17 @@ const { data: orders, loading } = useQueryRelay({
     :loading="loading"
   >
     <Column
-      :header="$t('orders.name')"
+      :header="t('orders.name')"
       field="createdAt"
     >
       <template #body="{ data }">
         <nuxt-link :to="localePath({ name: 'orders-view-orderId', params: { orderId: data.id } })">
-          {{ $t('orders.from', { dateTime: dateTimeHM(data.createdAt) }) }}
+          {{ t('orders.from', { dateTime: dateTimeHM(data.createdAt) }) }}
         </nuxt-link>
       </template>
     </Column>
     <Column
-      :header="$t('status')"
+      :header="t('status')"
       field="statuses"
     >
       <template #body="{ data }">
@@ -33,13 +33,13 @@ const { data: orders, loading } = useQueryRelay({
             v-for="status in data.statuses"
             :key="status.id"
             v-tooltip="dateTimeHM(status.createdAt)"
-            :value="$t(`orderStatuses.${status.status}`)"
+            :value="t(`orderStatuses.${status.status}`)"
           />
         </div>
       </template>
     </Column>
     <Column
-      :header="$t('users.name')"
+      :header="t('users.name')"
       field="user"
     >
       <template #body="{ data }">

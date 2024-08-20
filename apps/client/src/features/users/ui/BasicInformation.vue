@@ -49,7 +49,7 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <div class="flex flex-wrap mt-5">
     <div class="w-12 md:w-3 text-500">
-      {{ $t('profile.basicInformation.name') }}
+      {{ t('profile.basicInformation.name') }}
     </div>
     <div class="w-12 md:w-9 px-2">
       <form @submit="onSubmit">
@@ -57,7 +57,7 @@ const onSubmit = handleSubmit(async (values) => {
           <label
             :for="`profile-email`"
             class="text-800"
-          >{{ $t(`auth.email`) }}</label>
+          >{{ t(`auth.email`) }}</label>
           <client-only>
             <InputText
               id="profile-email"
@@ -72,7 +72,7 @@ const onSubmit = handleSubmit(async (values) => {
           <label
             :for="`profile-lastName`"
             class="text-800"
-          >{{ $t(`auth.lastName`) }}</label>
+          >{{ t(`auth.lastName`) }}</label>
           <client-only>
             <InputText
               id="profile-lastName"
@@ -87,7 +87,7 @@ const onSubmit = handleSubmit(async (values) => {
           <label
             :for="`profile-firstName`"
             class="text-800"
-          >{{ $t(`auth.firstName`) }}</label>
+          >{{ t(`auth.firstName`) }}</label>
           <client-only>
             <InputText
               id="profile-firstName"
@@ -102,7 +102,7 @@ const onSubmit = handleSubmit(async (values) => {
           <label
             :for="`profile-patronymic`"
             class="text-800"
-          >{{ $t(`auth.patronymic`) }}</label>
+          >{{ t(`auth.patronymic`) }}</label>
           <client-only>
             <InputText
               id="profile-patronymic"
@@ -116,7 +116,7 @@ const onSubmit = handleSubmit(async (values) => {
         <div class="flex justify-content-end">
           <Button
             :loading="loading"
-            :label="$t('save')"
+            :label="t('save')"
             icon="pi pi-check"
             type="submit"
           />

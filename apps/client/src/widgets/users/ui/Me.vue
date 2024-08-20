@@ -6,17 +6,17 @@ import meQuery from '@repo/queries/graphql/auth/queries/me.graphql'
 
 const authStore = useAuthStore()
 const { dateTimeHM } = useFilters()
-
+const { t } = useI18n()
 const { data: user, changeUpdate, loading } = useCommonQuery<MeQuery, MeQueryVariables>({ document: meQuery })
 </script>
 
 <template>
   <Card>
     <template #title>
-      {{ `${$t('profile.name')} ` }}{{ authStore.fullName }}
+      {{ `${t('profile.name')} ` }}{{ authStore.fullName }}
     </template>
     <template #subtitle>
-      {{ $t('profile.createdAt') }}: {{ dateTimeHM(authStore.user?.createdAt) }}
+      {{ t('profile.createdAt') }}: {{ dateTimeHM(authStore.user?.createdAt) }}
     </template>
     <template #content>
       <ProgressSpinner v-if="loading" />

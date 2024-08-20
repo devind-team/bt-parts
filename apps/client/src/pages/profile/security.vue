@@ -6,7 +6,7 @@ useHead({ title: t('profile.security') })
 <template>
   <Card>
     <template #title>
-      {{ $t('profile.security') }}
+      {{ t('profile.security') }}
     </template>
     <template #content>
       Для смены пароля обратитесь к администратору.

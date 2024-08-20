@@ -87,14 +87,14 @@ const onSubmit = handleSubmit(
     <template #header>
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">
-          {{ $t('auth.registration') }}
+          {{ t('auth.registration') }}
         </div>
-        <span class="text-600 font-medium mr-1 line-height-3">{{ $t('auth.accountExists') }}</span>
+        <span class="text-600 font-medium mr-1 line-height-3">{{ t('auth.accountExists') }}</span>
         <nuxt-link
           :to="localePath({ name: 'auth-login' })"
           class="font-medium text-blue-500"
         >
-          {{ $t('auth.login') }}
+          {{ t('auth.login') }}
         </nuxt-link>
       </div>
     </template>
@@ -104,7 +104,7 @@ const onSubmit = handleSubmit(
           <label
             for="email"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.email') }}</label>
+          >{{ t('auth.email') }}</label>
           <client-only>
             <InputText
               id="email"
@@ -123,7 +123,7 @@ const onSubmit = handleSubmit(
           <label
             for="username"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.username') }}</label>
+          >{{ t('auth.username') }}</label>
           <client-only>
             <InputText
               id="username"
@@ -142,7 +142,7 @@ const onSubmit = handleSubmit(
           <label
             for="lastName"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.lastName') }}</label>
+          >{{ t('auth.lastName') }}</label>
           <client-only>
             <InputText
               id="lastName"
@@ -161,7 +161,7 @@ const onSubmit = handleSubmit(
           <label
             for="firstName"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.firstName') }}</label>
+          >{{ t('auth.firstName') }}</label>
           <client-only>
             <InputText
               id="firstName"
@@ -180,7 +180,7 @@ const onSubmit = handleSubmit(
           <label
             for="patronymic"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.patronymic') }}</label>
+          >{{ t('auth.patronymic') }}</label>
           <client-only>
             <InputText
               id="patronymic"
@@ -199,7 +199,7 @@ const onSubmit = handleSubmit(
           <label
             for="companyName"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.companyName') }}</label>
+          >{{ t('auth.companyName') }}</label>
           <client-only>
             <InputText
               id="companyName"
@@ -213,7 +213,7 @@ const onSubmit = handleSubmit(
           <label
             for="phone"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.phone') }}</label>
+          >{{ t('auth.phone') }}</label>
           <client-only>
             <div class="flex-auto">
               <InputMask
@@ -236,7 +236,7 @@ const onSubmit = handleSubmit(
           <label
             for="password"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.password') }}</label>
+          >{{ t('auth.password') }}</label>
           <client-only>
             <InputText
               id="password"
@@ -256,7 +256,7 @@ const onSubmit = handleSubmit(
           <label
             for="passwordConfirm"
             class="block text-900 font-medium mb-2"
-          >{{ $t('auth.passwordConfirm') }}</label>
+          >{{ t('auth.passwordConfirm') }}</label>
           <client-only>
             <InputText
               id="passwordConfirm"
@@ -280,13 +280,13 @@ const onSubmit = handleSubmit(
             :class="{ 'p-invalid': errors.agreeToPrivacyPolicy }"
           >
           <label for="agreeToPrivacyPolicy">
-            {{ $t('auth.agreeToPrivacyPolicy') }}
+            {{ t('auth.agreeToPrivacyPolicy') }}
           
             <nuxt-link
               :to="localePath({ name: 'policy' })"
               class="font-medium text-blue-500"
             >
-              {{ $t('auth.privacyPolicy') }}
+              {{ t('auth.privacyPolicy') }}
             </nuxt-link>
           </label>
         </div>
@@ -301,7 +301,7 @@ const onSubmit = handleSubmit(
           class="w-full"
           type="submit"
         >
-          {{ $t('auth.register') }}
+          {{ t('auth.register') }}
         </Button>
       </form>
     </template>
