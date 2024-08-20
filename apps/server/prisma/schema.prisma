@@ -67,7 +67,7 @@ model User {
 
   /// Company name
   /// @Validator.MaxLength(50)
-  companyName String @map("company_name") @db.VarChar(50)
+  companyName String @default("BT_Parts") @map("company_name") @db.VarChar(50)
   /// TimeZone
   tz          String @default("Europe/Moscow") @db.VarChar(30)
 
