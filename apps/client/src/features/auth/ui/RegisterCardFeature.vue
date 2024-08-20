@@ -16,15 +16,15 @@ const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { pass
   validationSchema: toTypedSchema(
     z
       .object({
-        email: z.string().email(),
-        username: z.string().min(2),
-        lastName: z.string().min(2),
-        firstName: z.string().min(2),
-        patronymic: z.string().optional(),
+        email: z.string().email({ message: t('auth.error.invalidEmail') }),
+        username: z.string().min(3, { message: t('auth.error.invalidUsername') }),
+        lastName: z.string().min(2, { message: t('auth.error.invalidLastName') }),
+        firstName: z.string().min(2, { message: t('auth.error.invalidFirstName') }),
+        patronymic: z.string().min(2, { message: t('auth.error.invalidPatronymic') }),
         phone: z.string().length(17,{ message: t('auth.error.invalidPhoneNumber') }),
-        companyName: z.string().optional(),
-        password: z.string().min(6),
-        passwordConfirm: z.string().min(6),
+        companyName: z.string().min(2, { message: t('auth.error.invalidCompanyName') }),
+        password: z.string().min(6, { message: t('auth.error.invalidPassword') }),
+        passwordConfirm: z.string().min(6, { message: t('auth.error.invalidPassword') }),
         agreeToPrivacyPolicy: z.boolean().refine(val => val === true, {
           message: t('auth.agreeToPrivacyPolicyRequired')
         }),
@@ -68,15 +68,22 @@ const onSubmit = handleSubmit(
         : { name: '' }
       await mutate({ userRegisterInput, companyInput })
     } catch (e) {
-      setErrors({
-        username: t('auth.error.error'),
-        email: t('auth.error.error'),
-        firstName: t('auth.error.error'),
-        lastName: t('auth.error.error'),
-        patronymic: t('auth.error.error'),
-        phone: t('auth.error.error'),
-        password: t('auth.error.error'),
-      })
+      if (e instanceof Error) {
+        const errorType = e.message;
+        switch (errorType) {
+          case 'username':
+            setErrors({ username: t('auth.error.usernameTaken') });
+            break;
+          case 'email':
+            setErrors({ email: t('auth.error.emailTaken') });
+            break;
+          case 'phone':
+            setErrors({ phone: t('auth.error.phoneTaken') });
+            break;
+        }
+      } else {
+        console.log(e);
+      }
     }
   },
 )
