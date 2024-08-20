@@ -20,7 +20,7 @@ const { defineField, handleSubmit, errors } = useForm<UserRegisterInput & { pass
         username: z.string().min(3, { message: t('auth.error.invalidUsername') }),
         lastName: z.string().min(2, { message: t('auth.error.invalidLastName') }),
         firstName: z.string().min(2, { message: t('auth.error.invalidFirstName') }),
-        patronymic: z.string().min(2, { message: t('auth.error.invalidPatronymic') }),
+        patronymic: z.string().optional(),
         phone: z.string().length(17,{ message: t('auth.error.invalidPhoneNumber') }),
         companyName: z.string().min(2, { message: t('auth.error.invalidCompanyName') }),
         password: z.string().min(6, { message: t('auth.error.invalidPassword') }),
@@ -63,6 +63,10 @@ const onSubmit = handleSubmit(
       const userRegisterInput = Object.fromEntries(
         Object.entries(values).filter(([key]) => key !== 'passwordConfirm' && key !== 'companyName' && key!== 'agreeToPrivacyPolicy'),
       ) as UserRegisterInput
+      if (!values.patronymic) {
+        userRegisterInput.patronymic = "";
+      }
+      console.log(userRegisterInput);
       const companyInput: CompanyInput = values.companyName
         ? { name: values.companyName }
         : { name: '' }

@@ -9,7 +9,6 @@ import { BCRYPT } from '@auth/providers'
 import { JwtPayload } from '@auth/strategies'
 import { CompanyService } from '@company/company.service'
 import { CompanyInput } from '@company/dto'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 
 @Injectable()
 export class AuthService {
@@ -32,6 +31,7 @@ export class AuthService {
   }
 
   async register(userDto: UserRegisterInput, companyDto: CompanyInput): Promise<UserLoginType> {
+    console.log(userDto)
     const existingUser = await this.prismaService.user.findFirst({
       where: {
         OR: [{ username: userDto.username }, { email: userDto.email }, { phone: userDto.phone }],
