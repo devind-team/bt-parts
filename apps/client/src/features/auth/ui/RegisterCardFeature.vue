@@ -298,7 +298,7 @@ const onSubmit = handleSubmit(
             {{ t('auth.agreeToPrivacyPolicy') }}
           
             <nuxt-link
-              :to="localePath({ name: 'policy' })"
+              :to="localePath({ name: 'privacy' })"
               class="font-medium text-blue-500"
             >
               {{ t('auth.privacyPolicy') }}
