@@ -38,7 +38,7 @@ const onSubmit = handleSubmit(async (userLoginInput: UserLoginInput, { setErrors
   try {
     await mutate({ userLoginInput })
   } catch (e) {
-    setErrors({ username: t('auth.error'), password: t('auth.error') })
+    setErrors({ username: t('auth.error.login'), password: t('auth.error.login') })
   }
 })
 </script>
