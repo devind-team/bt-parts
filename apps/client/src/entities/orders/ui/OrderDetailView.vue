@@ -35,7 +35,10 @@ const { data: order, loading } = useCommonQuery<OrderQuery, OrderQueryVariables>
           />
         </div>
       </div>
-      <items-data-view :items="(order!.items || []) as Item[]" />
+      <items-data-view
+        :items="(order!.items || []) as Item[]"
+        :order-id="order!.id"
+      />
     </div>
   </div>
 </template>
