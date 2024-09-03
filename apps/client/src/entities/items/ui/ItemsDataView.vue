@@ -34,17 +34,17 @@ const decreaseQuantity = (item: Item) => {
 
 const confirmDeletion = (item: Item) => {
   confirm.require({
-        message: 'Do you want to delete this record?',
-        header: 'Danger Zone',
+        message: t('delete.confirm'),
+        header: t('delete.item'),
         icon: 'pi pi-info-circle',
-        rejectLabel: 'Cancel',
+        rejectLabel: t('cancel'),
         rejectProps: {
             label: 'Cancel',
             severity: 'secondary',
             outlined: true
         },
         acceptProps: {
-            label: 'Delete',
+            label: t('delete.delete'),
             severity: 'danger'
         },
         accept: () => {
