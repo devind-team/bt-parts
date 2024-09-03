@@ -296,13 +296,11 @@ const onSubmit = handleSubmit(
           >
           <label for="agreeToPrivacyPolicy">
             {{ t('auth.agreeToPrivacyPolicy') }}
-          
-            <nuxt-link
-              :to="localePath({ name: 'privacy' })"
+            <a
+              href="/privacy"
+              target="_blank"
               class="font-medium text-blue-500"
-            >
-              {{ t('auth.privacyPolicy') }}
-            </nuxt-link>
+            >{{ t('auth.privacyPolicy') }}</a>
           </label>
         </div>
         <div>
