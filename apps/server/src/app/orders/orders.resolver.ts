@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver, Query } from '@nestjs/graphql'
+import { Args, Mutation, Resolver, Query, Int } from '@nestjs/graphql'
 import { UseGuards } from '@nestjs/common'
 import { GqlAuthGuard } from '@auth/auth.guard'
 import { CurrentUser } from '@auth/auth.decorators'
@@ -14,6 +14,7 @@ import { File } from '@generated/file'
 import { Order } from '@generated/order'
 import { Status } from '@generated/status'
 import { OrderStatus } from '@generated/prisma'
+import { ProductCreateInput } from '@generated/product'
 
 @UseGuards(GqlAuthGuard)
 @Resolver()
@@ -63,6 +64,23 @@ export class OrdersResolver {
     product: AddProductInput,
   ): Promise<CreateOrderType> {
     return this.ordersService.addProduct(user, product)
+  }
+  /**
+   *
+   * @param user пользователь
+   * @param product добавляемая запчасть
+   */
+  @Mutation(() => CreateOrderType)
+  async addNewProductToOrder(
+    @CurrentUser() user: User,
+    @Args({
+      name: 'product',
+      type: () => ProductCreateInput,
+    })
+    product: ProductCreateInput,
+    @Args({ type: () => Int, name: 'quantity', description: 'Количество запчастей' }) quantity: number,
+  ): Promise<CreateOrderType> {
+    return this.ordersService.addNewProduct(user, product, quantity)
   }
   /**
    * Мутация для удаления заказа

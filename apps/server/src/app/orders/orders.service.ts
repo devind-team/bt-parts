@@ -16,6 +16,7 @@ import { User } from '@generated/user'
 import { File } from '@generated/file'
 import { Status } from '@generated/status'
 import { ItemsService } from '@items/items.service'
+import { ProductCreateInput } from '@generated/product'
 
 @Injectable()
 export class OrdersService {
@@ -122,8 +123,24 @@ export class OrdersService {
     return { order }
   }
   /**
-   * Добавляем товар в заказ со статусом CREATED
+   * Добавляем новый товар в заказ со статусом CREATED
    * @param user пользователь
+   * @param product новый продукт
+   */
+  async addNewProduct(user: User, product: ProductCreateInput, quantity: number): Promise<CreateOrderType> {
+    const productMap = new Map<string, unknown>(Object.entries(product))
+    console.log(productMap)
+    const result = await this.productsService.getOrCreateProducts([productMap])
+    const productId =
+      result.createdProducts.size > 0
+        ? result.createdProducts.values().next().value
+        : result.products.values().next().value
+    console.log(productId)
+    return await this.addProduct(user, { productId, quantity })
+  }
+  /**
+   * Добавляем товар в заказ со статусом CREATED
+   * @param user пользовательв
    * @param product выбранный продукт
    */
   async addProduct(user: User, product: AddProductInput): Promise<CreateOrderType> {

@@ -1,0 +1,9 @@
+#import "../fragments/order-fields.graphql"
+
+mutation AddNewProductToOrder($product: ProductCreateInput!, $quantity: Int!) {
+  addNewProductToOrder(product: $product, quantity: $quantity) {
+    order {
+      ...OrderFields
+    }
+  }
+}

@@ -483,6 +483,9 @@ type Product {
   updatedAt: DateTime!
   manufacturerId: String
 
+  """Status"""
+  Status: ProductStatus!
+
   """Manufacturer"""
   manufacturer: Manufacturer
   prices: [Price!]
@@ -496,6 +499,11 @@ type Product {
   """Products images"""
   images: [File!]
   _count: ProductCount!
+}
+
+enum ProductStatus {
+  UNCONFIRMED
+  CONFIRMED
 }
 
 type FileCount {
@@ -717,6 +725,7 @@ type ProductCountAggregate {
   createdAt: Int!
   updatedAt: Int!
   manufacturerId: Int!
+  Status: Int!
   _all: Int!
 }
 
@@ -747,6 +756,7 @@ type ProductMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   manufacturerId: String
+  Status: ProductStatus
 }
 
 type ProductMaxAggregate {
@@ -764,6 +774,7 @@ type ProductMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   manufacturerId: String
+  Status: ProductStatus
 }
 
 type ProductEdge {
@@ -1257,6 +1268,7 @@ input ProductWhereInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturerId: StringNullableFilter
+  Status: EnumProductStatusFilter
   manufacturer: ManufacturerNullableRelationFilter
   prices: PriceListRelationFilter
   attributes: AttributeValueListRelationFilter
@@ -1284,6 +1296,20 @@ input NestedDecimalNullableFilter {
   gt: Decimal
   gte: Decimal
   not: NestedDecimalNullableFilter
+}
+
+input EnumProductStatusFilter {
+  equals: ProductStatus
+  in: [ProductStatus!]
+  notIn: [ProductStatus!]
+  not: NestedEnumProductStatusFilter
+}
+
+input NestedEnumProductStatusFilter {
+  equals: ProductStatus
+  in: [ProductStatus!]
+  notIn: [ProductStatus!]
+  not: NestedEnumProductStatusFilter
 }
 
 input ManufacturerNullableRelationFilter {
@@ -1709,6 +1735,7 @@ input ProductOrderByWithRelationInput {
   createdAt: SortOrder
   updatedAt: SortOrder
   manufacturerId: SortOrderInput
+  Status: SortOrder
   manufacturer: ManufacturerOrderByWithRelationInput
   prices: PriceOrderByRelationAggregateInput
   attributes: AttributeValueOrderByRelationAggregateInput
@@ -1820,6 +1847,7 @@ input ProductWhereUniqueInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturerId: StringNullableFilter
+  Status: EnumProductStatusFilter
   manufacturer: ManufacturerNullableRelationFilter
   prices: PriceListRelationFilter
   attributes: AttributeValueListRelationFilter
@@ -1842,6 +1870,7 @@ enum ProductScalarFieldEnum {
   createdAt
   updatedAt
   manufacturerId
+  Status
 }
 
 input OrderWhereUniqueInput {
@@ -1921,6 +1950,12 @@ type Mutation {
   ): DeleteOrderItemsType!
   createOrder(order: CreateOrderInput!): CreateOrderType!
   addProductToOrder(product: AddProductInput!): CreateOrderType!
+  addNewProductToOrder(
+    product: ProductCreateInput!
+
+    """Количество запчастей"""
+    quantity: Int!
+  ): CreateOrderType!
   deleteOrder(
     """Идентификатор заказа"""
     orderId: String!
@@ -1988,4 +2023,1574 @@ input CreateOrderInput {
 input AddProductInput {
   productId: String!
   quantity: Float!
+}
+
+input ProductCreateInput {
+  id: String
+  vendorCode: String!
+  vinNumber: String
+  nameEn: String
+  nameRu: String
+  aliases: String
+  original: Boolean
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+  tnved: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  Status: ProductStatus
+  manufacturer: ManufacturerCreateNestedOneWithoutProductsInput
+  prices: PriceCreateNestedManyWithoutProductInput
+  attributes: AttributeValueCreateNestedManyWithoutProductInput
+  item: ItemCreateNestedManyWithoutProductInput
+  images: FileCreateNestedManyWithoutProductsInput
+}
+
+input ManufacturerCreateNestedOneWithoutProductsInput {
+  create: ManufacturerCreateWithoutProductsInput
+  connectOrCreate: ManufacturerCreateOrConnectWithoutProductsInput
+  connect: ManufacturerWhereUniqueInput
+}
+
+input ManufacturerCreateWithoutProductsInput {
+  id: String
+  name: String!
+}
+
+input ManufacturerCreateOrConnectWithoutProductsInput {
+  where: ManufacturerWhereUniqueInput!
+  create: ManufacturerCreateWithoutProductsInput!
+}
+
+input ManufacturerWhereUniqueInput {
+  id: String
+  name: String
+  AND: [ManufacturerWhereInput!]
+  OR: [ManufacturerWhereInput!]
+  NOT: [ManufacturerWhereInput!]
+  products: ProductListRelationFilter
+}
+
+input PriceCreateNestedManyWithoutProductInput {
+  create: [PriceCreateWithoutProductInput!]
+  connectOrCreate: [PriceCreateOrConnectWithoutProductInput!]
+  createMany: PriceCreateManyProductInputEnvelope
+  connect: [PriceWhereUniqueInput!]
+}
+
+input PriceCreateWithoutProductInput {
+  id: String
+  price: Decimal!
+  duration: Int
+  site: String
+  comment: String
+  relevant: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  validAt: DateTime
+  item: ItemCreateNestedManyWithoutPriceInput
+  supplier: SupplierCreateNestedOneWithoutPricesInput
+}
+
+input ItemCreateNestedManyWithoutPriceInput {
+  create: [ItemCreateWithoutPriceInput!]
+  connectOrCreate: [ItemCreateOrConnectWithoutPriceInput!]
+  createMany: ItemCreateManyPriceInputEnvelope
+  connect: [ItemWhereUniqueInput!]
+}
+
+input ItemCreateWithoutPriceInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: OrderCreateNestedOneWithoutItemsInput!
+  product: ProductCreateNestedOneWithoutItemInput!
+  user: UserCreateNestedOneWithoutItemInput
+  statuses: StatusItemCreateNestedManyWithoutItemInput
+  commentItem: CommentItemCreateNestedManyWithoutItemInput
+}
+
+input OrderCreateNestedOneWithoutItemsInput {
+  create: OrderCreateWithoutItemsInput
+  connectOrCreate: OrderCreateOrConnectWithoutItemsInput
+  connect: OrderWhereUniqueInput
+}
+
+input OrderCreateWithoutItemsInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutOrdersInput!
+  manager: UserCreateNestedOneWithoutManageOrdersInput
+  statuses: StatusCreateNestedManyWithoutOrderInput
+  comments: CommentCreateNestedManyWithoutOrderInput
+}
+
+input UserCreateNestedOneWithoutOrdersInput {
+  create: UserCreateWithoutOrdersInput
+  connectOrCreate: UserCreateOrConnectWithoutOrdersInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutOrdersInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  status: StatusCreateNestedManyWithoutUserInput
+  item: ItemCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+"""
+A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
+"""
+scalar URL
+
+input CompaniesCreateNestedOneWithoutUserInput {
+  create: CompaniesCreateWithoutUserInput
+  connectOrCreate: CompaniesCreateOrConnectWithoutUserInput
+  connect: CompaniesWhereUniqueInput
+}
+
+input CompaniesCreateWithoutUserInput {
+  id: String
+  name: String!
+  location: Location
+  address: String
+}
+
+input CompaniesCreateOrConnectWithoutUserInput {
+  where: CompaniesWhereUniqueInput!
+  create: CompaniesCreateWithoutUserInput!
+}
+
+input CompaniesWhereUniqueInput {
+  id: String
+  name: String
+  AND: [CompaniesWhereInput!]
+  OR: [CompaniesWhereInput!]
+  NOT: [CompaniesWhereInput!]
+  location: EnumLocationFilter
+  address: StringNullableFilter
+  User: UserListRelationFilter
+}
+
+input FileCreateNestedManyWithoutUserInput {
+  create: [FileCreateWithoutUserInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutUserInput!]
+  createMany: FileCreateManyUserInputEnvelope
+  connect: [FileWhereUniqueInput!]
+}
+
+input FileCreateWithoutUserInput {
+  id: String
+  name: String!
+  bucket: String!
+  key: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  products: ProductCreateNestedManyWithoutImagesInput
+}
+
+input ProductCreateNestedManyWithoutImagesInput {
+  create: [ProductCreateWithoutImagesInput!]
+  connectOrCreate: [ProductCreateOrConnectWithoutImagesInput!]
+  connect: [ProductWhereUniqueInput!]
+}
+
+input ProductCreateWithoutImagesInput {
+  id: String
+  vendorCode: String!
+  vinNumber: String
+  nameEn: String
+  nameRu: String
+  aliases: String
+  original: Boolean
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+  tnved: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  Status: ProductStatus
+  manufacturer: ManufacturerCreateNestedOneWithoutProductsInput
+  prices: PriceCreateNestedManyWithoutProductInput
+  attributes: AttributeValueCreateNestedManyWithoutProductInput
+  item: ItemCreateNestedManyWithoutProductInput
+}
+
+input AttributeValueCreateNestedManyWithoutProductInput {
+  create: [AttributeValueCreateWithoutProductInput!]
+  connectOrCreate: [AttributeValueCreateOrConnectWithoutProductInput!]
+  createMany: AttributeValueCreateManyProductInputEnvelope
+  connect: [AttributeValueWhereUniqueInput!]
+}
+
+input AttributeValueCreateWithoutProductInput {
+  id: String
+  value: String!
+  createdAt: DateTime
+  attribute: AttributeCreateNestedOneWithoutProductsInput!
+}
+
+input AttributeCreateNestedOneWithoutProductsInput {
+  create: AttributeCreateWithoutProductsInput
+  connectOrCreate: AttributeCreateOrConnectWithoutProductsInput
+  connect: AttributeWhereUniqueInput
+}
+
+input AttributeCreateWithoutProductsInput {
+  id: String
+  name: String!
+  createdAt: DateTime
+}
+
+input AttributeCreateOrConnectWithoutProductsInput {
+  where: AttributeWhereUniqueInput!
+  create: AttributeCreateWithoutProductsInput!
+}
+
+input AttributeWhereUniqueInput {
+  id: String
+  AND: [AttributeWhereInput!]
+  OR: [AttributeWhereInput!]
+  NOT: [AttributeWhereInput!]
+  name: StringFilter
+  createdAt: DateTimeFilter
+  products: AttributeValueListRelationFilter
+}
+
+input AttributeValueCreateOrConnectWithoutProductInput {
+  where: AttributeValueWhereUniqueInput!
+  create: AttributeValueCreateWithoutProductInput!
+}
+
+input AttributeValueWhereUniqueInput {
+  id: String
+  AND: [AttributeValueWhereInput!]
+  OR: [AttributeValueWhereInput!]
+  NOT: [AttributeValueWhereInput!]
+  value: StringFilter
+  createdAt: DateTimeFilter
+  productId: StringFilter
+  attributeId: StringFilter
+  product: ProductRelationFilter
+  attribute: AttributeRelationFilter
+}
+
+input AttributeValueCreateManyProductInputEnvelope {
+  data: [AttributeValueCreateManyProductInput!]!
+  skipDuplicates: Boolean
+}
+
+input AttributeValueCreateManyProductInput {
+  id: String
+  value: String!
+  createdAt: DateTime
+  attributeId: String!
+}
+
+input ItemCreateNestedManyWithoutProductInput {
+  create: [ItemCreateWithoutProductInput!]
+  connectOrCreate: [ItemCreateOrConnectWithoutProductInput!]
+  createMany: ItemCreateManyProductInputEnvelope
+  connect: [ItemWhereUniqueInput!]
+}
+
+input ItemCreateWithoutProductInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: OrderCreateNestedOneWithoutItemsInput!
+  price: PriceCreateNestedOneWithoutItemInput
+  user: UserCreateNestedOneWithoutItemInput
+  statuses: StatusItemCreateNestedManyWithoutItemInput
+  commentItem: CommentItemCreateNestedManyWithoutItemInput
+}
+
+input PriceCreateNestedOneWithoutItemInput {
+  create: PriceCreateWithoutItemInput
+  connectOrCreate: PriceCreateOrConnectWithoutItemInput
+  connect: PriceWhereUniqueInput
+}
+
+input PriceCreateWithoutItemInput {
+  id: String
+  price: Decimal!
+  duration: Int
+  site: String
+  comment: String
+  relevant: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  validAt: DateTime
+  product: ProductCreateNestedOneWithoutPricesInput!
+  supplier: SupplierCreateNestedOneWithoutPricesInput
+}
+
+input ProductCreateNestedOneWithoutPricesInput {
+  create: ProductCreateWithoutPricesInput
+  connectOrCreate: ProductCreateOrConnectWithoutPricesInput
+  connect: ProductWhereUniqueInput
+}
+
+input ProductCreateWithoutPricesInput {
+  id: String
+  vendorCode: String!
+  vinNumber: String
+  nameEn: String
+  nameRu: String
+  aliases: String
+  original: Boolean
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+  tnved: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  Status: ProductStatus
+  manufacturer: ManufacturerCreateNestedOneWithoutProductsInput
+  attributes: AttributeValueCreateNestedManyWithoutProductInput
+  item: ItemCreateNestedManyWithoutProductInput
+  images: FileCreateNestedManyWithoutProductsInput
+}
+
+input FileCreateNestedManyWithoutProductsInput {
+  create: [FileCreateWithoutProductsInput!]
+  connectOrCreate: [FileCreateOrConnectWithoutProductsInput!]
+  connect: [FileWhereUniqueInput!]
+}
+
+input FileCreateWithoutProductsInput {
+  id: String
+  name: String!
+  bucket: String!
+  key: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  user: UserCreateNestedOneWithoutFilesInput
+}
+
+input UserCreateNestedOneWithoutFilesInput {
+  create: UserCreateWithoutFilesInput
+  connectOrCreate: UserCreateOrConnectWithoutFilesInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutFilesInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  status: StatusCreateNestedManyWithoutUserInput
+  item: ItemCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+input OrderCreateNestedManyWithoutUserInput {
+  create: [OrderCreateWithoutUserInput!]
+  connectOrCreate: [OrderCreateOrConnectWithoutUserInput!]
+  createMany: OrderCreateManyUserInputEnvelope
+  connect: [OrderWhereUniqueInput!]
+}
+
+input OrderCreateWithoutUserInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  manager: UserCreateNestedOneWithoutManageOrdersInput
+  statuses: StatusCreateNestedManyWithoutOrderInput
+  items: ItemCreateNestedManyWithoutOrderInput
+  comments: CommentCreateNestedManyWithoutOrderInput
+}
+
+input UserCreateNestedOneWithoutManageOrdersInput {
+  create: UserCreateWithoutManageOrdersInput
+  connectOrCreate: UserCreateOrConnectWithoutManageOrdersInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutManageOrdersInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  status: StatusCreateNestedManyWithoutUserInput
+  item: ItemCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+input StatusCreateNestedManyWithoutUserInput {
+  create: [StatusCreateWithoutUserInput!]
+  connectOrCreate: [StatusCreateOrConnectWithoutUserInput!]
+  createMany: StatusCreateManyUserInputEnvelope
+  connect: [StatusWhereUniqueInput!]
+}
+
+input StatusCreateWithoutUserInput {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  order: OrderCreateNestedOneWithoutStatusesInput!
+}
+
+input OrderCreateNestedOneWithoutStatusesInput {
+  create: OrderCreateWithoutStatusesInput
+  connectOrCreate: OrderCreateOrConnectWithoutStatusesInput
+  connect: OrderWhereUniqueInput
+}
+
+input OrderCreateWithoutStatusesInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutOrdersInput!
+  manager: UserCreateNestedOneWithoutManageOrdersInput
+  items: ItemCreateNestedManyWithoutOrderInput
+  comments: CommentCreateNestedManyWithoutOrderInput
+}
+
+input ItemCreateNestedManyWithoutOrderInput {
+  create: [ItemCreateWithoutOrderInput!]
+  connectOrCreate: [ItemCreateOrConnectWithoutOrderInput!]
+  createMany: ItemCreateManyOrderInputEnvelope
+  connect: [ItemWhereUniqueInput!]
+}
+
+input ItemCreateWithoutOrderInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  product: ProductCreateNestedOneWithoutItemInput!
+  price: PriceCreateNestedOneWithoutItemInput
+  user: UserCreateNestedOneWithoutItemInput
+  statuses: StatusItemCreateNestedManyWithoutItemInput
+  commentItem: CommentItemCreateNestedManyWithoutItemInput
+}
+
+input ProductCreateNestedOneWithoutItemInput {
+  create: ProductCreateWithoutItemInput
+  connectOrCreate: ProductCreateOrConnectWithoutItemInput
+  connect: ProductWhereUniqueInput
+}
+
+input ProductCreateWithoutItemInput {
+  id: String
+  vendorCode: String!
+  vinNumber: String
+  nameEn: String
+  nameRu: String
+  aliases: String
+  original: Boolean
+  stock: Int
+  netto: Decimal
+  brutto: Decimal
+  tnved: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  Status: ProductStatus
+  manufacturer: ManufacturerCreateNestedOneWithoutProductsInput
+  prices: PriceCreateNestedManyWithoutProductInput
+  attributes: AttributeValueCreateNestedManyWithoutProductInput
+  images: FileCreateNestedManyWithoutProductsInput
+}
+
+input ProductCreateOrConnectWithoutItemInput {
+  where: ProductWhereUniqueInput!
+  create: ProductCreateWithoutItemInput!
+}
+
+input UserCreateNestedOneWithoutItemInput {
+  create: UserCreateWithoutItemInput
+  connectOrCreate: UserCreateOrConnectWithoutItemInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutItemInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  status: StatusCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+input OrderCreateNestedManyWithoutManagerInput {
+  create: [OrderCreateWithoutManagerInput!]
+  connectOrCreate: [OrderCreateOrConnectWithoutManagerInput!]
+  createMany: OrderCreateManyManagerInputEnvelope
+  connect: [OrderWhereUniqueInput!]
+}
+
+input OrderCreateWithoutManagerInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutOrdersInput!
+  statuses: StatusCreateNestedManyWithoutOrderInput
+  items: ItemCreateNestedManyWithoutOrderInput
+  comments: CommentCreateNestedManyWithoutOrderInput
+}
+
+input StatusCreateNestedManyWithoutOrderInput {
+  create: [StatusCreateWithoutOrderInput!]
+  connectOrCreate: [StatusCreateOrConnectWithoutOrderInput!]
+  createMany: StatusCreateManyOrderInputEnvelope
+  connect: [StatusWhereUniqueInput!]
+}
+
+input StatusCreateWithoutOrderInput {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutStatusInput
+}
+
+input UserCreateNestedOneWithoutStatusInput {
+  create: UserCreateWithoutStatusInput
+  connectOrCreate: UserCreateOrConnectWithoutStatusInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutStatusInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  item: ItemCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+input ItemCreateNestedManyWithoutUserInput {
+  create: [ItemCreateWithoutUserInput!]
+  connectOrCreate: [ItemCreateOrConnectWithoutUserInput!]
+  createMany: ItemCreateManyUserInputEnvelope
+  connect: [ItemWhereUniqueInput!]
+}
+
+input ItemCreateWithoutUserInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: OrderCreateNestedOneWithoutItemsInput!
+  product: ProductCreateNestedOneWithoutItemInput!
+  price: PriceCreateNestedOneWithoutItemInput
+  statuses: StatusItemCreateNestedManyWithoutItemInput
+  commentItem: CommentItemCreateNestedManyWithoutItemInput
+}
+
+input StatusItemCreateNestedManyWithoutItemInput {
+  create: [StatusItemCreateWithoutItemInput!]
+  connectOrCreate: [StatusItemCreateOrConnectWithoutItemInput!]
+  createMany: StatusItemCreateManyItemInputEnvelope
+  connect: [StatusItemWhereUniqueInput!]
+}
+
+input StatusItemCreateWithoutItemInput {
+  id: String
+  status: ItemStatus
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutStatusItemInput
+}
+
+input UserCreateNestedOneWithoutStatusItemInput {
+  create: UserCreateWithoutStatusItemInput
+  connectOrCreate: UserCreateOrConnectWithoutStatusItemInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutStatusItemInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  status: StatusCreateNestedManyWithoutUserInput
+  item: ItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+input CommentCreateNestedManyWithoutUserInput {
+  create: [CommentCreateWithoutUserInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutUserInput!]
+  createMany: CommentCreateManyUserInputEnvelope
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutUserInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  order: OrderCreateNestedOneWithoutCommentsInput!
+  comment: CommentCreateNestedOneWithoutCommentsInput
+  comments: CommentCreateNestedManyWithoutCommentInput
+}
+
+input OrderCreateNestedOneWithoutCommentsInput {
+  create: OrderCreateWithoutCommentsInput
+  connectOrCreate: OrderCreateOrConnectWithoutCommentsInput
+  connect: OrderWhereUniqueInput
+}
+
+input OrderCreateWithoutCommentsInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutOrdersInput!
+  manager: UserCreateNestedOneWithoutManageOrdersInput
+  statuses: StatusCreateNestedManyWithoutOrderInput
+  items: ItemCreateNestedManyWithoutOrderInput
+}
+
+input OrderCreateOrConnectWithoutCommentsInput {
+  where: OrderWhereUniqueInput!
+  create: OrderCreateWithoutCommentsInput!
+}
+
+input CommentCreateNestedOneWithoutCommentsInput {
+  create: CommentCreateWithoutCommentsInput
+  connectOrCreate: CommentCreateOrConnectWithoutCommentsInput
+  connect: CommentWhereUniqueInput
+}
+
+input CommentCreateWithoutCommentsInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  order: OrderCreateNestedOneWithoutCommentsInput!
+  user: UserCreateNestedOneWithoutCommentInput
+  comment: CommentCreateNestedOneWithoutCommentsInput
+}
+
+input UserCreateNestedOneWithoutCommentInput {
+  create: UserCreateWithoutCommentInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutCommentInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  status: StatusCreateNestedManyWithoutUserInput
+  item: ItemCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  commentItem: CommentItemCreateNestedManyWithoutUserInput
+}
+
+input StatusItemCreateNestedManyWithoutUserInput {
+  create: [StatusItemCreateWithoutUserInput!]
+  connectOrCreate: [StatusItemCreateOrConnectWithoutUserInput!]
+  createMany: StatusItemCreateManyUserInputEnvelope
+  connect: [StatusItemWhereUniqueInput!]
+}
+
+input StatusItemCreateWithoutUserInput {
+  id: String
+  status: ItemStatus
+  createdAt: DateTime
+  item: ItemCreateNestedOneWithoutStatusesInput!
+}
+
+input ItemCreateNestedOneWithoutStatusesInput {
+  create: ItemCreateWithoutStatusesInput
+  connectOrCreate: ItemCreateOrConnectWithoutStatusesInput
+  connect: ItemWhereUniqueInput
+}
+
+input ItemCreateWithoutStatusesInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: OrderCreateNestedOneWithoutItemsInput!
+  product: ProductCreateNestedOneWithoutItemInput!
+  price: PriceCreateNestedOneWithoutItemInput
+  user: UserCreateNestedOneWithoutItemInput
+  commentItem: CommentItemCreateNestedManyWithoutItemInput
+}
+
+input CommentItemCreateNestedManyWithoutItemInput {
+  create: [CommentItemCreateWithoutItemInput!]
+  connectOrCreate: [CommentItemCreateOrConnectWithoutItemInput!]
+  createMany: CommentItemCreateManyItemInputEnvelope
+  connect: [CommentItemWhereUniqueInput!]
+}
+
+input CommentItemCreateWithoutItemInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutCommentItemInput
+  comment: CommentItemCreateNestedOneWithoutCommentsInput
+  comments: CommentItemCreateNestedManyWithoutCommentInput
+}
+
+input UserCreateNestedOneWithoutCommentItemInput {
+  create: UserCreateWithoutCommentItemInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentItemInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutCommentItemInput {
+  id: String
+  username: String!
+  password: String!
+  email: EmailAddress!
+  avatar: URL
+  lastName: String!
+  firstName: String!
+  patronymic: String
+  isActive: Boolean
+  companyName: String
+  tz: String
+  phone: String!
+  birthday: DateTime
+  role: Role
+  gender: Gender
+  createdAt: DateTime
+  updatedAt: DateTime
+  companies: CompaniesCreateNestedOneWithoutUserInput
+  files: FileCreateNestedManyWithoutUserInput
+  orders: OrderCreateNestedManyWithoutUserInput
+  manageOrders: OrderCreateNestedManyWithoutManagerInput
+  status: StatusCreateNestedManyWithoutUserInput
+  item: ItemCreateNestedManyWithoutUserInput
+  statusItem: StatusItemCreateNestedManyWithoutUserInput
+  comment: CommentCreateNestedManyWithoutUserInput
+}
+
+input UserCreateOrConnectWithoutCommentItemInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutCommentItemInput!
+}
+
+input UserWhereUniqueInput {
+  id: String
+  username: String
+  email: EmailAddress
+  phone: String
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+  password: StringFilter
+  avatar: StringNullableFilter
+  lastName: StringFilter
+  firstName: StringFilter
+  patronymic: StringNullableFilter
+  isActive: BoolFilter
+  companyName: StringFilter
+  tz: StringFilter
+  birthday: DateTimeNullableFilter
+  role: EnumRoleFilter
+  gender: EnumGenderFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  companiesId: StringNullableFilter
+  companies: CompaniesNullableRelationFilter
+  files: FileListRelationFilter
+  orders: OrderListRelationFilter
+  manageOrders: OrderListRelationFilter
+  status: StatusListRelationFilter
+  item: ItemListRelationFilter
+  statusItem: StatusItemListRelationFilter
+  comment: CommentListRelationFilter
+  commentItem: CommentItemListRelationFilter
+}
+
+input CommentItemCreateNestedOneWithoutCommentsInput {
+  create: CommentItemCreateWithoutCommentsInput
+  connectOrCreate: CommentItemCreateOrConnectWithoutCommentsInput
+  connect: CommentItemWhereUniqueInput
+}
+
+input CommentItemCreateWithoutCommentsInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  item: ItemCreateNestedOneWithoutCommentItemInput!
+  user: UserCreateNestedOneWithoutCommentItemInput
+  comment: CommentItemCreateNestedOneWithoutCommentsInput
+}
+
+input ItemCreateNestedOneWithoutCommentItemInput {
+  create: ItemCreateWithoutCommentItemInput
+  connectOrCreate: ItemCreateOrConnectWithoutCommentItemInput
+  connect: ItemWhereUniqueInput
+}
+
+input ItemCreateWithoutCommentItemInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: OrderCreateNestedOneWithoutItemsInput!
+  product: ProductCreateNestedOneWithoutItemInput!
+  price: PriceCreateNestedOneWithoutItemInput
+  user: UserCreateNestedOneWithoutItemInput
+  statuses: StatusItemCreateNestedManyWithoutItemInput
+}
+
+input ItemCreateOrConnectWithoutCommentItemInput {
+  where: ItemWhereUniqueInput!
+  create: ItemCreateWithoutCommentItemInput!
+}
+
+input CommentItemCreateOrConnectWithoutCommentsInput {
+  where: CommentItemWhereUniqueInput!
+  create: CommentItemCreateWithoutCommentsInput!
+}
+
+input CommentItemWhereUniqueInput {
+  id: String
+  AND: [CommentItemWhereInput!]
+  OR: [CommentItemWhereInput!]
+  NOT: [CommentItemWhereInput!]
+  text: StringFilter
+  createdAt: DateTimeFilter
+  itemId: StringFilter
+  userId: StringNullableFilter
+  parentId: StringNullableFilter
+  item: ItemRelationFilter
+  user: UserNullableRelationFilter
+  comment: CommentItemNullableRelationFilter
+  comments: CommentItemListRelationFilter
+}
+
+input CommentItemCreateNestedManyWithoutCommentInput {
+  create: [CommentItemCreateWithoutCommentInput!]
+  connectOrCreate: [CommentItemCreateOrConnectWithoutCommentInput!]
+  createMany: CommentItemCreateManyCommentInputEnvelope
+  connect: [CommentItemWhereUniqueInput!]
+}
+
+input CommentItemCreateWithoutCommentInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  item: ItemCreateNestedOneWithoutCommentItemInput!
+  user: UserCreateNestedOneWithoutCommentItemInput
+  comments: CommentItemCreateNestedManyWithoutCommentInput
+}
+
+input CommentItemCreateOrConnectWithoutCommentInput {
+  where: CommentItemWhereUniqueInput!
+  create: CommentItemCreateWithoutCommentInput!
+}
+
+input CommentItemCreateManyCommentInputEnvelope {
+  data: [CommentItemCreateManyCommentInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentItemCreateManyCommentInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  itemId: String!
+  userId: String
+}
+
+input CommentItemCreateOrConnectWithoutItemInput {
+  where: CommentItemWhereUniqueInput!
+  create: CommentItemCreateWithoutItemInput!
+}
+
+input CommentItemCreateManyItemInputEnvelope {
+  data: [CommentItemCreateManyItemInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentItemCreateManyItemInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  userId: String
+  parentId: String
+}
+
+input ItemCreateOrConnectWithoutStatusesInput {
+  where: ItemWhereUniqueInput!
+  create: ItemCreateWithoutStatusesInput!
+}
+
+input StatusItemCreateOrConnectWithoutUserInput {
+  where: StatusItemWhereUniqueInput!
+  create: StatusItemCreateWithoutUserInput!
+}
+
+input StatusItemWhereUniqueInput {
+  id: String
+  AND: [StatusItemWhereInput!]
+  OR: [StatusItemWhereInput!]
+  NOT: [StatusItemWhereInput!]
+  status: EnumItemStatusFilter
+  createdAt: DateTimeFilter
+  itemId: StringFilter
+  userId: StringNullableFilter
+  item: ItemRelationFilter
+  user: UserNullableRelationFilter
+}
+
+input StatusItemCreateManyUserInputEnvelope {
+  data: [StatusItemCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input StatusItemCreateManyUserInput {
+  id: String
+  status: ItemStatus
+  createdAt: DateTime
+  itemId: String!
+}
+
+input CommentItemCreateNestedManyWithoutUserInput {
+  create: [CommentItemCreateWithoutUserInput!]
+  connectOrCreate: [CommentItemCreateOrConnectWithoutUserInput!]
+  createMany: CommentItemCreateManyUserInputEnvelope
+  connect: [CommentItemWhereUniqueInput!]
+}
+
+input CommentItemCreateWithoutUserInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  item: ItemCreateNestedOneWithoutCommentItemInput!
+  comment: CommentItemCreateNestedOneWithoutCommentsInput
+  comments: CommentItemCreateNestedManyWithoutCommentInput
+}
+
+input CommentItemCreateOrConnectWithoutUserInput {
+  where: CommentItemWhereUniqueInput!
+  create: CommentItemCreateWithoutUserInput!
+}
+
+input CommentItemCreateManyUserInputEnvelope {
+  data: [CommentItemCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentItemCreateManyUserInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  itemId: String!
+  parentId: String
+}
+
+input UserCreateOrConnectWithoutCommentInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutCommentInput!
+}
+
+input CommentCreateOrConnectWithoutCommentsInput {
+  where: CommentWhereUniqueInput!
+  create: CommentCreateWithoutCommentsInput!
+}
+
+input CommentWhereUniqueInput {
+  id: String
+  AND: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
+  text: StringFilter
+  createdAt: DateTimeFilter
+  orderId: StringFilter
+  userId: StringNullableFilter
+  parentId: StringNullableFilter
+  order: OrderRelationFilter
+  user: UserNullableRelationFilter
+  comment: CommentNullableRelationFilter
+  comments: CommentListRelationFilter
+}
+
+input CommentCreateNestedManyWithoutCommentInput {
+  create: [CommentCreateWithoutCommentInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutCommentInput!]
+  createMany: CommentCreateManyCommentInputEnvelope
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutCommentInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  order: OrderCreateNestedOneWithoutCommentsInput!
+  user: UserCreateNestedOneWithoutCommentInput
+  comments: CommentCreateNestedManyWithoutCommentInput
+}
+
+input CommentCreateOrConnectWithoutCommentInput {
+  where: CommentWhereUniqueInput!
+  create: CommentCreateWithoutCommentInput!
+}
+
+input CommentCreateManyCommentInputEnvelope {
+  data: [CommentCreateManyCommentInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyCommentInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  orderId: String!
+  userId: String
+}
+
+input CommentCreateOrConnectWithoutUserInput {
+  where: CommentWhereUniqueInput!
+  create: CommentCreateWithoutUserInput!
+}
+
+input CommentCreateManyUserInputEnvelope {
+  data: [CommentCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyUserInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  orderId: String!
+  parentId: String
+}
+
+input UserCreateOrConnectWithoutStatusItemInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutStatusItemInput!
+}
+
+input StatusItemCreateOrConnectWithoutItemInput {
+  where: StatusItemWhereUniqueInput!
+  create: StatusItemCreateWithoutItemInput!
+}
+
+input StatusItemCreateManyItemInputEnvelope {
+  data: [StatusItemCreateManyItemInput!]!
+  skipDuplicates: Boolean
+}
+
+input StatusItemCreateManyItemInput {
+  id: String
+  status: ItemStatus
+  createdAt: DateTime
+  userId: String
+}
+
+input ItemCreateOrConnectWithoutUserInput {
+  where: ItemWhereUniqueInput!
+  create: ItemCreateWithoutUserInput!
+}
+
+input ItemCreateManyUserInputEnvelope {
+  data: [ItemCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input ItemCreateManyUserInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderId: String!
+  productId: String!
+  priceId: String
+}
+
+input UserCreateOrConnectWithoutStatusInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutStatusInput!
+}
+
+input StatusCreateOrConnectWithoutOrderInput {
+  where: StatusWhereUniqueInput!
+  create: StatusCreateWithoutOrderInput!
+}
+
+input StatusWhereUniqueInput {
+  id: String
+  AND: [StatusWhereInput!]
+  OR: [StatusWhereInput!]
+  NOT: [StatusWhereInput!]
+  status: EnumOrderStatusFilter
+  createdAt: DateTimeFilter
+  orderId: StringFilter
+  userId: StringNullableFilter
+  order: OrderRelationFilter
+  user: UserNullableRelationFilter
+}
+
+input StatusCreateManyOrderInputEnvelope {
+  data: [StatusCreateManyOrderInput!]!
+  skipDuplicates: Boolean
+}
+
+input StatusCreateManyOrderInput {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  userId: String
+}
+
+input CommentCreateNestedManyWithoutOrderInput {
+  create: [CommentCreateWithoutOrderInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutOrderInput!]
+  createMany: CommentCreateManyOrderInputEnvelope
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutOrderInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  user: UserCreateNestedOneWithoutCommentInput
+  comment: CommentCreateNestedOneWithoutCommentsInput
+  comments: CommentCreateNestedManyWithoutCommentInput
+}
+
+input CommentCreateOrConnectWithoutOrderInput {
+  where: CommentWhereUniqueInput!
+  create: CommentCreateWithoutOrderInput!
+}
+
+input CommentCreateManyOrderInputEnvelope {
+  data: [CommentCreateManyOrderInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyOrderInput {
+  id: String
+  text: String!
+  createdAt: DateTime
+  userId: String
+  parentId: String
+}
+
+input OrderCreateOrConnectWithoutManagerInput {
+  where: OrderWhereUniqueInput!
+  create: OrderCreateWithoutManagerInput!
+}
+
+input OrderCreateManyManagerInputEnvelope {
+  data: [OrderCreateManyManagerInput!]!
+  skipDuplicates: Boolean
+}
+
+input OrderCreateManyManagerInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  userId: String!
+}
+
+input UserCreateOrConnectWithoutItemInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutItemInput!
+}
+
+input ItemCreateOrConnectWithoutOrderInput {
+  where: ItemWhereUniqueInput!
+  create: ItemCreateWithoutOrderInput!
+}
+
+input ItemCreateManyOrderInputEnvelope {
+  data: [ItemCreateManyOrderInput!]!
+  skipDuplicates: Boolean
+}
+
+input ItemCreateManyOrderInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  productId: String!
+  priceId: String
+  userId: String
+}
+
+input OrderCreateOrConnectWithoutStatusesInput {
+  where: OrderWhereUniqueInput!
+  create: OrderCreateWithoutStatusesInput!
+}
+
+input StatusCreateOrConnectWithoutUserInput {
+  where: StatusWhereUniqueInput!
+  create: StatusCreateWithoutUserInput!
+}
+
+input StatusCreateManyUserInputEnvelope {
+  data: [StatusCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input StatusCreateManyUserInput {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  orderId: String!
+}
+
+input UserCreateOrConnectWithoutManageOrdersInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutManageOrdersInput!
+}
+
+input OrderCreateOrConnectWithoutUserInput {
+  where: OrderWhereUniqueInput!
+  create: OrderCreateWithoutUserInput!
+}
+
+input OrderCreateManyUserInputEnvelope {
+  data: [OrderCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input OrderCreateManyUserInput {
+  id: String
+  address: String
+  createdAt: DateTime
+  managerId: String
+}
+
+input UserCreateOrConnectWithoutFilesInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutFilesInput!
+}
+
+input FileCreateOrConnectWithoutProductsInput {
+  where: FileWhereUniqueInput!
+  create: FileCreateWithoutProductsInput!
+}
+
+input FileWhereUniqueInput {
+  id: String
+  AND: [FileWhereInput!]
+  OR: [FileWhereInput!]
+  NOT: [FileWhereInput!]
+  name: StringFilter
+  bucket: StringFilter
+  key: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  userId: StringNullableFilter
+  user: UserNullableRelationFilter
+  products: ProductListRelationFilter
+}
+
+input ProductCreateOrConnectWithoutPricesInput {
+  where: ProductWhereUniqueInput!
+  create: ProductCreateWithoutPricesInput!
+}
+
+input SupplierCreateNestedOneWithoutPricesInput {
+  create: SupplierCreateWithoutPricesInput
+  connectOrCreate: SupplierCreateOrConnectWithoutPricesInput
+  connect: SupplierWhereUniqueInput
+}
+
+input SupplierCreateWithoutPricesInput {
+  id: String
+  name: String!
+  location: Location
+}
+
+input SupplierCreateOrConnectWithoutPricesInput {
+  where: SupplierWhereUniqueInput!
+  create: SupplierCreateWithoutPricesInput!
+}
+
+input SupplierWhereUniqueInput {
+  id: String
+  AND: [SupplierWhereInput!]
+  OR: [SupplierWhereInput!]
+  NOT: [SupplierWhereInput!]
+  name: StringFilter
+  location: EnumLocationFilter
+  prices: PriceListRelationFilter
+}
+
+input PriceCreateOrConnectWithoutItemInput {
+  where: PriceWhereUniqueInput!
+  create: PriceCreateWithoutItemInput!
+}
+
+input PriceWhereUniqueInput {
+  id: String
+  AND: [PriceWhereInput!]
+  OR: [PriceWhereInput!]
+  NOT: [PriceWhereInput!]
+  price: DecimalFilter
+  duration: IntNullableFilter
+  site: StringNullableFilter
+  comment: StringNullableFilter
+  relevant: BoolNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  validAt: DateTimeNullableFilter
+  productId: StringFilter
+  supplierId: StringNullableFilter
+  product: ProductRelationFilter
+  item: ItemListRelationFilter
+  supplier: SupplierNullableRelationFilter
+}
+
+input ItemCreateOrConnectWithoutProductInput {
+  where: ItemWhereUniqueInput!
+  create: ItemCreateWithoutProductInput!
+}
+
+input ItemCreateManyProductInputEnvelope {
+  data: [ItemCreateManyProductInput!]!
+  skipDuplicates: Boolean
+}
+
+input ItemCreateManyProductInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderId: String!
+  priceId: String
+  userId: String
+}
+
+input ProductCreateOrConnectWithoutImagesInput {
+  where: ProductWhereUniqueInput!
+  create: ProductCreateWithoutImagesInput!
+}
+
+input FileCreateOrConnectWithoutUserInput {
+  where: FileWhereUniqueInput!
+  create: FileCreateWithoutUserInput!
+}
+
+input FileCreateManyUserInputEnvelope {
+  data: [FileCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input FileCreateManyUserInput {
+  id: String
+  name: String!
+  bucket: String!
+  key: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input UserCreateOrConnectWithoutOrdersInput {
+  where: UserWhereUniqueInput!
+  create: UserCreateWithoutOrdersInput!
+}
+
+input OrderCreateOrConnectWithoutItemsInput {
+  where: OrderWhereUniqueInput!
+  create: OrderCreateWithoutItemsInput!
+}
+
+input ItemCreateOrConnectWithoutPriceInput {
+  where: ItemWhereUniqueInput!
+  create: ItemCreateWithoutPriceInput!
+}
+
+input ItemCreateManyPriceInputEnvelope {
+  data: [ItemCreateManyPriceInput!]!
+  skipDuplicates: Boolean
+}
+
+input ItemCreateManyPriceInput {
+  id: String
+  quantity: Int
+  coefficient: Float
+  carNo: String
+  routeNo: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderId: String!
+  productId: String!
+  userId: String
+}
+
+input PriceCreateOrConnectWithoutProductInput {
+  where: PriceWhereUniqueInput!
+  create: PriceCreateWithoutProductInput!
+}
+
+input PriceCreateManyProductInputEnvelope {
+  data: [PriceCreateManyProductInput!]!
+  skipDuplicates: Boolean
+}
+
+input PriceCreateManyProductInput {
+  id: String
+  price: Decimal!
+  duration: Int
+  site: String
+  comment: String
+  relevant: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  validAt: DateTime
+  supplierId: String
 }
