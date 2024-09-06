@@ -10,7 +10,7 @@ const props = defineProps<{
   orderId: String
 }>()
 
-const { data: order, loading } = useCommonQuery<OrderQuery, OrderQueryVariables>({
+const { data: order, loading, refetch  } = useCommonQuery<OrderQuery, OrderQueryVariables>({
   document: orderQuery,
   variables: {
     orderId: props.orderId
@@ -38,6 +38,7 @@ const { data: order, loading } = useCommonQuery<OrderQuery, OrderQueryVariables>
       <items-data-view
         :items="(order!.items || []) as Item[]"
         :order-id="order!.id"
+        :refetch="refetch"
       />
     </div>
   </div>
