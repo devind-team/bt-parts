@@ -3,12 +3,13 @@ import { useChangeQuantityItemMutation, useDeleteOrderItemsMutation, type Item }
 const { t } = useI18n()
 const props = defineProps<{
   items: Item[],
-  orderId: string
+  orderId: string,
+  refetch: () => void
 }>()
 
 
 const { mutate } = useChangeQuantityItemMutation()
-const { mutate: deleteMutate} = useDeleteOrderItemsMutation()
+const { mutate: deleteMutate, onDone } = useDeleteOrderItemsMutation()
 
 const toast = useToast();
 const confirm = useConfirm();
@@ -30,7 +31,6 @@ const decreaseQuantity = (item: Item) => {
     confirmDeletion(item)
   }
 }
-
 const confirmDeletion = (item: Item) => {
   confirm.require({
         message: t('delete.confirm'),
@@ -55,7 +55,7 @@ const confirmDeletion = (item: Item) => {
             },
           }
           })
-          toast.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted', life: 3000 })
+          toast.add({ severity: 'success', summary: t('delete.success'), life: 3000 });
           confirm.close()
         },
         reject: () => {
@@ -63,7 +63,12 @@ const confirmDeletion = (item: Item) => {
         }
     });
 }
-const deleteItem = (item: Item) => { 
+onDone(async ({ data }) => {
+  if (data) {
+    await props.refetch()
+  }
+});
+const deleteItem = (item: Item) => {
     confirmDeletion(item)
 }
 </script>
