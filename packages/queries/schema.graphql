@@ -483,6 +483,9 @@ type Product {
   updatedAt: DateTime!
   manufacturerId: String
 
+  """Status"""
+  Status: ProductStatus!
+
   """Manufacturer"""
   manufacturer: Manufacturer
   prices: [Price!]
@@ -496,6 +499,11 @@ type Product {
   """Products images"""
   images: [File!]
   _count: ProductCount!
+}
+
+enum ProductStatus {
+  UNCONFIRMED
+  CONFIRMED
 }
 
 type FileCount {
@@ -717,6 +725,7 @@ type ProductCountAggregate {
   createdAt: Int!
   updatedAt: Int!
   manufacturerId: Int!
+  Status: Int!
   _all: Int!
 }
 
@@ -747,6 +756,7 @@ type ProductMinAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   manufacturerId: String
+  Status: ProductStatus
 }
 
 type ProductMaxAggregate {
@@ -764,6 +774,7 @@ type ProductMaxAggregate {
   createdAt: DateTime
   updatedAt: DateTime
   manufacturerId: String
+  Status: ProductStatus
 }
 
 type ProductEdge {
@@ -1257,6 +1268,7 @@ input ProductWhereInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturerId: StringNullableFilter
+  Status: EnumProductStatusFilter
   manufacturer: ManufacturerNullableRelationFilter
   prices: PriceListRelationFilter
   attributes: AttributeValueListRelationFilter
@@ -1284,6 +1296,20 @@ input NestedDecimalNullableFilter {
   gt: Decimal
   gte: Decimal
   not: NestedDecimalNullableFilter
+}
+
+input EnumProductStatusFilter {
+  equals: ProductStatus
+  in: [ProductStatus!]
+  notIn: [ProductStatus!]
+  not: NestedEnumProductStatusFilter
+}
+
+input NestedEnumProductStatusFilter {
+  equals: ProductStatus
+  in: [ProductStatus!]
+  notIn: [ProductStatus!]
+  not: NestedEnumProductStatusFilter
 }
 
 input ManufacturerNullableRelationFilter {
@@ -1709,6 +1735,7 @@ input ProductOrderByWithRelationInput {
   createdAt: SortOrder
   updatedAt: SortOrder
   manufacturerId: SortOrderInput
+  Status: SortOrder
   manufacturer: ManufacturerOrderByWithRelationInput
   prices: PriceOrderByRelationAggregateInput
   attributes: AttributeValueOrderByRelationAggregateInput
@@ -1820,6 +1847,7 @@ input ProductWhereUniqueInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturerId: StringNullableFilter
+  Status: EnumProductStatusFilter
   manufacturer: ManufacturerNullableRelationFilter
   prices: PriceListRelationFilter
   attributes: AttributeValueListRelationFilter
@@ -1842,6 +1870,7 @@ enum ProductScalarFieldEnum {
   createdAt
   updatedAt
   manufacturerId
+  Status
 }
 
 input OrderWhereUniqueInput {
@@ -1921,6 +1950,12 @@ type Mutation {
   ): DeleteOrderItemsType!
   createOrder(order: CreateOrderInput!): CreateOrderType!
   addProductToOrder(product: AddProductInput!): CreateOrderType!
+  addNewProductToOrder(
+    product: AddNewProductInput!
+
+    """Количество запчастей"""
+    quantity: Int!
+  ): CreateOrderType!
   deleteOrder(
     """Идентификатор заказа"""
     orderId: String!
@@ -1988,4 +2023,9 @@ input CreateOrderInput {
 input AddProductInput {
   productId: String!
   quantity: Float!
+}
+
+input AddNewProductInput {
+  vendorCode: String!
+  manufacturer: String
 }

@@ -24,6 +24,11 @@ export type Scalars = {
   EmailAddress: { input: any; output: any; }
 };
 
+export type AddNewProductInput = {
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  vendorCode: Scalars['String']['input'];
+};
+
 export type AddProductInput = {
   productId: Scalars['String']['input'];
   quantity: Scalars['Float']['input'];
@@ -395,6 +400,13 @@ export type EnumOrderStatusFilter = {
   in?: InputMaybe<Array<OrderStatus>>;
   not?: InputMaybe<NestedEnumOrderStatusFilter>;
   notIn?: InputMaybe<Array<OrderStatus>>;
+};
+
+export type EnumProductStatusFilter = {
+  equals?: InputMaybe<ProductStatus>;
+  in?: InputMaybe<Array<ProductStatus>>;
+  not?: InputMaybe<NestedEnumProductStatusFilter>;
+  notIn?: InputMaybe<Array<ProductStatus>>;
 };
 
 export type EnumRoleFilter = {
@@ -799,6 +811,7 @@ export type ManufacturerWhereInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addNewProductToOrder: CreateOrderType;
   addProductToOrder: CreateOrderType;
   addStatusItems: Array<Item>;
   addStatusOrder: Status;
@@ -814,6 +827,12 @@ export type Mutation = {
   unloadOrder: File;
   updateUser: User;
   uploadAvatar: User;
+};
+
+
+export type MutationAddNewProductToOrderArgs = {
+  product: AddNewProductInput;
+  quantity: Scalars['Int']['input'];
 };
 
 
@@ -981,6 +1000,13 @@ export type NestedEnumOrderStatusFilter = {
   in?: InputMaybe<Array<OrderStatus>>;
   not?: InputMaybe<NestedEnumOrderStatusFilter>;
   notIn?: InputMaybe<Array<OrderStatus>>;
+};
+
+export type NestedEnumProductStatusFilter = {
+  equals?: InputMaybe<ProductStatus>;
+  in?: InputMaybe<Array<ProductStatus>>;
+  not?: InputMaybe<NestedEnumProductStatusFilter>;
+  notIn?: InputMaybe<Array<ProductStatus>>;
 };
 
 export type NestedEnumRoleFilter = {
@@ -1303,6 +1329,8 @@ export type PriceWhereInput = {
 /** List of available products */
 export type Product = {
   __typename?: 'Product';
+  /** Status */
+  Status: ProductStatus;
   _count: ProductCount;
   /** Aliases separated by commas */
   aliases?: Maybe<Scalars['String']['output']>;
@@ -1366,6 +1394,7 @@ export type ProductCount = {
 
 export type ProductCountAggregate = {
   __typename?: 'ProductCountAggregate';
+  Status: Scalars['Int']['output'];
   _all: Scalars['Int']['output'];
   aliases: Scalars['Int']['output'];
   brutto: Scalars['Int']['output'];
@@ -1397,6 +1426,7 @@ export type ProductListRelationFilter = {
 
 export type ProductMaxAggregate = {
   __typename?: 'ProductMaxAggregate';
+  Status?: Maybe<ProductStatus>;
   aliases?: Maybe<Scalars['String']['output']>;
   brutto?: Maybe<Scalars['Decimal']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1415,6 +1445,7 @@ export type ProductMaxAggregate = {
 
 export type ProductMinAggregate = {
   __typename?: 'ProductMinAggregate';
+  Status?: Maybe<ProductStatus>;
   aliases?: Maybe<Scalars['String']['output']>;
   brutto?: Maybe<Scalars['Decimal']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1436,6 +1467,7 @@ export type ProductOrderByRelationAggregateInput = {
 };
 
 export type ProductOrderByWithRelationInput = {
+  Status?: InputMaybe<SortOrder>;
   aliases?: InputMaybe<SortOrderInput>;
   attributes?: InputMaybe<AttributeValueOrderByRelationAggregateInput>;
   brutto?: InputMaybe<SortOrderInput>;
@@ -1463,6 +1495,7 @@ export type ProductRelationFilter = {
 };
 
 export type ProductScalarFieldEnum =
+  | 'Status'
   | 'aliases'
   | 'brutto'
   | 'createdAt'
@@ -1478,6 +1511,10 @@ export type ProductScalarFieldEnum =
   | 'vendorCode'
   | 'vinNumber';
 
+export type ProductStatus =
+  | 'CONFIRMED'
+  | 'UNCONFIRMED';
+
 export type ProductSumAggregate = {
   __typename?: 'ProductSumAggregate';
   brutto?: Maybe<Scalars['Decimal']['output']>;
@@ -1489,6 +1526,7 @@ export type ProductWhereInput = {
   AND?: InputMaybe<Array<ProductWhereInput>>;
   NOT?: InputMaybe<Array<ProductWhereInput>>;
   OR?: InputMaybe<Array<ProductWhereInput>>;
+  Status?: InputMaybe<EnumProductStatusFilter>;
   aliases?: InputMaybe<StringNullableFilter>;
   attributes?: InputMaybe<AttributeValueListRelationFilter>;
   brutto?: InputMaybe<DecimalNullableFilter>;
@@ -1514,6 +1552,7 @@ export type ProductWhereUniqueInput = {
   AND?: InputMaybe<Array<ProductWhereInput>>;
   NOT?: InputMaybe<Array<ProductWhereInput>>;
   OR?: InputMaybe<Array<ProductWhereInput>>;
+  Status?: InputMaybe<EnumProductStatusFilter>;
   aliases?: InputMaybe<StringNullableFilter>;
   attributes?: InputMaybe<AttributeValueListRelationFilter>;
   brutto?: InputMaybe<DecimalNullableFilter>;
@@ -2127,6 +2166,14 @@ export type OrderFieldsFragment = { __typename: 'Order', id: string, address?: s
 
 export type StatusFieldsFragment = { __typename: 'Status', id: string, status: OrderStatus, createdAt: any };
 
+export type AddNewProductToOrderMutationVariables = Exact<{
+  product: AddNewProductInput;
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type AddNewProductToOrderMutation = { __typename?: 'Mutation', addNewProductToOrder: { __typename?: 'CreateOrderType', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any } } };
+
 export type AddProductToOrderMutationVariables = Exact<{
   product: AddProductInput;
 }>;
@@ -2665,6 +2712,38 @@ export function useItemsLazyQuery(variables: ItemsQueryVariables | VueCompositio
   return VueApolloComposable.useLazyQuery<ItemsQuery, ItemsQueryVariables>(ItemsDocument, variables, options);
 }
 export type ItemsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ItemsQuery, ItemsQueryVariables>;
+export const AddNewProductToOrderDocument = gql`
+    mutation AddNewProductToOrder($product: AddNewProductInput!, $quantity: Int!) {
+  addNewProductToOrder(product: $product, quantity: $quantity) {
+    order {
+      ...OrderFields
+    }
+  }
+}
+    ${OrderFieldsFragmentDoc}`;
+
+/**
+ * __useAddNewProductToOrderMutation__
+ *
+ * To run a mutation, you first call `useAddNewProductToOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useAddNewProductToOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useAddNewProductToOrderMutation({
+ *   variables: {
+ *     product: // value for 'product'
+ *     quantity: // value for 'quantity'
+ *   },
+ * });
+ */
+export function useAddNewProductToOrderMutation(options: VueApolloComposable.UseMutationOptions<AddNewProductToOrderMutation, AddNewProductToOrderMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AddNewProductToOrderMutation, AddNewProductToOrderMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<AddNewProductToOrderMutation, AddNewProductToOrderMutationVariables>(AddNewProductToOrderDocument, options);
+}
+export type AddNewProductToOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddNewProductToOrderMutation, AddNewProductToOrderMutationVariables>;
 export const AddProductToOrderDocument = gql`
     mutation AddProductToOrder($product: AddProductInput!) {
   addProductToOrder(product: $product) {

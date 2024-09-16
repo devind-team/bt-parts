@@ -242,7 +242,15 @@ model Product {
   images         File[]
   manufacturerId String?
 
+  /// Status
+  Status ProductStatus @default(UNCONFIRMED)
+
   @@map("products")
+}
+
+enum ProductStatus {
+  UNCONFIRMED
+  CONFIRMED
 }
 
 /// Products prices model
