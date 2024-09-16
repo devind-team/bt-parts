@@ -14,7 +14,7 @@ import { File } from '@generated/file'
 import { Order } from '@generated/order'
 import { Status } from '@generated/status'
 import { OrderStatus } from '@generated/prisma'
-import { ProductCreateInput } from '@generated/product'
+import { AddNewProductInput } from '@orders/dto/add-new-product.input'
 
 @UseGuards(GqlAuthGuard)
 @Resolver()
@@ -75,9 +75,9 @@ export class OrdersResolver {
     @CurrentUser() user: User,
     @Args({
       name: 'product',
-      type: () => ProductCreateInput,
+      type: () => AddNewProductInput,
     })
-    product: ProductCreateInput,
+    product: AddNewProductInput,
     @Args({ type: () => Int, name: 'quantity', description: 'Количество запчастей' }) quantity: number,
   ): Promise<CreateOrderType> {
     return this.ordersService.addNewProduct(user, product, quantity)

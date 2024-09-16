@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useChangeQuantityItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
-
 const { t } = useI18n()
 const props = defineProps<{
   items: Item[],
@@ -64,7 +63,7 @@ const confirmDeletion = (item: Item) => {
         }
     });
 }
-const deleteItem = (item: Item) => {
+const deleteItem = (item: Item) => { 
     confirmDeletion(item)
 }
 </script>

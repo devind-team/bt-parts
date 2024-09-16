@@ -5,6 +5,7 @@ import { findManyCursorConnection } from '@common/relay/find-many-cursor-connect
 import { PrismaService } from '@common/services/prisma.service'
 import { productValidator } from './validators'
 import { ProductCreateManyInput } from '@generated/product'
+import { AddNewProductInput } from '@orders/dto/add-new-product.input'
 
 @Injectable()
 export class ProductsService {
@@ -41,6 +42,18 @@ export class ProductsService {
   }
 
   /**
+   * Поиск идентификаторов продуктов по из артикулам
+   * @param vendorCodes
+   */
+  async findIdByVendorCode(vendorCode: string): Promise<string> {
+    const findProduct = await this.prismaService.product.findFirst({
+      select: { id: true },
+      where: { vendorCode },
+    })
+    return findProduct ? findProduct.id : null
+  }
+
+  /**
    * Функция для выборки и создания продуктов по артиклу.
    * vendorCode - обазательное поле
    * @param values
@@ -72,5 +85,35 @@ export class ProductsService {
       createProductsData.map((createProductData) => createProductData.vendorCode),
     )
     return { products, createdProducts }
+  }
+
+  /**
+   * Функция для выборки, или создания продуктов по артиклу.
+   * vendorCode - обазательное поле
+   * @param product: addNewProductInput
+   */
+  async getOrCreateProduct(product: AddNewProductInput): Promise<string> {
+    const oldProductId = await this.findIdByVendorCode(product.vendorCode)
+    console.log(oldProductId)
+    if (oldProductId) {
+      return oldProductId
+    }
+    const manufacturerInput = product.manufacturer
+      ? await this.prismaService.manufacturer
+          .findFirst({
+            where: { name: product.manufacturer },
+          })
+          .then((manufacturer) =>
+            manufacturer ? { connect: { id: manufacturer.id } } : { create: { name: product.manufacturer } },
+          )
+      : undefined
+    const productId = await this.prismaService.product.create({
+      select: { id: true },
+      data: {
+        vendorCode: product.vendorCode,
+        manufacturer: manufacturerInput,
+      },
+    })
+    return productId.id
   }
 }

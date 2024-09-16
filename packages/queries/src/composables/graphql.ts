@@ -22,8 +22,11 @@ export type Scalars = {
   Decimal: { input: any; output: any; }
   /** A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address. */
   EmailAddress: { input: any; output: any; }
-  /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
-  URL: { input: any; output: any; }
+};
+
+export type AddNewProductInput = {
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  vendorCode: Scalars['String']['input'];
 };
 
 export type AddProductInput = {
@@ -50,23 +53,6 @@ export type AttributeCount = {
   products: Scalars['Int']['output'];
 };
 
-export type AttributeCreateNestedOneWithoutProductsInput = {
-  connect?: InputMaybe<AttributeWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<AttributeCreateOrConnectWithoutProductsInput>;
-  create?: InputMaybe<AttributeCreateWithoutProductsInput>;
-};
-
-export type AttributeCreateOrConnectWithoutProductsInput = {
-  create: AttributeCreateWithoutProductsInput;
-  where: AttributeWhereUniqueInput;
-};
-
-export type AttributeCreateWithoutProductsInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-};
-
 export type AttributeRelationFilter = {
   is?: InputMaybe<AttributeWhereInput>;
   isNot?: InputMaybe<AttributeWhereInput>;
@@ -87,37 +73,6 @@ export type AttributeValue = {
   productId: Scalars['String']['output'];
   /** atribute value */
   value: Scalars['String']['output'];
-};
-
-export type AttributeValueCreateManyProductInput = {
-  attributeId: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  value: Scalars['String']['input'];
-};
-
-export type AttributeValueCreateManyProductInputEnvelope = {
-  data: Array<AttributeValueCreateManyProductInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type AttributeValueCreateNestedManyWithoutProductInput = {
-  connect?: InputMaybe<Array<AttributeValueWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<AttributeValueCreateOrConnectWithoutProductInput>>;
-  create?: InputMaybe<Array<AttributeValueCreateWithoutProductInput>>;
-  createMany?: InputMaybe<AttributeValueCreateManyProductInputEnvelope>;
-};
-
-export type AttributeValueCreateOrConnectWithoutProductInput = {
-  create: AttributeValueCreateWithoutProductInput;
-  where: AttributeValueWhereUniqueInput;
-};
-
-export type AttributeValueCreateWithoutProductInput = {
-  attribute: AttributeCreateNestedOneWithoutProductsInput;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  value: Scalars['String']['input'];
 };
 
 export type AttributeValueListRelationFilter = {
@@ -143,35 +98,12 @@ export type AttributeValueWhereInput = {
   value?: InputMaybe<StringFilter>;
 };
 
-export type AttributeValueWhereUniqueInput = {
-  AND?: InputMaybe<Array<AttributeValueWhereInput>>;
-  NOT?: InputMaybe<Array<AttributeValueWhereInput>>;
-  OR?: InputMaybe<Array<AttributeValueWhereInput>>;
-  attribute?: InputMaybe<AttributeRelationFilter>;
-  attributeId?: InputMaybe<StringFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  product?: InputMaybe<ProductRelationFilter>;
-  productId?: InputMaybe<StringFilter>;
-  value?: InputMaybe<StringFilter>;
-};
-
 export type AttributeWhereInput = {
   AND?: InputMaybe<Array<AttributeWhereInput>>;
   NOT?: InputMaybe<Array<AttributeWhereInput>>;
   OR?: InputMaybe<Array<AttributeWhereInput>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  name?: InputMaybe<StringFilter>;
-  products?: InputMaybe<AttributeValueListRelationFilter>;
-};
-
-export type AttributeWhereUniqueInput = {
-  AND?: InputMaybe<Array<AttributeWhereInput>>;
-  NOT?: InputMaybe<Array<AttributeWhereInput>>;
-  OR?: InputMaybe<Array<AttributeWhereInput>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<StringFilter>;
   products?: InputMaybe<AttributeValueListRelationFilter>;
 };
@@ -213,128 +145,6 @@ export type CommentCount = {
   comments: Scalars['Int']['output'];
 };
 
-export type CommentCreateManyCommentInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  text: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type CommentCreateManyCommentInputEnvelope = {
-  data: Array<CommentCreateManyCommentInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CommentCreateManyOrderInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['String']['input']>;
-  text: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type CommentCreateManyOrderInputEnvelope = {
-  data: Array<CommentCreateManyOrderInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CommentCreateManyUserInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['String']['input']>;
-  text: Scalars['String']['input'];
-};
-
-export type CommentCreateManyUserInputEnvelope = {
-  data: Array<CommentCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CommentCreateNestedManyWithoutCommentInput = {
-  connect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentCreateOrConnectWithoutCommentInput>>;
-  create?: InputMaybe<Array<CommentCreateWithoutCommentInput>>;
-  createMany?: InputMaybe<CommentCreateManyCommentInputEnvelope>;
-};
-
-export type CommentCreateNestedManyWithoutOrderInput = {
-  connect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentCreateOrConnectWithoutOrderInput>>;
-  create?: InputMaybe<Array<CommentCreateWithoutOrderInput>>;
-  createMany?: InputMaybe<CommentCreateManyOrderInputEnvelope>;
-};
-
-export type CommentCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<CommentCreateWithoutUserInput>>;
-  createMany?: InputMaybe<CommentCreateManyUserInputEnvelope>;
-};
-
-export type CommentCreateNestedOneWithoutCommentsInput = {
-  connect?: InputMaybe<CommentWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<CommentCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<CommentCreateWithoutCommentsInput>;
-};
-
-export type CommentCreateOrConnectWithoutCommentInput = {
-  create: CommentCreateWithoutCommentInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentCreateOrConnectWithoutCommentsInput = {
-  create: CommentCreateWithoutCommentsInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentCreateOrConnectWithoutOrderInput = {
-  create: CommentCreateWithoutOrderInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentCreateOrConnectWithoutUserInput = {
-  create: CommentCreateWithoutUserInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentCreateWithoutCommentInput = {
-  comments?: InputMaybe<CommentCreateNestedManyWithoutCommentInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutCommentsInput;
-  text: Scalars['String']['input'];
-  user?: InputMaybe<UserCreateNestedOneWithoutCommentInput>;
-};
-
-export type CommentCreateWithoutCommentsInput = {
-  comment?: InputMaybe<CommentCreateNestedOneWithoutCommentsInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutCommentsInput;
-  text: Scalars['String']['input'];
-  user?: InputMaybe<UserCreateNestedOneWithoutCommentInput>;
-};
-
-export type CommentCreateWithoutOrderInput = {
-  comment?: InputMaybe<CommentCreateNestedOneWithoutCommentsInput>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutCommentInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  text: Scalars['String']['input'];
-  user?: InputMaybe<UserCreateNestedOneWithoutCommentInput>;
-};
-
-export type CommentCreateWithoutUserInput = {
-  comment?: InputMaybe<CommentCreateNestedOneWithoutCommentsInput>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutCommentInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutCommentsInput;
-  text: Scalars['String']['input'];
-};
-
 /** Comments on the order item */
 export type CommentItem = {
   __typename?: 'CommentItem';
@@ -362,128 +172,6 @@ export type CommentItemCount = {
   comments: Scalars['Int']['output'];
 };
 
-export type CommentItemCreateManyCommentInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  itemId: Scalars['String']['input'];
-  text: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type CommentItemCreateManyCommentInputEnvelope = {
-  data: Array<CommentItemCreateManyCommentInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CommentItemCreateManyItemInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['String']['input']>;
-  text: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type CommentItemCreateManyItemInputEnvelope = {
-  data: Array<CommentItemCreateManyItemInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CommentItemCreateManyUserInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  itemId: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['String']['input']>;
-  text: Scalars['String']['input'];
-};
-
-export type CommentItemCreateManyUserInputEnvelope = {
-  data: Array<CommentItemCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CommentItemCreateNestedManyWithoutCommentInput = {
-  connect?: InputMaybe<Array<CommentItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentItemCreateOrConnectWithoutCommentInput>>;
-  create?: InputMaybe<Array<CommentItemCreateWithoutCommentInput>>;
-  createMany?: InputMaybe<CommentItemCreateManyCommentInputEnvelope>;
-};
-
-export type CommentItemCreateNestedManyWithoutItemInput = {
-  connect?: InputMaybe<Array<CommentItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentItemCreateOrConnectWithoutItemInput>>;
-  create?: InputMaybe<Array<CommentItemCreateWithoutItemInput>>;
-  createMany?: InputMaybe<CommentItemCreateManyItemInputEnvelope>;
-};
-
-export type CommentItemCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<CommentItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<CommentItemCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<CommentItemCreateWithoutUserInput>>;
-  createMany?: InputMaybe<CommentItemCreateManyUserInputEnvelope>;
-};
-
-export type CommentItemCreateNestedOneWithoutCommentsInput = {
-  connect?: InputMaybe<CommentItemWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<CommentItemCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<CommentItemCreateWithoutCommentsInput>;
-};
-
-export type CommentItemCreateOrConnectWithoutCommentInput = {
-  create: CommentItemCreateWithoutCommentInput;
-  where: CommentItemWhereUniqueInput;
-};
-
-export type CommentItemCreateOrConnectWithoutCommentsInput = {
-  create: CommentItemCreateWithoutCommentsInput;
-  where: CommentItemWhereUniqueInput;
-};
-
-export type CommentItemCreateOrConnectWithoutItemInput = {
-  create: CommentItemCreateWithoutItemInput;
-  where: CommentItemWhereUniqueInput;
-};
-
-export type CommentItemCreateOrConnectWithoutUserInput = {
-  create: CommentItemCreateWithoutUserInput;
-  where: CommentItemWhereUniqueInput;
-};
-
-export type CommentItemCreateWithoutCommentInput = {
-  comments?: InputMaybe<CommentItemCreateNestedManyWithoutCommentInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  item: ItemCreateNestedOneWithoutCommentItemInput;
-  text: Scalars['String']['input'];
-  user?: InputMaybe<UserCreateNestedOneWithoutCommentItemInput>;
-};
-
-export type CommentItemCreateWithoutCommentsInput = {
-  comment?: InputMaybe<CommentItemCreateNestedOneWithoutCommentsInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  item: ItemCreateNestedOneWithoutCommentItemInput;
-  text: Scalars['String']['input'];
-  user?: InputMaybe<UserCreateNestedOneWithoutCommentItemInput>;
-};
-
-export type CommentItemCreateWithoutItemInput = {
-  comment?: InputMaybe<CommentItemCreateNestedOneWithoutCommentsInput>;
-  comments?: InputMaybe<CommentItemCreateNestedManyWithoutCommentInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  text: Scalars['String']['input'];
-  user?: InputMaybe<UserCreateNestedOneWithoutCommentItemInput>;
-};
-
-export type CommentItemCreateWithoutUserInput = {
-  comment?: InputMaybe<CommentItemCreateNestedOneWithoutCommentsInput>;
-  comments?: InputMaybe<CommentItemCreateNestedManyWithoutCommentInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  item: ItemCreateNestedOneWithoutCommentItemInput;
-  text: Scalars['String']['input'];
-};
-
 export type CommentItemListRelationFilter = {
   every?: InputMaybe<CommentItemWhereInput>;
   none?: InputMaybe<CommentItemWhereInput>;
@@ -507,22 +195,6 @@ export type CommentItemWhereInput = {
   comments?: InputMaybe<CommentItemListRelationFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  item?: InputMaybe<ItemRelationFilter>;
-  itemId?: InputMaybe<StringFilter>;
-  parentId?: InputMaybe<StringNullableFilter>;
-  text?: InputMaybe<StringFilter>;
-  user?: InputMaybe<UserNullableRelationFilter>;
-  userId?: InputMaybe<StringNullableFilter>;
-};
-
-export type CommentItemWhereUniqueInput = {
-  AND?: InputMaybe<Array<CommentItemWhereInput>>;
-  NOT?: InputMaybe<Array<CommentItemWhereInput>>;
-  OR?: InputMaybe<Array<CommentItemWhereInput>>;
-  comment?: InputMaybe<CommentItemNullableRelationFilter>;
-  comments?: InputMaybe<CommentItemListRelationFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
   item?: InputMaybe<ItemRelationFilter>;
   itemId?: InputMaybe<StringFilter>;
   parentId?: InputMaybe<StringNullableFilter>;
@@ -562,22 +234,6 @@ export type CommentWhereInput = {
   userId?: InputMaybe<StringNullableFilter>;
 };
 
-export type CommentWhereUniqueInput = {
-  AND?: InputMaybe<Array<CommentWhereInput>>;
-  NOT?: InputMaybe<Array<CommentWhereInput>>;
-  OR?: InputMaybe<Array<CommentWhereInput>>;
-  comment?: InputMaybe<CommentNullableRelationFilter>;
-  comments?: InputMaybe<CommentListRelationFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order?: InputMaybe<OrderRelationFilter>;
-  orderId?: InputMaybe<StringFilter>;
-  parentId?: InputMaybe<StringNullableFilter>;
-  text?: InputMaybe<StringFilter>;
-  user?: InputMaybe<UserNullableRelationFilter>;
-  userId?: InputMaybe<StringNullableFilter>;
-};
-
 export type Companies = {
   __typename?: 'Companies';
   User?: Maybe<Array<User>>;
@@ -604,24 +260,6 @@ export type CompaniesCountAggregate = {
   id: Scalars['Int']['output'];
   location: Scalars['Int']['output'];
   name: Scalars['Int']['output'];
-};
-
-export type CompaniesCreateNestedOneWithoutUserInput = {
-  connect?: InputMaybe<CompaniesWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<CompaniesCreateOrConnectWithoutUserInput>;
-  create?: InputMaybe<CompaniesCreateWithoutUserInput>;
-};
-
-export type CompaniesCreateOrConnectWithoutUserInput = {
-  create: CompaniesCreateWithoutUserInput;
-  where: CompaniesWhereUniqueInput;
-};
-
-export type CompaniesCreateWithoutUserInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  location?: InputMaybe<Location>;
-  name: Scalars['String']['input'];
 };
 
 export type CompaniesMaxAggregate = {
@@ -662,17 +300,6 @@ export type CompaniesWhereInput = {
   id?: InputMaybe<StringFilter>;
   location?: InputMaybe<EnumLocationFilter>;
   name?: InputMaybe<StringFilter>;
-};
-
-export type CompaniesWhereUniqueInput = {
-  AND?: InputMaybe<Array<CompaniesWhereInput>>;
-  NOT?: InputMaybe<Array<CompaniesWhereInput>>;
-  OR?: InputMaybe<Array<CompaniesWhereInput>>;
-  User?: InputMaybe<UserListRelationFilter>;
-  address?: InputMaybe<StringNullableFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  location?: InputMaybe<EnumLocationFilter>;
-  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CompanyInput = {
@@ -830,63 +457,6 @@ export type FileCountAggregate = {
   userId: Scalars['Int']['output'];
 };
 
-export type FileCreateManyUserInput = {
-  bucket: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  key: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type FileCreateManyUserInputEnvelope = {
-  data: Array<FileCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type FileCreateNestedManyWithoutProductsInput = {
-  connect?: InputMaybe<Array<FileWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<FileCreateOrConnectWithoutProductsInput>>;
-  create?: InputMaybe<Array<FileCreateWithoutProductsInput>>;
-};
-
-export type FileCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<FileWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<FileCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<FileCreateWithoutUserInput>>;
-  createMany?: InputMaybe<FileCreateManyUserInputEnvelope>;
-};
-
-export type FileCreateOrConnectWithoutProductsInput = {
-  create: FileCreateWithoutProductsInput;
-  where: FileWhereUniqueInput;
-};
-
-export type FileCreateOrConnectWithoutUserInput = {
-  create: FileCreateWithoutUserInput;
-  where: FileWhereUniqueInput;
-};
-
-export type FileCreateWithoutProductsInput = {
-  bucket: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  key: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutFilesInput>;
-};
-
-export type FileCreateWithoutUserInput = {
-  bucket: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  key: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  products?: InputMaybe<ProductCreateNestedManyWithoutImagesInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
 export type FileListRelationFilter = {
   every?: InputMaybe<FileWhereInput>;
   none?: InputMaybe<FileWhereInput>;
@@ -926,21 +496,6 @@ export type FileWhereInput = {
   bucket?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  key?: InputMaybe<StringFilter>;
-  name?: InputMaybe<StringFilter>;
-  products?: InputMaybe<ProductListRelationFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  user?: InputMaybe<UserNullableRelationFilter>;
-  userId?: InputMaybe<StringNullableFilter>;
-};
-
-export type FileWhereUniqueInput = {
-  AND?: InputMaybe<Array<FileWhereInput>>;
-  NOT?: InputMaybe<Array<FileWhereInput>>;
-  OR?: InputMaybe<Array<FileWhereInput>>;
-  bucket?: InputMaybe<StringFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
   key?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   products?: InputMaybe<ProductListRelationFilter>;
@@ -1055,238 +610,6 @@ export type ItemCountAggregate = {
   routeNo: Scalars['Int']['output'];
   updatedAt: Scalars['Int']['output'];
   userId: Scalars['Int']['output'];
-};
-
-export type ItemCreateManyOrderInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  priceId?: InputMaybe<Scalars['String']['input']>;
-  productId: Scalars['String']['input'];
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ItemCreateManyOrderInputEnvelope = {
-  data: Array<ItemCreateManyOrderInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type ItemCreateManyPriceInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  productId: Scalars['String']['input'];
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ItemCreateManyPriceInputEnvelope = {
-  data: Array<ItemCreateManyPriceInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type ItemCreateManyProductInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  priceId?: InputMaybe<Scalars['String']['input']>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ItemCreateManyProductInputEnvelope = {
-  data: Array<ItemCreateManyProductInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type ItemCreateManyUserInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  priceId?: InputMaybe<Scalars['String']['input']>;
-  productId: Scalars['String']['input'];
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type ItemCreateManyUserInputEnvelope = {
-  data: Array<ItemCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type ItemCreateNestedManyWithoutOrderInput = {
-  connect?: InputMaybe<Array<ItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<ItemCreateOrConnectWithoutOrderInput>>;
-  create?: InputMaybe<Array<ItemCreateWithoutOrderInput>>;
-  createMany?: InputMaybe<ItemCreateManyOrderInputEnvelope>;
-};
-
-export type ItemCreateNestedManyWithoutPriceInput = {
-  connect?: InputMaybe<Array<ItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<ItemCreateOrConnectWithoutPriceInput>>;
-  create?: InputMaybe<Array<ItemCreateWithoutPriceInput>>;
-  createMany?: InputMaybe<ItemCreateManyPriceInputEnvelope>;
-};
-
-export type ItemCreateNestedManyWithoutProductInput = {
-  connect?: InputMaybe<Array<ItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<ItemCreateOrConnectWithoutProductInput>>;
-  create?: InputMaybe<Array<ItemCreateWithoutProductInput>>;
-  createMany?: InputMaybe<ItemCreateManyProductInputEnvelope>;
-};
-
-export type ItemCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<ItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<ItemCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<ItemCreateWithoutUserInput>>;
-  createMany?: InputMaybe<ItemCreateManyUserInputEnvelope>;
-};
-
-export type ItemCreateNestedOneWithoutCommentItemInput = {
-  connect?: InputMaybe<ItemWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<ItemCreateOrConnectWithoutCommentItemInput>;
-  create?: InputMaybe<ItemCreateWithoutCommentItemInput>;
-};
-
-export type ItemCreateNestedOneWithoutStatusesInput = {
-  connect?: InputMaybe<ItemWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<ItemCreateOrConnectWithoutStatusesInput>;
-  create?: InputMaybe<ItemCreateWithoutStatusesInput>;
-};
-
-export type ItemCreateOrConnectWithoutCommentItemInput = {
-  create: ItemCreateWithoutCommentItemInput;
-  where: ItemWhereUniqueInput;
-};
-
-export type ItemCreateOrConnectWithoutOrderInput = {
-  create: ItemCreateWithoutOrderInput;
-  where: ItemWhereUniqueInput;
-};
-
-export type ItemCreateOrConnectWithoutPriceInput = {
-  create: ItemCreateWithoutPriceInput;
-  where: ItemWhereUniqueInput;
-};
-
-export type ItemCreateOrConnectWithoutProductInput = {
-  create: ItemCreateWithoutProductInput;
-  where: ItemWhereUniqueInput;
-};
-
-export type ItemCreateOrConnectWithoutStatusesInput = {
-  create: ItemCreateWithoutStatusesInput;
-  where: ItemWhereUniqueInput;
-};
-
-export type ItemCreateOrConnectWithoutUserInput = {
-  create: ItemCreateWithoutUserInput;
-  where: ItemWhereUniqueInput;
-};
-
-export type ItemCreateWithoutCommentItemInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutItemsInput;
-  price?: InputMaybe<PriceCreateNestedOneWithoutItemInput>;
-  product: ProductCreateNestedOneWithoutItemInput;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  statuses?: InputMaybe<StatusItemCreateNestedManyWithoutItemInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutItemInput>;
-};
-
-export type ItemCreateWithoutOrderInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutItemInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<PriceCreateNestedOneWithoutItemInput>;
-  product: ProductCreateNestedOneWithoutItemInput;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  statuses?: InputMaybe<StatusItemCreateNestedManyWithoutItemInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutItemInput>;
-};
-
-export type ItemCreateWithoutPriceInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutItemInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutItemsInput;
-  product: ProductCreateNestedOneWithoutItemInput;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  statuses?: InputMaybe<StatusItemCreateNestedManyWithoutItemInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutItemInput>;
-};
-
-export type ItemCreateWithoutProductInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutItemInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutItemsInput;
-  price?: InputMaybe<PriceCreateNestedOneWithoutItemInput>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  statuses?: InputMaybe<StatusItemCreateNestedManyWithoutItemInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutItemInput>;
-};
-
-export type ItemCreateWithoutStatusesInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutItemInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutItemsInput;
-  price?: InputMaybe<PriceCreateNestedOneWithoutItemInput>;
-  product: ProductCreateNestedOneWithoutItemInput;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutItemInput>;
-};
-
-export type ItemCreateWithoutUserInput = {
-  carNo?: InputMaybe<Scalars['String']['input']>;
-  coefficient?: InputMaybe<Scalars['Float']['input']>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutItemInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutItemsInput;
-  price?: InputMaybe<PriceCreateNestedOneWithoutItemInput>;
-  product: ProductCreateNestedOneWithoutItemInput;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  routeNo?: InputMaybe<Scalars['String']['input']>;
-  statuses?: InputMaybe<StatusItemCreateNestedManyWithoutItemInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type ItemEdge = {
@@ -1466,22 +789,6 @@ export type ManufacturerCount = {
   products: Scalars['Int']['output'];
 };
 
-export type ManufacturerCreateNestedOneWithoutProductsInput = {
-  connect?: InputMaybe<ManufacturerWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<ManufacturerCreateOrConnectWithoutProductsInput>;
-  create?: InputMaybe<ManufacturerCreateWithoutProductsInput>;
-};
-
-export type ManufacturerCreateOrConnectWithoutProductsInput = {
-  create: ManufacturerCreateWithoutProductsInput;
-  where: ManufacturerWhereUniqueInput;
-};
-
-export type ManufacturerCreateWithoutProductsInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-};
-
 export type ManufacturerNullableRelationFilter = {
   is?: InputMaybe<ManufacturerWhereInput>;
   isNot?: InputMaybe<ManufacturerWhereInput>;
@@ -1499,15 +806,6 @@ export type ManufacturerWhereInput = {
   OR?: InputMaybe<Array<ManufacturerWhereInput>>;
   id?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
-  products?: InputMaybe<ProductListRelationFilter>;
-};
-
-export type ManufacturerWhereUniqueInput = {
-  AND?: InputMaybe<Array<ManufacturerWhereInput>>;
-  NOT?: InputMaybe<Array<ManufacturerWhereInput>>;
-  OR?: InputMaybe<Array<ManufacturerWhereInput>>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
   products?: InputMaybe<ProductListRelationFilter>;
 };
 
@@ -1533,7 +831,7 @@ export type Mutation = {
 
 
 export type MutationAddNewProductToOrderArgs = {
-  product: ProductCreateInput;
+  product: AddNewProductInput;
   quantity: Scalars['Int']['input'];
 };
 
@@ -1829,137 +1127,6 @@ export type OrderCountAggregate = {
   userId: Scalars['Int']['output'];
 };
 
-export type OrderCreateManyManagerInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  userId: Scalars['String']['input'];
-};
-
-export type OrderCreateManyManagerInputEnvelope = {
-  data: Array<OrderCreateManyManagerInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type OrderCreateManyUserInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  managerId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type OrderCreateManyUserInputEnvelope = {
-  data: Array<OrderCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type OrderCreateNestedManyWithoutManagerInput = {
-  connect?: InputMaybe<Array<OrderWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<OrderCreateOrConnectWithoutManagerInput>>;
-  create?: InputMaybe<Array<OrderCreateWithoutManagerInput>>;
-  createMany?: InputMaybe<OrderCreateManyManagerInputEnvelope>;
-};
-
-export type OrderCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<OrderWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<OrderCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<OrderCreateWithoutUserInput>>;
-  createMany?: InputMaybe<OrderCreateManyUserInputEnvelope>;
-};
-
-export type OrderCreateNestedOneWithoutCommentsInput = {
-  connect?: InputMaybe<OrderWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<OrderCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<OrderCreateWithoutCommentsInput>;
-};
-
-export type OrderCreateNestedOneWithoutItemsInput = {
-  connect?: InputMaybe<OrderWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<OrderCreateOrConnectWithoutItemsInput>;
-  create?: InputMaybe<OrderCreateWithoutItemsInput>;
-};
-
-export type OrderCreateNestedOneWithoutStatusesInput = {
-  connect?: InputMaybe<OrderWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<OrderCreateOrConnectWithoutStatusesInput>;
-  create?: InputMaybe<OrderCreateWithoutStatusesInput>;
-};
-
-export type OrderCreateOrConnectWithoutCommentsInput = {
-  create: OrderCreateWithoutCommentsInput;
-  where: OrderWhereUniqueInput;
-};
-
-export type OrderCreateOrConnectWithoutItemsInput = {
-  create: OrderCreateWithoutItemsInput;
-  where: OrderWhereUniqueInput;
-};
-
-export type OrderCreateOrConnectWithoutManagerInput = {
-  create: OrderCreateWithoutManagerInput;
-  where: OrderWhereUniqueInput;
-};
-
-export type OrderCreateOrConnectWithoutStatusesInput = {
-  create: OrderCreateWithoutStatusesInput;
-  where: OrderWhereUniqueInput;
-};
-
-export type OrderCreateOrConnectWithoutUserInput = {
-  create: OrderCreateWithoutUserInput;
-  where: OrderWhereUniqueInput;
-};
-
-export type OrderCreateWithoutCommentsInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  items?: InputMaybe<ItemCreateNestedManyWithoutOrderInput>;
-  manager?: InputMaybe<UserCreateNestedOneWithoutManageOrdersInput>;
-  statuses?: InputMaybe<StatusCreateNestedManyWithoutOrderInput>;
-  user: UserCreateNestedOneWithoutOrdersInput;
-};
-
-export type OrderCreateWithoutItemsInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutOrderInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  manager?: InputMaybe<UserCreateNestedOneWithoutManageOrdersInput>;
-  statuses?: InputMaybe<StatusCreateNestedManyWithoutOrderInput>;
-  user: UserCreateNestedOneWithoutOrdersInput;
-};
-
-export type OrderCreateWithoutManagerInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutOrderInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  items?: InputMaybe<ItemCreateNestedManyWithoutOrderInput>;
-  statuses?: InputMaybe<StatusCreateNestedManyWithoutOrderInput>;
-  user: UserCreateNestedOneWithoutOrdersInput;
-};
-
-export type OrderCreateWithoutStatusesInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutOrderInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  items?: InputMaybe<ItemCreateNestedManyWithoutOrderInput>;
-  manager?: InputMaybe<UserCreateNestedOneWithoutManageOrdersInput>;
-  user: UserCreateNestedOneWithoutOrdersInput;
-};
-
-export type OrderCreateWithoutUserInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutOrderInput>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  items?: InputMaybe<ItemCreateNestedManyWithoutOrderInput>;
-  manager?: InputMaybe<UserCreateNestedOneWithoutManageOrdersInput>;
-  statuses?: InputMaybe<StatusCreateNestedManyWithoutOrderInput>;
-};
-
 export type OrderEdge = {
   __typename?: 'OrderEdge';
   cursor: Scalars['String']['output'];
@@ -2107,75 +1274,6 @@ export type PriceCount = {
   item: Scalars['Int']['output'];
 };
 
-export type PriceCreateManyProductInput = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  duration?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  price: Scalars['Decimal']['input'];
-  relevant?: InputMaybe<Scalars['Boolean']['input']>;
-  site?: InputMaybe<Scalars['String']['input']>;
-  supplierId?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  validAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type PriceCreateManyProductInputEnvelope = {
-  data: Array<PriceCreateManyProductInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type PriceCreateNestedManyWithoutProductInput = {
-  connect?: InputMaybe<Array<PriceWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<PriceCreateOrConnectWithoutProductInput>>;
-  create?: InputMaybe<Array<PriceCreateWithoutProductInput>>;
-  createMany?: InputMaybe<PriceCreateManyProductInputEnvelope>;
-};
-
-export type PriceCreateNestedOneWithoutItemInput = {
-  connect?: InputMaybe<PriceWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<PriceCreateOrConnectWithoutItemInput>;
-  create?: InputMaybe<PriceCreateWithoutItemInput>;
-};
-
-export type PriceCreateOrConnectWithoutItemInput = {
-  create: PriceCreateWithoutItemInput;
-  where: PriceWhereUniqueInput;
-};
-
-export type PriceCreateOrConnectWithoutProductInput = {
-  create: PriceCreateWithoutProductInput;
-  where: PriceWhereUniqueInput;
-};
-
-export type PriceCreateWithoutItemInput = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  duration?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  price: Scalars['Decimal']['input'];
-  product: ProductCreateNestedOneWithoutPricesInput;
-  relevant?: InputMaybe<Scalars['Boolean']['input']>;
-  site?: InputMaybe<Scalars['String']['input']>;
-  supplier?: InputMaybe<SupplierCreateNestedOneWithoutPricesInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  validAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
-export type PriceCreateWithoutProductInput = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  duration?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutPriceInput>;
-  price: Scalars['Decimal']['input'];
-  relevant?: InputMaybe<Scalars['Boolean']['input']>;
-  site?: InputMaybe<Scalars['String']['input']>;
-  supplier?: InputMaybe<SupplierCreateNestedOneWithoutPricesInput>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  validAt?: InputMaybe<Scalars['DateTime']['input']>;
-};
-
 export type PriceListRelationFilter = {
   every?: InputMaybe<PriceWhereInput>;
   none?: InputMaybe<PriceWhereInput>;
@@ -2216,26 +1314,6 @@ export type PriceWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   duration?: InputMaybe<IntNullableFilter>;
   id?: InputMaybe<StringFilter>;
-  item?: InputMaybe<ItemListRelationFilter>;
-  price?: InputMaybe<DecimalFilter>;
-  product?: InputMaybe<ProductRelationFilter>;
-  productId?: InputMaybe<StringFilter>;
-  relevant?: InputMaybe<BoolNullableFilter>;
-  site?: InputMaybe<StringNullableFilter>;
-  supplier?: InputMaybe<SupplierNullableRelationFilter>;
-  supplierId?: InputMaybe<StringNullableFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  validAt?: InputMaybe<DateTimeNullableFilter>;
-};
-
-export type PriceWhereUniqueInput = {
-  AND?: InputMaybe<Array<PriceWhereInput>>;
-  NOT?: InputMaybe<Array<PriceWhereInput>>;
-  OR?: InputMaybe<Array<PriceWhereInput>>;
-  comment?: InputMaybe<StringNullableFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  duration?: InputMaybe<IntNullableFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
   item?: InputMaybe<ItemListRelationFilter>;
   price?: InputMaybe<DecimalFilter>;
   product?: InputMaybe<ProductRelationFilter>;
@@ -2332,124 +1410,6 @@ export type ProductCountAggregate = {
   updatedAt: Scalars['Int']['output'];
   vendorCode: Scalars['Int']['output'];
   vinNumber: Scalars['Int']['output'];
-};
-
-export type ProductCreateInput = {
-  Status?: InputMaybe<ProductStatus>;
-  aliases?: InputMaybe<Scalars['String']['input']>;
-  attributes?: InputMaybe<AttributeValueCreateNestedManyWithoutProductInput>;
-  brutto?: InputMaybe<Scalars['Decimal']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  images?: InputMaybe<FileCreateNestedManyWithoutProductsInput>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutProductInput>;
-  manufacturer?: InputMaybe<ManufacturerCreateNestedOneWithoutProductsInput>;
-  nameEn?: InputMaybe<Scalars['String']['input']>;
-  nameRu?: InputMaybe<Scalars['String']['input']>;
-  netto?: InputMaybe<Scalars['Decimal']['input']>;
-  original?: InputMaybe<Scalars['Boolean']['input']>;
-  prices?: InputMaybe<PriceCreateNestedManyWithoutProductInput>;
-  stock?: InputMaybe<Scalars['Int']['input']>;
-  tnved?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  vendorCode: Scalars['String']['input'];
-  vinNumber?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ProductCreateNestedManyWithoutImagesInput = {
-  connect?: InputMaybe<Array<ProductWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<ProductCreateOrConnectWithoutImagesInput>>;
-  create?: InputMaybe<Array<ProductCreateWithoutImagesInput>>;
-};
-
-export type ProductCreateNestedOneWithoutItemInput = {
-  connect?: InputMaybe<ProductWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<ProductCreateOrConnectWithoutItemInput>;
-  create?: InputMaybe<ProductCreateWithoutItemInput>;
-};
-
-export type ProductCreateNestedOneWithoutPricesInput = {
-  connect?: InputMaybe<ProductWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<ProductCreateOrConnectWithoutPricesInput>;
-  create?: InputMaybe<ProductCreateWithoutPricesInput>;
-};
-
-export type ProductCreateOrConnectWithoutImagesInput = {
-  create: ProductCreateWithoutImagesInput;
-  where: ProductWhereUniqueInput;
-};
-
-export type ProductCreateOrConnectWithoutItemInput = {
-  create: ProductCreateWithoutItemInput;
-  where: ProductWhereUniqueInput;
-};
-
-export type ProductCreateOrConnectWithoutPricesInput = {
-  create: ProductCreateWithoutPricesInput;
-  where: ProductWhereUniqueInput;
-};
-
-export type ProductCreateWithoutImagesInput = {
-  Status?: InputMaybe<ProductStatus>;
-  aliases?: InputMaybe<Scalars['String']['input']>;
-  attributes?: InputMaybe<AttributeValueCreateNestedManyWithoutProductInput>;
-  brutto?: InputMaybe<Scalars['Decimal']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutProductInput>;
-  manufacturer?: InputMaybe<ManufacturerCreateNestedOneWithoutProductsInput>;
-  nameEn?: InputMaybe<Scalars['String']['input']>;
-  nameRu?: InputMaybe<Scalars['String']['input']>;
-  netto?: InputMaybe<Scalars['Decimal']['input']>;
-  original?: InputMaybe<Scalars['Boolean']['input']>;
-  prices?: InputMaybe<PriceCreateNestedManyWithoutProductInput>;
-  stock?: InputMaybe<Scalars['Int']['input']>;
-  tnved?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  vendorCode: Scalars['String']['input'];
-  vinNumber?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ProductCreateWithoutItemInput = {
-  Status?: InputMaybe<ProductStatus>;
-  aliases?: InputMaybe<Scalars['String']['input']>;
-  attributes?: InputMaybe<AttributeValueCreateNestedManyWithoutProductInput>;
-  brutto?: InputMaybe<Scalars['Decimal']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  images?: InputMaybe<FileCreateNestedManyWithoutProductsInput>;
-  manufacturer?: InputMaybe<ManufacturerCreateNestedOneWithoutProductsInput>;
-  nameEn?: InputMaybe<Scalars['String']['input']>;
-  nameRu?: InputMaybe<Scalars['String']['input']>;
-  netto?: InputMaybe<Scalars['Decimal']['input']>;
-  original?: InputMaybe<Scalars['Boolean']['input']>;
-  prices?: InputMaybe<PriceCreateNestedManyWithoutProductInput>;
-  stock?: InputMaybe<Scalars['Int']['input']>;
-  tnved?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  vendorCode: Scalars['String']['input'];
-  vinNumber?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ProductCreateWithoutPricesInput = {
-  Status?: InputMaybe<ProductStatus>;
-  aliases?: InputMaybe<Scalars['String']['input']>;
-  attributes?: InputMaybe<AttributeValueCreateNestedManyWithoutProductInput>;
-  brutto?: InputMaybe<Scalars['Decimal']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  images?: InputMaybe<FileCreateNestedManyWithoutProductsInput>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutProductInput>;
-  manufacturer?: InputMaybe<ManufacturerCreateNestedOneWithoutProductsInput>;
-  nameEn?: InputMaybe<Scalars['String']['input']>;
-  nameRu?: InputMaybe<Scalars['String']['input']>;
-  netto?: InputMaybe<Scalars['Decimal']['input']>;
-  original?: InputMaybe<Scalars['Boolean']['input']>;
-  stock?: InputMaybe<Scalars['Int']['input']>;
-  tnved?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  vendorCode: Scalars['String']['input'];
-  vinNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ProductEdge = {
@@ -2733,68 +1693,6 @@ export type StatusCountAggregate = {
   userId: Scalars['Int']['output'];
 };
 
-export type StatusCreateManyOrderInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<OrderStatus>;
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type StatusCreateManyOrderInputEnvelope = {
-  data: Array<StatusCreateManyOrderInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type StatusCreateManyUserInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  status?: InputMaybe<OrderStatus>;
-};
-
-export type StatusCreateManyUserInputEnvelope = {
-  data: Array<StatusCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type StatusCreateNestedManyWithoutOrderInput = {
-  connect?: InputMaybe<Array<StatusWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<StatusCreateOrConnectWithoutOrderInput>>;
-  create?: InputMaybe<Array<StatusCreateWithoutOrderInput>>;
-  createMany?: InputMaybe<StatusCreateManyOrderInputEnvelope>;
-};
-
-export type StatusCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<StatusWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<StatusCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<StatusCreateWithoutUserInput>>;
-  createMany?: InputMaybe<StatusCreateManyUserInputEnvelope>;
-};
-
-export type StatusCreateOrConnectWithoutOrderInput = {
-  create: StatusCreateWithoutOrderInput;
-  where: StatusWhereUniqueInput;
-};
-
-export type StatusCreateOrConnectWithoutUserInput = {
-  create: StatusCreateWithoutUserInput;
-  where: StatusWhereUniqueInput;
-};
-
-export type StatusCreateWithoutOrderInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<OrderStatus>;
-  user?: InputMaybe<UserCreateNestedOneWithoutStatusInput>;
-};
-
-export type StatusCreateWithoutUserInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  order: OrderCreateNestedOneWithoutStatusesInput;
-  status?: InputMaybe<OrderStatus>;
-};
-
 /** The model of the item statuses in the order */
 export type StatusItem = {
   __typename?: 'StatusItem';
@@ -2810,68 +1708,6 @@ export type StatusItem = {
   /** User */
   user?: Maybe<User>;
   userId?: Maybe<Scalars['String']['output']>;
-};
-
-export type StatusItemCreateManyItemInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<ItemStatus>;
-  userId?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type StatusItemCreateManyItemInputEnvelope = {
-  data: Array<StatusItemCreateManyItemInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type StatusItemCreateManyUserInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  itemId: Scalars['String']['input'];
-  status?: InputMaybe<ItemStatus>;
-};
-
-export type StatusItemCreateManyUserInputEnvelope = {
-  data: Array<StatusItemCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type StatusItemCreateNestedManyWithoutItemInput = {
-  connect?: InputMaybe<Array<StatusItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<StatusItemCreateOrConnectWithoutItemInput>>;
-  create?: InputMaybe<Array<StatusItemCreateWithoutItemInput>>;
-  createMany?: InputMaybe<StatusItemCreateManyItemInputEnvelope>;
-};
-
-export type StatusItemCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<StatusItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<StatusItemCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<StatusItemCreateWithoutUserInput>>;
-  createMany?: InputMaybe<StatusItemCreateManyUserInputEnvelope>;
-};
-
-export type StatusItemCreateOrConnectWithoutItemInput = {
-  create: StatusItemCreateWithoutItemInput;
-  where: StatusItemWhereUniqueInput;
-};
-
-export type StatusItemCreateOrConnectWithoutUserInput = {
-  create: StatusItemCreateWithoutUserInput;
-  where: StatusItemWhereUniqueInput;
-};
-
-export type StatusItemCreateWithoutItemInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<ItemStatus>;
-  user?: InputMaybe<UserCreateNestedOneWithoutStatusItemInput>;
-};
-
-export type StatusItemCreateWithoutUserInput = {
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  item: ItemCreateNestedOneWithoutStatusesInput;
-  status?: InputMaybe<ItemStatus>;
 };
 
 export type StatusItemListRelationFilter = {
@@ -2890,19 +1726,6 @@ export type StatusItemWhereInput = {
   OR?: InputMaybe<Array<StatusItemWhereInput>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  item?: InputMaybe<ItemRelationFilter>;
-  itemId?: InputMaybe<StringFilter>;
-  status?: InputMaybe<EnumItemStatusFilter>;
-  user?: InputMaybe<UserNullableRelationFilter>;
-  userId?: InputMaybe<StringNullableFilter>;
-};
-
-export type StatusItemWhereUniqueInput = {
-  AND?: InputMaybe<Array<StatusItemWhereInput>>;
-  NOT?: InputMaybe<Array<StatusItemWhereInput>>;
-  OR?: InputMaybe<Array<StatusItemWhereInput>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
   item?: InputMaybe<ItemRelationFilter>;
   itemId?: InputMaybe<StringFilter>;
   status?: InputMaybe<EnumItemStatusFilter>;
@@ -2944,19 +1767,6 @@ export type StatusWhereInput = {
   OR?: InputMaybe<Array<StatusWhereInput>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
-  order?: InputMaybe<OrderRelationFilter>;
-  orderId?: InputMaybe<StringFilter>;
-  status?: InputMaybe<EnumOrderStatusFilter>;
-  user?: InputMaybe<UserNullableRelationFilter>;
-  userId?: InputMaybe<StringNullableFilter>;
-};
-
-export type StatusWhereUniqueInput = {
-  AND?: InputMaybe<Array<StatusWhereInput>>;
-  NOT?: InputMaybe<Array<StatusWhereInput>>;
-  OR?: InputMaybe<Array<StatusWhereInput>>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<OrderRelationFilter>;
   orderId?: InputMaybe<StringFilter>;
   status?: InputMaybe<EnumOrderStatusFilter>;
@@ -3011,23 +1821,6 @@ export type SupplierCount = {
   prices: Scalars['Int']['output'];
 };
 
-export type SupplierCreateNestedOneWithoutPricesInput = {
-  connect?: InputMaybe<SupplierWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<SupplierCreateOrConnectWithoutPricesInput>;
-  create?: InputMaybe<SupplierCreateWithoutPricesInput>;
-};
-
-export type SupplierCreateOrConnectWithoutPricesInput = {
-  create: SupplierCreateWithoutPricesInput;
-  where: SupplierWhereUniqueInput;
-};
-
-export type SupplierCreateWithoutPricesInput = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  location?: InputMaybe<Location>;
-  name: Scalars['String']['input'];
-};
-
 export type SupplierNullableRelationFilter = {
   is?: InputMaybe<SupplierWhereInput>;
   isNot?: InputMaybe<SupplierWhereInput>;
@@ -3045,16 +1838,6 @@ export type SupplierWhereInput = {
   NOT?: InputMaybe<Array<SupplierWhereInput>>;
   OR?: InputMaybe<Array<SupplierWhereInput>>;
   id?: InputMaybe<StringFilter>;
-  location?: InputMaybe<EnumLocationFilter>;
-  name?: InputMaybe<StringFilter>;
-  prices?: InputMaybe<PriceListRelationFilter>;
-};
-
-export type SupplierWhereUniqueInput = {
-  AND?: InputMaybe<Array<SupplierWhereInput>>;
-  NOT?: InputMaybe<Array<SupplierWhereInput>>;
-  OR?: InputMaybe<Array<SupplierWhereInput>>;
-  id?: InputMaybe<Scalars['String']['input']>;
   location?: InputMaybe<EnumLocationFilter>;
   name?: InputMaybe<StringFilter>;
   prices?: InputMaybe<PriceListRelationFilter>;
@@ -3140,318 +1923,6 @@ export type UserCountAggregate = {
   tz: Scalars['Int']['output'];
   updatedAt: Scalars['Int']['output'];
   username: Scalars['Int']['output'];
-};
-
-export type UserCreateNestedOneWithoutCommentInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutCommentInput>;
-  create?: InputMaybe<UserCreateWithoutCommentInput>;
-};
-
-export type UserCreateNestedOneWithoutCommentItemInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutCommentItemInput>;
-  create?: InputMaybe<UserCreateWithoutCommentItemInput>;
-};
-
-export type UserCreateNestedOneWithoutFilesInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutFilesInput>;
-  create?: InputMaybe<UserCreateWithoutFilesInput>;
-};
-
-export type UserCreateNestedOneWithoutItemInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutItemInput>;
-  create?: InputMaybe<UserCreateWithoutItemInput>;
-};
-
-export type UserCreateNestedOneWithoutManageOrdersInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutManageOrdersInput>;
-  create?: InputMaybe<UserCreateWithoutManageOrdersInput>;
-};
-
-export type UserCreateNestedOneWithoutOrdersInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutOrdersInput>;
-  create?: InputMaybe<UserCreateWithoutOrdersInput>;
-};
-
-export type UserCreateNestedOneWithoutStatusInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutStatusInput>;
-  create?: InputMaybe<UserCreateWithoutStatusInput>;
-};
-
-export type UserCreateNestedOneWithoutStatusItemInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutStatusItemInput>;
-  create?: InputMaybe<UserCreateWithoutStatusItemInput>;
-};
-
-export type UserCreateOrConnectWithoutCommentInput = {
-  create: UserCreateWithoutCommentInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutCommentItemInput = {
-  create: UserCreateWithoutCommentItemInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutFilesInput = {
-  create: UserCreateWithoutFilesInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutItemInput = {
-  create: UserCreateWithoutItemInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutManageOrdersInput = {
-  create: UserCreateWithoutManageOrdersInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutOrdersInput = {
-  create: UserCreateWithoutOrdersInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutStatusInput = {
-  create: UserCreateWithoutStatusInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutStatusItemInput = {
-  create: UserCreateWithoutStatusItemInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateWithoutCommentInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutCommentItemInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutFilesInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutItemInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutManageOrdersInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutOrdersInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutStatusInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  statusItem?: InputMaybe<StatusItemCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
-};
-
-export type UserCreateWithoutStatusItemInput = {
-  avatar?: InputMaybe<Scalars['URL']['input']>;
-  birthday?: InputMaybe<Scalars['DateTime']['input']>;
-  comment?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
-  commentItem?: InputMaybe<CommentItemCreateNestedManyWithoutUserInput>;
-  companies?: InputMaybe<CompaniesCreateNestedOneWithoutUserInput>;
-  companyName?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  email: Scalars['EmailAddress']['input'];
-  files?: InputMaybe<FileCreateNestedManyWithoutUserInput>;
-  firstName: Scalars['String']['input'];
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  item?: InputMaybe<ItemCreateNestedManyWithoutUserInput>;
-  lastName: Scalars['String']['input'];
-  manageOrders?: InputMaybe<OrderCreateNestedManyWithoutManagerInput>;
-  orders?: InputMaybe<OrderCreateNestedManyWithoutUserInput>;
-  password: Scalars['String']['input'];
-  patronymic?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  role?: InputMaybe<Role>;
-  status?: InputMaybe<StatusCreateNestedManyWithoutUserInput>;
-  tz?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  username: Scalars['String']['input'];
 };
 
 export type UserListRelationFilter = {
@@ -3603,39 +2074,6 @@ export type UserWhereInput = {
   username?: InputMaybe<StringFilter>;
 };
 
-export type UserWhereUniqueInput = {
-  AND?: InputMaybe<Array<UserWhereInput>>;
-  NOT?: InputMaybe<Array<UserWhereInput>>;
-  OR?: InputMaybe<Array<UserWhereInput>>;
-  avatar?: InputMaybe<StringNullableFilter>;
-  birthday?: InputMaybe<DateTimeNullableFilter>;
-  comment?: InputMaybe<CommentListRelationFilter>;
-  commentItem?: InputMaybe<CommentItemListRelationFilter>;
-  companies?: InputMaybe<CompaniesNullableRelationFilter>;
-  companiesId?: InputMaybe<StringNullableFilter>;
-  companyName?: InputMaybe<StringFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  email?: InputMaybe<Scalars['EmailAddress']['input']>;
-  files?: InputMaybe<FileListRelationFilter>;
-  firstName?: InputMaybe<StringFilter>;
-  gender?: InputMaybe<EnumGenderFilter>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<BoolFilter>;
-  item?: InputMaybe<ItemListRelationFilter>;
-  lastName?: InputMaybe<StringFilter>;
-  manageOrders?: InputMaybe<OrderListRelationFilter>;
-  orders?: InputMaybe<OrderListRelationFilter>;
-  password?: InputMaybe<StringFilter>;
-  patronymic?: InputMaybe<StringNullableFilter>;
-  phone?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<EnumRoleFilter>;
-  status?: InputMaybe<StatusListRelationFilter>;
-  statusItem?: InputMaybe<StatusItemListRelationFilter>;
-  tz?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeFilter>;
-  username?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UserFieldsFragment = { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string };
 
 export type LoginMutationVariables = Exact<{
@@ -3729,7 +2167,7 @@ export type OrderFieldsFragment = { __typename: 'Order', id: string, address?: s
 export type StatusFieldsFragment = { __typename: 'Status', id: string, status: OrderStatus, createdAt: any };
 
 export type AddNewProductToOrderMutationVariables = Exact<{
-  product: ProductCreateInput;
+  product: AddNewProductInput;
   quantity: Scalars['Int']['input'];
 }>;
 
@@ -4275,7 +2713,7 @@ export function useItemsLazyQuery(variables: ItemsQueryVariables | VueCompositio
 }
 export type ItemsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<ItemsQuery, ItemsQueryVariables>;
 export const AddNewProductToOrderDocument = gql`
-    mutation AddNewProductToOrder($product: ProductCreateInput!, $quantity: Int!) {
+    mutation AddNewProductToOrder($product: AddNewProductInput!, $quantity: Int!) {
   addNewProductToOrder(product: $product, quantity: $quantity) {
     order {
       ...OrderFields
