@@ -23,21 +23,21 @@ const onHandleUpload = async (event: { files: File | File[] }) => {
   formData.append('file', file)
   const data: { id: string | null } = await $fetch('/api/files/upload', {
     method: 'POST',
-    body: formData,
+    body: formData, 
     headers: {
       'Authorization': `Bearer ${await getToken()}`
     }
   })
-  emit('uploader', data.id ?? null)
+  emit('uploader', data.id ?? null) 
 }
 </script>
 
 <template>
   <FileUpload
-    :choose-label="t('chose')"
+    :choose-label="t('chose')" 
     :upload-label="t('upload')"
     :cancel-label="t('cancel')"
-    :max-file-size="1000000"
+    :max-file-size="15000000"
     :file-limit="props.fileLimit"
     :name="props.name"
     :multiple="props.multiple"
