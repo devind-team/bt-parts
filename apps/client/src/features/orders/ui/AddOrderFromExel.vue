@@ -13,9 +13,11 @@ const { mutate, onDone } = useCreateOrderFromExcelMutation()
 const onHandleFileUpload = async (fileId: string | null) => {
   if (fileId) {
     console.log(fileId)
-    mutate(fileId)
+    mutate({ fileId })
+    onDone(()=>{toast.add({ severity: 'success', summary: t('file.success_upload'), detail: t('file.success_upload_detail'), life: 3000 })})
+    
   } else {
-    toast.add({ severity: 'error', summary: t('profile.avatar'), detail: t('profile.avatarError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('file.error_upload'), detail: t('file.error_upload_detail'), life: 3000 })
   }
   visible.value = false
 }

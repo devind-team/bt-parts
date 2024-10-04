@@ -128,9 +128,7 @@ export class OrdersService {
    * @param product новый продукт
    */
   async addNewProduct(user: User, product: AddNewProductInput, quantity: number): Promise<CreateOrderType> {
-    console.log(product)
     const productId = await this.productsService.getOrCreateProduct(product)
-    console.log(productId)
     return await this.addProduct(user, { productId, quantity })
   }
   /**
@@ -294,7 +292,25 @@ export class OrdersService {
   async createOrderFromFile(user: User, fileId: string): Promise<CreateOrderType> {
     const order = await this.getOrCreateOrder(user)
     const file = await this.fileService.getExcelValuesById(fileId)
-    console.log(file)
+    console.log(file.values)
+
+    for (const value of file.values) {
+      const vendorCode = value.get('VendorCode')
+      const manufacturer = value.get('Manufacturer')
+      const quantity = value.get('Quantity')
+      console.log(vendorCode)
+
+      if (!vendorCode || !quantity) {
+        console.error('Неполные данные в строке:', value)
+        continue
+      }
+
+      const product: AddNewProductInput = {
+        vendorCode: String(vendorCode),
+        manufacturer: manufacturer ? String(manufacturer) : undefined,
+      }
+      await this.addNewProduct(user, product, Number(quantity))
+    }
     return { order }
   }
 }
