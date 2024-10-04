@@ -39,10 +39,10 @@ const onHandleUpload = async (event: { files: File | File[] }) => {
 
 <template>
   <FileUpload
-    :choose-label="t('chose')"
+    :choose-label="t('chose')" 
     :upload-label="t('upload')"
     :cancel-label="t('cancel')"
-    :max-file-size="1000000"
+    :max-file-size="15000000"
     :file-limit="props.fileLimit"
     :name="props.name"
     :multiple="props.multiple"
