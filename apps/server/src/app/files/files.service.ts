@@ -81,6 +81,18 @@ export class FilesService {
   }
 
   /**
+   * Получаем значения из первого листа Excel файла.
+   * Первая строка является заголовочной, остальные строки представляют из себя набор данных.
+   * @param file
+   */
+  async getExcelValuesById(fileId: string): Promise<{ headers: string[]; values: Map<string, unknown>[] }> {
+    const stream = await this.getFileStreamById(fileId)
+    const excelReader = new ExcelReader()
+    await excelReader.load(stream)
+    return ExcelReader.getValues(excelReader.workSheet)
+  }
+
+  /**
    * Записываем значения из заказа в Excel файл.
    * @param sheetName: string
    * @param headers: название заголовоков

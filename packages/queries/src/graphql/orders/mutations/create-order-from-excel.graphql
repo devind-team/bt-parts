@@ -1,0 +1,9 @@
+#import "../fragments/order-fields.graphql"
+
+mutation CreateOrderFromExcel($fileId: String!) {
+  createOrderFromExcel(fileId: $fileId) {
+    order {
+      ...OrderFields
+    }
+  }
+}

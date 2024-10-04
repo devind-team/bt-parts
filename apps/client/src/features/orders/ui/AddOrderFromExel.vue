@@ -3,15 +3,17 @@ import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
 import FileChoiceUpload from '@/shared/common/ui/FileChoiceUpload.vue';
+import { useCreateOrderFromExcelMutation } from '@repo/queries/composables/graphql';
 
 const visible = ref(false);
 const toast = useToast();
 const { t } = useI18n();
-
+const { mutate, onDone } = useCreateOrderFromExcelMutation()
 
 const onHandleFileUpload = async (fileId: string | null) => {
   if (fileId) {
-  console.log(fileId)
+    console.log(fileId)
+    mutate(fileId)
   } else {
     toast.add({ severity: 'error', summary: t('profile.avatar'), detail: t('profile.avatarError'), life: 3000 })
   }

@@ -28,7 +28,7 @@ export class OrdersService {
   ) {}
 
   /**
-   * Выбираем заказа по идентификатору
+   * Выбираем заказ по идентификатору
    * @param orderId
    */
   async getOrder(orderId: string): Promise<Order> {
@@ -283,5 +283,18 @@ export class OrdersService {
       })),
       user,
     )
+  }
+
+  /**
+   * /**
+   * Мутация для добавления заказа из файла
+   * @param user: пользователь
+   * @param fileId: айди загруженного файла с заказом
+   */
+  async createOrderFromFile(user: User, fileId: string): Promise<CreateOrderType> {
+    const order = await this.getOrCreateOrder(user)
+    const file = await this.fileService.getExcelValuesById(fileId)
+    console.log(file)
+    return { order }
   }
 }
