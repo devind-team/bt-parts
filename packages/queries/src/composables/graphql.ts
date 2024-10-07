@@ -819,6 +819,7 @@ export type Mutation = {
   changeQuantityItem: Item;
   changeSellingPriceItem: Item;
   createOrder: CreateOrderType;
+  createOrderFromExcel: CreateOrderType;
   deleteOrder: DeleteOrderType;
   deleteOrderItems: DeleteOrderItemsType;
   login: UserLoginType;
@@ -875,6 +876,11 @@ export type MutationChangeSellingPriceItemArgs = {
 
 export type MutationCreateOrderArgs = {
   order: CreateOrderInput;
+};
+
+
+export type MutationCreateOrderFromExcelArgs = {
+  fileId: Scalars['String']['input'];
 };
 
 
@@ -2189,6 +2195,13 @@ export type AddStatusOrderMutationVariables = Exact<{
 
 export type AddStatusOrderMutation = { __typename?: 'Mutation', addStatusOrder: { __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null } };
 
+export type CreateOrderFromExcelMutationVariables = Exact<{
+  fileId: Scalars['String']['input'];
+}>;
+
+
+export type CreateOrderFromExcelMutation = { __typename?: 'Mutation', createOrderFromExcel: { __typename?: 'CreateOrderType', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any } } };
+
 export type CreateOrderMutationVariables = Exact<{
   address?: InputMaybe<Scalars['String']['input']>;
   fileId: Scalars['String']['input'];
@@ -2809,6 +2822,37 @@ export function useAddStatusOrderMutation(options: VueApolloComposable.UseMutati
   return VueApolloComposable.useMutation<AddStatusOrderMutation, AddStatusOrderMutationVariables>(AddStatusOrderDocument, options);
 }
 export type AddStatusOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AddStatusOrderMutation, AddStatusOrderMutationVariables>;
+export const CreateOrderFromExcelDocument = gql`
+    mutation CreateOrderFromExcel($fileId: String!) {
+  createOrderFromExcel(fileId: $fileId) {
+    order {
+      ...OrderFields
+    }
+  }
+}
+    ${OrderFieldsFragmentDoc}`;
+
+/**
+ * __useCreateOrderFromExcelMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderFromExcelMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderFromExcelMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreateOrderFromExcelMutation({
+ *   variables: {
+ *     fileId: // value for 'fileId'
+ *   },
+ * });
+ */
+export function useCreateOrderFromExcelMutation(options: VueApolloComposable.UseMutationOptions<CreateOrderFromExcelMutation, CreateOrderFromExcelMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<CreateOrderFromExcelMutation, CreateOrderFromExcelMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<CreateOrderFromExcelMutation, CreateOrderFromExcelMutationVariables>(CreateOrderFromExcelDocument, options);
+}
+export type CreateOrderFromExcelMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateOrderFromExcelMutation, CreateOrderFromExcelMutationVariables>;
 export const CreateOrderDocument = gql`
     mutation CreateOrder($address: String, $fileId: String!) {
   createOrder(order: {address: $address, fileId: $fileId}) {

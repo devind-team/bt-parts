@@ -21,14 +21,19 @@ const onHandleUpload = async (event: { files: File | File[] }) => {
   const file = Array.isArray(event.files) ? event.files[0] : event.files
   const formData = new FormData()
   formData.append('file', file)
-  const data: { id: string | null } = await $fetch('/api/files/upload', {
-    method: 'POST',
-    body: formData, 
-    headers: {
-      'Authorization': `Bearer ${await getToken()}`
-    }
-  })
-  emit('uploader', data.id ?? null) 
+  try {
+    const data: { id: string | null } = await $fetch('/api/files/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Authorization': `Bearer ${await getToken()}`
+      }
+    })
+    emit('uploader', data.id ?? null)
+  } catch (error) {
+    console.error('Error uploading file:', error)
+    emit('uploader', null)
+  }
 }
 </script>
 

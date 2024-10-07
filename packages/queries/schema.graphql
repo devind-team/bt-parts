@@ -1949,6 +1949,10 @@ type Mutation {
     where: ItemWhereInput
   ): DeleteOrderItemsType!
   createOrder(order: CreateOrderInput!): CreateOrderType!
+  createOrderFromExcel(
+    """Идентификатор файла"""
+    fileId: String!
+  ): CreateOrderType!
   addProductToOrder(product: AddProductInput!): CreateOrderType!
   addNewProductToOrder(
     product: AddNewProductInput!

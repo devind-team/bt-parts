@@ -52,6 +52,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pnpm": "^9.11.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.0.4",
     "prisma-graphql-type-decimal": "^3.0.0",

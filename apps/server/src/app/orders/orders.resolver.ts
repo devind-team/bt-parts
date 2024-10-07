@@ -50,6 +50,19 @@ export class OrdersResolver {
     return this.ordersService.createOrder(user, order)
   }
   /**
+   * Мутация для добавления заказа из файла
+   * @param user: пользователь
+   * @param fileId: айди загруженного файла с заказом
+   */
+  @Mutation(() => CreateOrderType)
+  async createOrderFromExcel(
+    @CurrentUser() user: User,
+    @Args({ type: () => String, name: 'fileId', description: 'Идентификатор файла' }) fileId: string,
+  ): Promise<CreateOrderType> {
+    return this.ordersService.createOrderFromFile(user, fileId)
+  }
+
+  /**
    *
    * @param user пользователь
    * @param product добавляемая запчасть
