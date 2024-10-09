@@ -10,6 +10,7 @@ import AddOrderFromExel from '@/features/orders/ui/AddOrderFromExel.vue';
       <AddItemToOrder />
       <div class="flex ml-2">
         <AddOrderFromExel />
+        <Button label="Проверка" />
       </div>
     </div>
     <orders-data-view />
