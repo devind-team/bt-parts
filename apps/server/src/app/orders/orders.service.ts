@@ -311,6 +311,12 @@ export class OrdersService {
       }
       await this.addNewProduct(user, product, Number(quantity))
     }
+    this.orderUploadCheck()
     return { order }
+  }
+
+  async orderUploadCheck(): Promise<void> {
+    console.log('Заказ загружен')
+    return
   }
 }
