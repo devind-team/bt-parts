@@ -8,7 +8,7 @@ import AddOrderFromExel from '@/features/orders/ui/AddOrderFromExel.vue';
   <div>
     <div class="flex ">
       <AddItemToOrder />
-      <div class="flex ml-2">
+      <div class="flex ml-3">
         <AddOrderFromExel />
       </div>
     </div>
