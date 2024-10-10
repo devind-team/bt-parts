@@ -1953,6 +1953,10 @@ type Mutation {
     """Идентификатор файла"""
     fileId: String!
   ): CreateOrderType!
+  checkOrderUpload(
+    """Идентификатор файла"""
+    fileId: String!
+  ): CreateOrderType!
   addProductToOrder(product: AddProductInput!): CreateOrderType!
   addNewProductToOrder(
     product: AddNewProductInput!

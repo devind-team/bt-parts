@@ -59,7 +59,20 @@ export class OrdersResolver {
     @CurrentUser() user: User,
     @Args({ type: () => String, name: 'fileId', description: 'Идентификатор файла' }) fileId: string,
   ): Promise<CreateOrderType> {
-    return this.ordersService.createOrderFromFile(user, fileId)
+    return this.ordersService.createOrderFromExcel(user, fileId)
+  }
+
+  /**
+   * Мутация для добавления заказа из файла
+   * @param user: пользователь
+   * @param fileId: айди загруженного файла с заказом
+   */
+  @Mutation(() => CreateOrderType)
+  async checkOrderUpload(
+    @CurrentUser() user: User,
+    @Args({ type: () => String, name: 'fileId', description: 'Идентификатор файла' }) fileId: string,
+  ): Promise<CreateOrderType> {
+    return this.ordersService.orderUploadCheck(user, fileId)
   }
 
   /**

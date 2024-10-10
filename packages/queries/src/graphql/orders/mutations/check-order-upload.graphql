@@ -1,0 +1,9 @@
+#import "../fragments/order-fields.graphql"
+
+mutation CheckOrderUpload($fileId: String!) {
+  checkOrderUpload(fileId: $fileId) {
+    order {
+      ...OrderFields
+    }
+  }
+}

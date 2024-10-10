@@ -29,7 +29,6 @@ export class UsersResolver {
     @Args({ name: 'fileId', type: () => String }) fileId: string,
   ): Promise<User> {
     return this.usersService.updateAvatar(fileId, user)
-    return user
   }
 
   @UseGuards(GqlAuthGuard)

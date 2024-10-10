@@ -289,7 +289,7 @@ export class OrdersService {
    * @param user: пользователь
    * @param fileId: айди загруженного файла с заказом
    */
-  async createOrderFromFile(user: User, fileId: string): Promise<CreateOrderType> {
+  async createOrderFromExcel(user: User, fileId: string): Promise<CreateOrderType> {
     const order = await this.getOrCreateOrder(user)
     const file = await this.fileService.getExcelValuesById(fileId)
     console.log(file.values)
@@ -311,12 +311,12 @@ export class OrdersService {
       }
       await this.addNewProduct(user, product, Number(quantity))
     }
-    this.orderUploadCheck()
     return { order }
   }
 
-  async orderUploadCheck(): Promise<void> {
-    console.log('Заказ загружен')
-    return
+  async orderUploadCheck(user: User, fileId: string): Promise<CreateOrderType> {
+    console.log('Заказ загружен', fileId)
+    const order = await this.getOrCreateOrder(user)
+    return { order }
   }
 }
