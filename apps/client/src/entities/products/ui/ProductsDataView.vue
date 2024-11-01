@@ -66,7 +66,7 @@ const props = defineProps<{
                 v-for="price in item.prices"
                 :key="price.id"
                 v-tooltip="date(price.validAt)"
-                :value="price.price * 2"
+                :value="price.price * 1"
                 icon="pi pi-euro"
               />
             </div>
