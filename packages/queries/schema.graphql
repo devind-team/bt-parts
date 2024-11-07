@@ -305,6 +305,9 @@ type Item {
   """Flight number"""
   routeNo: String
 
+  """Purchase Price per unit/piece"""
+  salePrice: Decimal
+
   """Created date"""
   createdAt: DateTime!
 
@@ -333,6 +336,9 @@ type Item {
   _count: ItemCount!
 }
 
+"""An arbitrary-precision Decimal type"""
+scalar Decimal
+
 type SupplierCount {
   prices: Int!
 }
@@ -358,7 +364,7 @@ type Price {
   """Price ID"""
   id: ID!
 
-  """Price per unit/piece"""
+  """Purchase Price per unit/piece"""
   price: Decimal!
 
   """Delivery time in days to the warehouse"""
@@ -390,9 +396,6 @@ type Price {
   supplier: Supplier
   _count: PriceCount!
 }
-
-"""An arbitrary-precision Decimal type"""
-scalar Decimal
 
 type AttributeCount {
   products: Int!
@@ -645,6 +648,7 @@ type ItemCountAggregate {
   coefficient: Int!
   carNo: Int!
   routeNo: Int!
+  salePrice: Int!
   createdAt: Int!
   updatedAt: Int!
   orderId: Int!
@@ -657,11 +661,13 @@ type ItemCountAggregate {
 type ItemAvgAggregate {
   quantity: Float
   coefficient: Float
+  salePrice: Decimal
 }
 
 type ItemSumAggregate {
   quantity: Int
   coefficient: Float
+  salePrice: Decimal
 }
 
 type ItemMinAggregate {
@@ -670,6 +676,7 @@ type ItemMinAggregate {
   coefficient: Float
   carNo: String
   routeNo: String
+  salePrice: Decimal
   createdAt: DateTime
   updatedAt: DateTime
   orderId: String
@@ -684,6 +691,7 @@ type ItemMaxAggregate {
   coefficient: Float
   carNo: String
   routeNo: String
+  salePrice: Decimal
   createdAt: DateTime
   updatedAt: DateTime
   orderId: String
@@ -708,6 +716,22 @@ type ItemConnectionType {
   edges: [ItemEdge!]
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+type WhyCountAggregate {
+  id: Int!
+  becouse: Int!
+  _all: Int!
+}
+
+type WhyMinAggregate {
+  id: String
+  becouse: String
+}
+
+type WhyMaxAggregate {
+  id: String
+  becouse: String
 }
 
 type ProductCountAggregate {
@@ -920,6 +944,7 @@ input ItemWhereInput {
   coefficient: FloatFilter
   carNo: StringNullableFilter
   routeNo: StringNullableFilter
+  salePrice: DecimalNullableFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   orderId: StringFilter
@@ -1039,6 +1064,28 @@ input NestedStringNullableFilter {
   startsWith: String
   endsWith: String
   not: NestedStringNullableFilter
+}
+
+input DecimalNullableFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalNullableFilter
+}
+
+input NestedDecimalNullableFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalNullableFilter
 }
 
 input DateTimeFilter {
@@ -1274,28 +1321,6 @@ input ProductWhereInput {
   attributes: AttributeValueListRelationFilter
   item: ItemListRelationFilter
   images: FileListRelationFilter
-}
-
-input DecimalNullableFilter {
-  equals: Decimal
-  in: [Decimal!]
-  notIn: [Decimal!]
-  lt: Decimal
-  lte: Decimal
-  gt: Decimal
-  gte: Decimal
-  not: NestedDecimalNullableFilter
-}
-
-input NestedDecimalNullableFilter {
-  equals: Decimal
-  in: [Decimal!]
-  notIn: [Decimal!]
-  lt: Decimal
-  lte: Decimal
-  gt: Decimal
-  gte: Decimal
-  not: NestedDecimalNullableFilter
 }
 
 input EnumProductStatusFilter {
@@ -1608,6 +1633,7 @@ input ItemOrderByWithRelationInput {
   coefficient: SortOrder
   carNo: SortOrderInput
   routeNo: SortOrderInput
+  salePrice: SortOrderInput
   createdAt: SortOrder
   updatedAt: SortOrder
   orderId: SortOrder
@@ -1795,6 +1821,7 @@ input ItemWhereUniqueInput {
   coefficient: FloatFilter
   carNo: StringNullableFilter
   routeNo: StringNullableFilter
+  salePrice: DecimalNullableFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   orderId: StringFilter
@@ -1821,6 +1848,7 @@ enum ItemScalarFieldEnum {
   coefficient
   carNo
   routeNo
+  salePrice
   createdAt
   updatedAt
   orderId

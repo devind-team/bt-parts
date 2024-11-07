@@ -1,19 +1,46 @@
 <script setup lang="ts">
-import { useChangeQuantityItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
+import { useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item, type Order } from '@repo/queries/composables/graphql.js'
 const { t } = useI18n()
+const { date } = useFilters()
 const props = defineProps<{
+  isAdoptedStatus: Boolean
+  isPricedStatus: Boolean
   items: Item[],
   orderId: string,
   refetch: () => void
 }>()
-
+const authStore = useAuthStore()
 
 const { mutate } = useChangeQuantityItemMutation()
 const { mutate: deleteMutate, onDone } = useDeleteOrderItemsMutation()
+const { mutate: changeSellingPriceMutate, onDone: changeSellingPriceDone} = useChangeSellingPriceItemMutation();
 
 const toast = useToast();
 const confirm = useConfirm();
+const inputValues = ref<Record<string, string>>({})
 
+onMounted(() => {
+  props.items.forEach((item) => {
+    inputValues.value[item.id] = String(item.salePrice || 0);
+  });
+});
+
+const onPriceBlur = (item: Item) => {
+  const newPrice = Number(inputValues.value[item.id]);
+  if(newPrice > 0){
+    if ((newPrice != item.salePrice)) {
+      changeSellingPriceMutate({
+        itemId: item.id,
+        price: newPrice
+      })
+  }}else{
+    toast.add({ severity: 'error', summary: t('price.invalid'), life: 3000 });
+    inputValues.value[item.id] = String(item.salePrice)
+  }
+}
+changeSellingPriceDone(() =>{
+  toast.add({ severity: 'success', summary: t('price.changeSuccess'), life: 3000 });
+})
 const increaseQuantity = (item: Item) => {
   mutate({
     itemId: item.id,
@@ -71,6 +98,7 @@ onDone(async ({ data }) => {
 const deleteItem = (item: Item) => {
     confirmDeletion(item)
 }
+
 </script>
 
 <template>
@@ -123,11 +151,68 @@ const deleteItem = (item: Item) => {
       </template>
     </Column>
     <Column
-      :header="t('prices.name')"
+      v-if="authStore.userRole == 'ADMIN'"
+      :header="t('purchasePrices.name')"
       field="price"
     >
-      <template #body>
-        {{ t('prices.none') }}
+      <template #body="{ data }">
+        <div>
+          <span v-if="data.price">
+            <div class="flex gap-2">
+              <Tag
+                v-tooltip="date(data.price.validAt)"
+                :value="data.price.price * 1"
+                icon="pi pi-euro"
+              />
+            </div>
+          </span>
+          <span v-else>
+            {{ t('prices.none') }}
+          </span>
+        </div>
+      </template>
+    </Column>
+    <Column
+      v-if="authStore.userRole == 'ADMIN' && isAdoptedStatus"
+      :header="t('pricesSells.name')"
+    >
+      <template #body="{ data }">
+        <div>
+          <span>
+            <div class="flex gap-2">
+              <InputText
+                v-model="inputValues[data.id]"
+                type="string"
+                placeholder="Enter sale price"
+                class="input input-sm"
+                @blur="onPriceBlur(data)"
+              >
+                <Tag
+                  icon="pi pi-euro"
+                />
+              </inputtext></div>
+          </span>
+        </div>
+      </template>
+    </Column>
+    <Column
+      v-else
+      :header="t('prices.name')"
+    >
+      <template #body="{ data }">
+        <div>
+          <span v-if="isPricedStatus">
+            <div class="flex gap-2">
+              <Tag
+                :value="data.salePrice * 1"
+                icon="pi pi-euro"
+              />
+            </div>
+          </span>
+          <span v-else>
+            {{ t('prices.none') }}
+          </span>
+        </div>
       </template>
     </Column>
     <Column>

@@ -120,6 +120,7 @@ export class ItemsService {
    * @param itemsId: идентификаторы записей
    */
   async recountPrices(user: User, itemsId: string[]): Promise<void> {
+    console.log('why this dont work')
     const itemPrices = await this.prismaService.$queryRaw<{ price: string; item: string }[]>`
       select pi.id as price, pi.item_id as item
       from (select pr.id,
@@ -132,9 +133,9 @@ export class ItemsService {
                          p.price,
                          p.created_at,
                          p.product_id,
-                         p.supplier_name,
-                         max(p.created_at) over (partition by p.product_id, p.supplier_name) as created_at_max,
-                         min(p.price) over (partition by p.product_id, p.supplier_name)      as price_min
+                         p.supplier_id,
+                         max(p.created_at) over (partition by p.product_id, p.supplier_id) as created_at_max,
+                         min(p.price) over (partition by p.product_id, p.supplier_id)      as price_min
                   from prices p
                          left join products product on product.id = p.product_id
                          left join items i on product.id = i.product_id
@@ -152,7 +153,6 @@ export class ItemsService {
       ),
     )
   }
-
   /**
    * Изменение коэффицнетов заказа
    * @param itemsId: идентификаторы позиций
@@ -170,7 +170,7 @@ export class ItemsService {
    * @param id: идентификатор позиции
    * @param price: значение цены
    */
-  async changeSellingPriceItem(id: string, price: number): Promise<Item> {
+  async changeCoefficientSellingPriceItem(id: string, price: number): Promise<Item> {
     const item = await this.prismaService.item.findUnique({
       select: { price: { select: { price: true } } },
       where: { id },
@@ -178,6 +178,18 @@ export class ItemsService {
     return this.prismaService.item.update({
       where: { id },
       data: { coefficient: price / Number(item.price.price) },
+    })
+  }
+
+  /**
+   * Мутация изменения цены продажи
+   * @param id: идентификатор позиции
+   * @param price: значение цены
+   */
+  async changeSellingPriceItem(id: string, price: number): Promise<Item> {
+    return this.prismaService.item.update({
+      where: { id },
+      data: { salePrice: price },
     })
   }
 

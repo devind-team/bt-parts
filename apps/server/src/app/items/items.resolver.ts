@@ -83,7 +83,7 @@ export class ItemsResolver {
     return await this.itemsService.getItems(orderId)
   }
   /**
-   * Мутация дл изменение цены продажи
+   * Мутация для изменение цены продажи
    * @param user
    * @param itemId
    * @param price

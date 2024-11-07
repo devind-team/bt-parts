@@ -257,7 +257,7 @@ enum ProductStatus {
 model Price {
   /// Price ID
   id       String  @id @default(uuid())
-  /// Price per unit/piece
+  /// Purchase Price per unit/piece
   price    Decimal @db.Decimal(9, 2)
   /// Delivery time in days to the warehouse
   duration Int?    @default(0)
@@ -281,7 +281,7 @@ model Price {
   productId  String    @map("product_id")
   item       Item[]
   supplier   Supplier? @relation(fields: [supplierId], references: [id])
-  supplierId String?
+  supplierId String?   @map("supplier_id")
 
   @@map("prices")
 }
@@ -429,6 +429,9 @@ model Item {
   carNo       String? @map("car_no") @db.VarChar(50)
   /// Flight number
   routeNo     String? @map("route_no") @db.VarChar(50)
+
+  /// Purchase Price per unit/piece
+  salePrice Decimal? @map("sale_price") @db.Decimal(9, 2)
 
   /// Created date
   createdAt DateTime @default(now()) @map("created_at")

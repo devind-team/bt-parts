@@ -168,8 +168,14 @@
     "added": "Товар {vendorCode} успешно добавлен в заказ",
     "from": "Заказ от {dateTime}"
   },
+  "pricesSells": {
+    "name": "Цена продажи"
+  },
   "prices": {
     "name": "Цена",
     "none": "Товар еще не проценен"
+  },
+  "purchasePrices": {
+    "name": "Цена закупки"
   }
 }
