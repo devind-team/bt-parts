@@ -28,5 +28,5 @@ const handleSearch = () => {
       @click="handleSearch"
     />
   </div>
-  <div></div>
+  <div />
 </template>

@@ -50,15 +50,8 @@ export class PricesService {
    * @param values: массив значений
    */
   async addPricesFromValues(headers: string[], values: Map<string, unknown>[]): Promise<CreateUploadPricesType> {
-    console.log('Headers:', headers)
-    console.log('Values:', values)
-
     const { products, createdProducts } = await this.productsService.getOrCreateProducts(values)
-    console.log('products: ', products)
-    console.log('createdProducts: ', createdProducts)
     const { data, rows } = await this.#makePricesForWrite(values, products, createdProducts)
-    console.log('data: ', data)
-    console.log('rows: ', rows)
     // Загрузка цен по частям (батчами)
     const BATCH_SIZE = 5000 // Размер батча
     let batchCount = 0
@@ -109,7 +102,6 @@ export class PricesService {
       where: { name: { in: supplierNames } },
     })
     const suppliersMap = new Map(allSuppliers.map((supplier) => [supplier.name, supplier.id]))
-    console.log('suppliersMap: ', suppliersMap)
     // Формирование данных для записи
     for (const value of values) {
       const vendorCode = value.get('vendorCode')
@@ -117,20 +109,14 @@ export class PricesService {
       const supplierName = String(value.get('supplierName') || '')
       const validAt = value.get('validAt')
       const price = Number(value.get('price'))
-      console.log('vendorCode: ', vendorCode)
-      console.log('productId: ', productId)
-      console.log('supplierName: ', supplierName)
-      console.log('validAt: ', validAt)
-      console.log('price: ', price)
 
       if (productId) {
         const validatedPrice = await priceValidator.safeParseAsync({
           ...Object.fromEntries(value),
-          price: Number(value.get('price')),
+          price,
           productId,
           validAt,
         })
-        console.log('validatedPrice: ', validatedPrice.error)
         if (validatedPrice.success) {
           const { price, ...validateData } = validatedPrice.data
 
