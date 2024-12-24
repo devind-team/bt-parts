@@ -79,7 +79,6 @@ export class FilesService {
     await excelReader.load(stream)
     return ExcelReader.getValues(excelReader.workSheet)
   }
-
   /**
    * Получаем значения из первого листа Excel файла.
    * Первая строка является заголовочной, остальные строки представляют из себя набор данных.

@@ -33,19 +33,14 @@ const recountPrices = async () => {
   await refetch()
 }
 
+const currentStatus = computed(() => {
+  if (!order.value?.statuses || order.value.statuses.length === 0) {
+    return null;
+  }
+  const lastStatus = order.value.statuses[order.value.statuses.length - 1];
+  return String(lastStatus.status);
+});
 
-const isCreatedStatus = computed(() => {
-  return order.value?.statuses?.length === 1 && order.value.statuses[0].status === 'CREATED'
-})
-const isRequestStatus = computed(() => {
-  return order.value?.statuses?.length === 2 && order.value.statuses[1].status === 'REQUEST'
-})
-const isAdoptedStatus = computed(() => {
-  return order.value?.statuses?.length === 3 && order.value.statuses[2].status === 'ADOPTED'
-})
-const isPricedStatus = computed(() => {
-  return order.value?.statuses?.length === 4 && order.value.statuses[3].status === 'PRICED'
-})
 </script>
 
 <template>
@@ -66,13 +61,12 @@ const isPricedStatus = computed(() => {
         </div>
       </div>
       <items-data-view
-        :is-adopted-status="isAdoptedStatus"
-        :is-priced-status="isPricedStatus"
+        :current-status="currentStatus"
         :items="(order!.items || []) as Item[]"
         :order-id="order!.id"
         :refetch="refetch"
       />
-      <div v-if="isCreatedStatus">
+      <div v-if="currentStatus == 'CREATED'">
         <Button
           label="Отправить на проценку"
           @click="statusEdit('REQUEST')"
@@ -80,15 +74,16 @@ const isPricedStatus = computed(() => {
       </div>
       <div v-if="authStore.userRole == 'ADMIN'">
         <div
-          v-if="isRequestStatus"
+          v-if="currentStatus == 'REQUEST'"
         >
+          >
           <Button
             label="Принять"
             @click="statusEdit('ADOPTED')"
           />
         </div>
         <div
-          v-if="isAdoptedStatus"
+          v-if="currentStatus == 'ADOPTED'"
         >
           <Button
             label="Проценить"

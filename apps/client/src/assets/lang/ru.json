@@ -19,6 +19,7 @@
   "success": "Успех",
   "file": {
     "upload": "Загрузить файл",
+    "priceUpload": "Загрузить цены",
     "error_upload": "Ошибка загрузки файла",
     "error_upload_detail": "Не правильный формат файла",
     "success_upload": "Файл успешно загружен",

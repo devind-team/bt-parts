@@ -718,22 +718,6 @@ type ItemConnectionType {
   totalCount: Int!
 }
 
-type WhyCountAggregate {
-  id: Int!
-  becouse: Int!
-  _all: Int!
-}
-
-type WhyMinAggregate {
-  id: String
-  becouse: String
-}
-
-type WhyMaxAggregate {
-  id: String
-  becouse: String
-}
-
 type ProductCountAggregate {
   id: Int!
   vendorCode: Int!
@@ -913,6 +897,101 @@ type StatusMaxAggregate {
   userId: String
 }
 
+type PriceCountAggregate {
+  id: Int!
+  price: Int!
+  duration: Int!
+  site: Int!
+  comment: Int!
+  relevant: Int!
+  createdAt: Int!
+  updatedAt: Int!
+  validAt: Int!
+  productId: Int!
+  supplierId: Int!
+  _all: Int!
+}
+
+type PriceAvgAggregate {
+  price: Decimal
+  duration: Float
+}
+
+type PriceSumAggregate {
+  price: Decimal
+  duration: Int
+}
+
+type PriceMinAggregate {
+  id: String
+  price: Decimal
+  duration: Int
+  site: String
+  comment: String
+  relevant: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  validAt: DateTime
+  productId: String
+  supplierId: String
+}
+
+type PriceMaxAggregate {
+  id: String
+  price: Decimal
+  duration: Int
+  site: String
+  comment: String
+  relevant: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  validAt: DateTime
+  productId: String
+  supplierId: String
+}
+
+type CreatePriceType {
+  price: Price!
+}
+
+type PriceEdge {
+  cursor: String!
+  node: Price!
+}
+
+type PriceConnectionType {
+  edges: [PriceEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type CreateUploadPriceRowType {
+  """Статус"""
+  success: Boolean!
+
+  """Новый продукт"""
+  productCreate: Boolean!
+
+  """Строка переданных данных"""
+  data: JSON!
+
+  """Ошибка создания объекта"""
+  error: JSON
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type CreateUploadPricesType {
+  """Заголовки передаваемого файла"""
+  headers: [String!]
+
+  """Переданные строки"""
+  rows: [CreateUploadPriceRowType!]!
+}
+
 type Query {
   me: User!
   items(where: ItemWhereInput, orderBy: [ItemOrderByWithRelationInput!], cursor: ItemWhereUniqueInput, take: Int, skip: Int, distinct: [ItemScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ItemConnectionType!
@@ -933,6 +1012,7 @@ type Query {
   products(where: ProductWhereInput, orderBy: [ProductOrderByWithRelationInput!], cursor: ProductWhereUniqueInput, take: Int, skip: Int, distinct: [ProductScalarFieldEnum!], after: String, before: String, first: Int, last: Int): ProductConnectionType!
   order(orderId: String!): Order!
   orders(where: OrderWhereInput, orderBy: [OrderOrderByWithRelationInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderScalarFieldEnum!], after: String, before: String, first: Int, last: Int): OrderConnectionType!
+  prices(where: PriceWhereInput, orderBy: [PriceOrderByWithRelationInput!], cursor: PriceWhereUniqueInput, take: Int, skip: Int, distinct: [PriceScalarFieldEnum!], after: String, before: String, first: Int, last: Int): PriceConnectionType!
 }
 
 input ItemWhereInput {
@@ -1925,6 +2005,40 @@ enum OrderScalarFieldEnum {
   managerId
 }
 
+input PriceWhereUniqueInput {
+  id: String
+  AND: [PriceWhereInput!]
+  OR: [PriceWhereInput!]
+  NOT: [PriceWhereInput!]
+  price: DecimalFilter
+  duration: IntNullableFilter
+  site: StringNullableFilter
+  comment: StringNullableFilter
+  relevant: BoolNullableFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  validAt: DateTimeNullableFilter
+  productId: StringFilter
+  supplierId: StringNullableFilter
+  product: ProductRelationFilter
+  item: ItemListRelationFilter
+  supplier: SupplierNullableRelationFilter
+}
+
+enum PriceScalarFieldEnum {
+  id
+  price
+  duration
+  site
+  comment
+  relevant
+  createdAt
+  updatedAt
+  validAt
+  productId
+  supplierId
+}
+
 type Mutation {
   login(userLoginInput: UserLoginInput!): UserLoginType!
   register(userRegisterInput: UserRegisterInput!, companyInput: CompanyInput): UserLoginType
@@ -2007,6 +2121,11 @@ type Mutation {
     """Идентификатор заказа"""
     orderId: String!
   ): File!
+  createPrice(price: CreatePriceInput!): CreatePriceType!
+  uploadPricesFromExcel(
+    """Идентификатор файла"""
+    fileId: String!
+  ): CreateUploadPricesType!
 }
 
 input UserLoginInput {
@@ -2064,4 +2183,13 @@ input AddProductInput {
 input AddNewProductInput {
   vendorCode: String!
   manufacturer: String
+}
+
+input CreatePriceInput {
+  price: Decimal!
+  duration: Int
+  site: String
+  comment: String
+  validAt: DateTime
+  productId: Int!
 }

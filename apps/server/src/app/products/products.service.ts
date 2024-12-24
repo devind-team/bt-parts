@@ -52,7 +52,13 @@ export class ProductsService {
     })
     return findProduct ? findProduct.id : null
   }
-
+  async findManufacturerIdByName(name: string): Promise<string> {
+    const findManufacturer = await this.prismaService.manufacturer.findFirst({
+      select: { id: true },
+      where: { name },
+    })
+    return findManufacturer ? findManufacturer.id : null
+  }
   /**
    * Функция для выборки и создания продуктов по артиклу.
    * vendorCode - обазательное поле
@@ -67,23 +73,52 @@ export class ProductsService {
       .map(String)
     const products = await this.findIdsByVendorCodes(vendorCodes)
     const makeProductsForWrite = async () => {
-      return values
-        .filter((v) => Boolean(v.get('vendorCode')))
-        .map((v) =>
-          productValidator.safeParse({
+      for (const v of values) {
+        const manufacturerName = v.get('manufacturer') as string
+        if (manufacturerName) {
+          const manufacturer = await this.prismaService.manufacturer.findFirst({ where: { name: manufacturerName } })
+          if (!manufacturer) {
+            await this.prismaService.manufacturer.create({ data: { name: manufacturerName } })
+          }
+        }
+      }
+
+      const rez = await Promise.all(
+        values.map(async (v) => {
+          const manufacturerId = v.get('manufacturer')
+            ? await this.findManufacturerIdByName(v.get('manufacturer') as string)
+            : undefined
+
+          const validationResult = productValidator.safeParse({
             ...Object.fromEntries(v),
             vendorCode: String(v.get('vendorCode')),
-          }),
-        )
-        .filter((validationResult) => validationResult.success)
-        .map((validationResult) => validationResult['data'])
+            manufacturerId,
+          })
+
+          if (!validationResult.success) {
+            console.error('Validation Error:', validationResult.error)
+            return null
+          }
+
+          return validationResult.data
+        }),
+      )
+
+      const filteredRez = rez
+        .filter(Boolean)
         .filter((createProductData) => !products.has(createProductData.vendorCode)) as ProductCreateManyInput[]
+      return filteredRez
     }
+
     const createProductsData = await makeProductsForWrite()
-    await this.prismaService.product.createMany({ data: createProductsData, skipDuplicates: true })
+    if (createProductsData.length) {
+      await this.prismaService.product.createMany({ data: createProductsData, skipDuplicates: true })
+    }
+
     const createdProducts = await this.findIdsByVendorCodes(
       createProductsData.map((createProductData) => createProductData.vendorCode),
     )
+
     return { products, createdProducts }
   }
 

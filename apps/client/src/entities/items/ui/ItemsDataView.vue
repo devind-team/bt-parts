@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item, type Order } from '@repo/queries/composables/graphql.js'
+import { useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
 const { t } = useI18n()
 const { date } = useFilters()
 const props = defineProps<{
-  isAdoptedStatus: Boolean
-  isPricedStatus: Boolean
+  currentStatus: string | null,
   items: Item[],
   orderId: string,
   refetch: () => void
@@ -173,7 +172,7 @@ const deleteItem = (item: Item) => {
       </template>
     </Column>
     <Column
-      v-if="authStore.userRole == 'ADMIN' && isAdoptedStatus"
+      v-if="authStore.userRole == 'ADMIN' && currentStatus =='ADOPTED'"
       :header="t('pricesSells.name')"
     >
       <template #body="{ data }">
@@ -201,7 +200,7 @@ const deleteItem = (item: Item) => {
     >
       <template #body="{ data }">
         <div>
-          <span v-if="isPricedStatus">
+          <span v-if="currentStatus == 'PRICED'">
             <div class="flex gap-2">
               <Tag
                 :value="data.salePrice * 1"
