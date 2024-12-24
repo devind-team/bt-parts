@@ -22,6 +22,8 @@ export type Scalars = {
   Decimal: { input: any; output: any; }
   /** A field whose value conforms to the standard internet email address format as specified in HTML Spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address. */
   EmailAddress: { input: any; output: any; }
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: { input: any; output: any; }
 };
 
 export type AddNewProductInput = {
@@ -316,6 +318,40 @@ export type CreateOrderInput = {
 export type CreateOrderType = {
   __typename?: 'CreateOrderType';
   order: Order;
+};
+
+export type CreatePriceInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['Int']['input']>;
+  price: Scalars['Decimal']['input'];
+  productId: Scalars['Int']['input'];
+  site?: InputMaybe<Scalars['String']['input']>;
+  validAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type CreatePriceType = {
+  __typename?: 'CreatePriceType';
+  price: Price;
+};
+
+export type CreateUploadPriceRowType = {
+  __typename?: 'CreateUploadPriceRowType';
+  /** Строка переданных данных */
+  data: Scalars['JSON']['output'];
+  /** Ошибка создания объекта */
+  error?: Maybe<Scalars['JSON']['output']>;
+  /** Новый продукт */
+  productCreate: Scalars['Boolean']['output'];
+  /** Статус */
+  success: Scalars['Boolean']['output'];
+};
+
+export type CreateUploadPricesType = {
+  __typename?: 'CreateUploadPricesType';
+  /** Заголовки передаваемого файла */
+  headers?: Maybe<Array<Scalars['String']['output']>>;
+  /** Переданные строки */
+  rows: Array<CreateUploadPriceRowType>;
 };
 
 export type DateTimeFilter = {
@@ -832,6 +868,7 @@ export type Mutation = {
   checkOrderUpload: CreateOrderType;
   createOrder: CreateOrderType;
   createOrderFromExcel: CreateOrderType;
+  createPrice: CreatePriceType;
   deleteOrder: DeleteOrderType;
   deleteOrderItems: DeleteOrderItemsType;
   login: UserLoginType;
@@ -840,6 +877,7 @@ export type Mutation = {
   unloadOrder: File;
   updateUser: User;
   uploadAvatar: User;
+  uploadPricesFromExcel: CreateUploadPricesType;
 };
 
 
@@ -901,6 +939,11 @@ export type MutationCreateOrderFromExcelArgs = {
 };
 
 
+export type MutationCreatePriceArgs = {
+  price: CreatePriceInput;
+};
+
+
 export type MutationDeleteOrderArgs = {
   orderId: Scalars['String']['input'];
 };
@@ -940,6 +983,11 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationUploadAvatarArgs = {
+  fileId: Scalars['String']['input'];
+};
+
+
+export type MutationUploadPricesFromExcelArgs = {
   fileId: Scalars['String']['input'];
 };
 
@@ -1292,15 +1340,80 @@ export type Price = {
   validAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
+export type PriceAvgAggregate = {
+  __typename?: 'PriceAvgAggregate';
+  duration?: Maybe<Scalars['Float']['output']>;
+  price?: Maybe<Scalars['Decimal']['output']>;
+};
+
+export type PriceConnectionType = {
+  __typename?: 'PriceConnectionType';
+  edges?: Maybe<Array<PriceEdge>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type PriceCount = {
   __typename?: 'PriceCount';
   item: Scalars['Int']['output'];
+};
+
+export type PriceCountAggregate = {
+  __typename?: 'PriceCountAggregate';
+  _all: Scalars['Int']['output'];
+  comment: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  duration: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  price: Scalars['Int']['output'];
+  productId: Scalars['Int']['output'];
+  relevant: Scalars['Int']['output'];
+  site: Scalars['Int']['output'];
+  supplierId: Scalars['Int']['output'];
+  updatedAt: Scalars['Int']['output'];
+  validAt: Scalars['Int']['output'];
+};
+
+export type PriceEdge = {
+  __typename?: 'PriceEdge';
+  cursor: Scalars['String']['output'];
+  node: Price;
 };
 
 export type PriceListRelationFilter = {
   every?: InputMaybe<PriceWhereInput>;
   none?: InputMaybe<PriceWhereInput>;
   some?: InputMaybe<PriceWhereInput>;
+};
+
+export type PriceMaxAggregate = {
+  __typename?: 'PriceMaxAggregate';
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  duration?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  price?: Maybe<Scalars['Decimal']['output']>;
+  productId?: Maybe<Scalars['String']['output']>;
+  relevant?: Maybe<Scalars['Boolean']['output']>;
+  site?: Maybe<Scalars['String']['output']>;
+  supplierId?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  validAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type PriceMinAggregate = {
+  __typename?: 'PriceMinAggregate';
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  duration?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  price?: Maybe<Scalars['Decimal']['output']>;
+  productId?: Maybe<Scalars['String']['output']>;
+  relevant?: Maybe<Scalars['Boolean']['output']>;
+  site?: Maybe<Scalars['String']['output']>;
+  supplierId?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  validAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type PriceNullableRelationFilter = {
@@ -1329,6 +1442,25 @@ export type PriceOrderByWithRelationInput = {
   validAt?: InputMaybe<SortOrderInput>;
 };
 
+export type PriceScalarFieldEnum =
+  | 'comment'
+  | 'createdAt'
+  | 'duration'
+  | 'id'
+  | 'price'
+  | 'productId'
+  | 'relevant'
+  | 'site'
+  | 'supplierId'
+  | 'updatedAt'
+  | 'validAt';
+
+export type PriceSumAggregate = {
+  __typename?: 'PriceSumAggregate';
+  duration?: Maybe<Scalars['Int']['output']>;
+  price?: Maybe<Scalars['Decimal']['output']>;
+};
+
 export type PriceWhereInput = {
   AND?: InputMaybe<Array<PriceWhereInput>>;
   NOT?: InputMaybe<Array<PriceWhereInput>>;
@@ -1337,6 +1469,26 @@ export type PriceWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   duration?: InputMaybe<IntNullableFilter>;
   id?: InputMaybe<StringFilter>;
+  item?: InputMaybe<ItemListRelationFilter>;
+  price?: InputMaybe<DecimalFilter>;
+  product?: InputMaybe<ProductRelationFilter>;
+  productId?: InputMaybe<StringFilter>;
+  relevant?: InputMaybe<BoolNullableFilter>;
+  site?: InputMaybe<StringNullableFilter>;
+  supplier?: InputMaybe<SupplierNullableRelationFilter>;
+  supplierId?: InputMaybe<StringNullableFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  validAt?: InputMaybe<DateTimeNullableFilter>;
+};
+
+export type PriceWhereUniqueInput = {
+  AND?: InputMaybe<Array<PriceWhereInput>>;
+  NOT?: InputMaybe<Array<PriceWhereInput>>;
+  OR?: InputMaybe<Array<PriceWhereInput>>;
+  comment?: InputMaybe<StringNullableFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  duration?: InputMaybe<IntNullableFilter>;
+  id?: InputMaybe<Scalars['String']['input']>;
   item?: InputMaybe<ItemListRelationFilter>;
   price?: InputMaybe<DecimalFilter>;
   product?: InputMaybe<ProductRelationFilter>;
@@ -1604,6 +1756,7 @@ export type Query = {
   me: User;
   order: Order;
   orders: OrderConnectionType;
+  prices: PriceConnectionType;
   products: ProductConnectionType;
 };
 
@@ -1653,6 +1806,20 @@ export type QueryOrdersArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<OrderWhereInput>;
+};
+
+
+export type QueryPricesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  cursor?: InputMaybe<PriceWhereUniqueInput>;
+  distinct?: InputMaybe<Array<PriceScalarFieldEnum>>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PriceOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PriceWhereInput>;
 };
 
 
@@ -2097,25 +2264,6 @@ export type UserWhereInput = {
   username?: InputMaybe<StringFilter>;
 };
 
-export type WhyCountAggregate = {
-  __typename?: 'WhyCountAggregate';
-  _all: Scalars['Int']['output'];
-  becouse: Scalars['Int']['output'];
-  id: Scalars['Int']['output'];
-};
-
-export type WhyMaxAggregate = {
-  __typename?: 'WhyMaxAggregate';
-  becouse?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-};
-
-export type WhyMinAggregate = {
-  __typename?: 'WhyMinAggregate';
-  becouse?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
-};
-
 export type UserFieldsFragment = { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string };
 
 export type LoginMutationVariables = Exact<{
@@ -2284,6 +2432,13 @@ export type OrdersQueryVariables = Exact<{
 export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean }, edges?: Array<{ __typename: 'OrderEdge', node: { __typename: 'Order', id: string, address?: string | null, createdAt: any, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string }, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
 
 export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
+
+export type UploadPricesFromExcelMutationVariables = Exact<{
+  fileId: Scalars['String']['input'];
+}>;
+
+
+export type UploadPricesFromExcelMutation = { __typename?: 'Mutation', uploadPricesFromExcel: { __typename?: 'CreateUploadPricesType', headers?: Array<string> | null, rows: Array<{ __typename?: 'CreateUploadPriceRowType', success: boolean, productCreate: boolean, data: any, error?: any | null }> } };
 
 export type ManufacturerFieldsFragment = { __typename: 'Manufacturer', id: string, name: string };
 
@@ -3149,6 +3304,41 @@ export function useOrdersLazyQuery(variables: OrdersQueryVariables | VueComposit
   return VueApolloComposable.useLazyQuery<OrdersQuery, OrdersQueryVariables>(OrdersDocument, variables, options);
 }
 export type OrdersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<OrdersQuery, OrdersQueryVariables>;
+export const UploadPricesFromExcelDocument = gql`
+    mutation UploadPricesFromExcel($fileId: String!) {
+  uploadPricesFromExcel(fileId: $fileId) {
+    headers
+    rows {
+      success
+      productCreate
+      data
+      error
+    }
+  }
+}
+    `;
+
+/**
+ * __useUploadPricesFromExcelMutation__
+ *
+ * To run a mutation, you first call `useUploadPricesFromExcelMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUploadPricesFromExcelMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUploadPricesFromExcelMutation({
+ *   variables: {
+ *     fileId: // value for 'fileId'
+ *   },
+ * });
+ */
+export function useUploadPricesFromExcelMutation(options: VueApolloComposable.UseMutationOptions<UploadPricesFromExcelMutation, UploadPricesFromExcelMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UploadPricesFromExcelMutation, UploadPricesFromExcelMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UploadPricesFromExcelMutation, UploadPricesFromExcelMutationVariables>(UploadPricesFromExcelDocument, options);
+}
+export type UploadPricesFromExcelMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UploadPricesFromExcelMutation, UploadPricesFromExcelMutationVariables>;
 export const SearchProductsDocument = gql`
     query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
   products(

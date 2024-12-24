@@ -1,0 +1,12 @@
+mutation UploadPricesFromExcel($fileId: String!) {
+  uploadPricesFromExcel(fileId: $fileId) {
+    headers,
+    rows {
+      success,
+      productCreate,
+      data,
+      error
+    }
+  }
+}
+ 

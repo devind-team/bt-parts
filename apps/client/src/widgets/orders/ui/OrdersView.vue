@@ -2,6 +2,7 @@
 import OrdersDataView from '@/entities/orders/ui/OrdersDataView.vue'
 import AddItemToOrder from '@/features/items/AddItemToOrder.vue'
 import AddOrderFromExel from '@/features/orders/ui/AddOrderFromExel.vue';
+import AddPricesFromExel from '~/features/orders/ui/AddPricesFromExel.vue';
 </script>
 
 <template>
@@ -10,6 +11,9 @@ import AddOrderFromExel from '@/features/orders/ui/AddOrderFromExel.vue';
       <AddItemToOrder />
       <div class="flex ml-3">
         <AddOrderFromExel />
+      </div>
+      <div class="flex ml-3">
+        <AddPricesFromExel />
       </div>
     </div>
     <orders-data-view />

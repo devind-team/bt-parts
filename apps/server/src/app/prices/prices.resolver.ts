@@ -8,6 +8,7 @@ import { CreatePriceType } from '@prices/dto/create-price.type'
 import { PriceConnectionType } from '@prices/dto/price-connection.type'
 import { PriceConnectionArgs } from '@prices/dto/price-connection.args'
 import { CreatePriceInput } from '@prices/dto/create-price.input'
+import { CreateUploadPricesType } from '@prices/dto/create-upload-prices.type'
 import { User } from '@generated/user'
 
 @UseGuards(GqlAuthGuard)
@@ -43,15 +44,14 @@ export class PricesResolver {
    *    - nameEn? - название
    *    - manufacturer? - производитель
    * @param user: пользователь
-   * @param fileUpload: файл для загрузки
+   * @param fileId: файл для загрузки
    */
-  // @Mutation(() => CreateUploadPricesType)
-  // async uploadPrices(
-  //   @CurrentUser() user: User,
-  //   @Args({ name: 'fileUpload', type: () => FileUploadInput }) fileUpload: FileUploadInput,
-  // ): Promise<CreateUploadPricesType> {
-  //   const file = await this.fileService.add(fileUpload, user)
-  //   const { headers, values } = await this.fileService.getExcelValues(file)
-  //   return await this.pricesService.addPricesFromValues(headers.filter(Boolean), values)
-  // }
+  @Mutation(() => CreateUploadPricesType)
+  async uploadPricesFromExcel(
+    @CurrentUser() user: User,
+    @Args({ type: () => String, name: 'fileId', description: 'Идентификатор файла' }) fileId: string,
+  ): Promise<CreateUploadPricesType> {
+    const { headers, values } = await this.fileService.getExcelValuesById(fileId)
+    return await this.pricesService.addPricesFromValues(headers.filter(Boolean), values)
+  }
 }
