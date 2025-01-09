@@ -10,22 +10,24 @@ const authStore = useAuthStore()
 
 const props = defineProps<{
   orderId: string
-  
 }>()
+
 const { mutate } = useAddStatusOrderMutation()
 const { mutate: recountPricesMutate } = useRecountPricesMutation()
-const { data: order, loading, refetch  } = useCommonQuery<OrderQuery, OrderQueryVariables>({
+const { data: order, loading, refetch } = useCommonQuery<OrderQuery, OrderQueryVariables>({
   document: orderQuery,
   variables: {
     orderId: props.orderId
   }
 })
+
 const statusEdit = async (newStatus: OrderStatus) => {
   const orderId = props.orderId 
   const status = newStatus
   await mutate({ orderId, status })
   await refetch()
 }
+
 const recountPrices = async () => {
   const orderId = props.orderId 
   const itemIds = order.value?.items?.map(item => item.id) || []
@@ -35,12 +37,11 @@ const recountPrices = async () => {
 
 const currentStatus = computed(() => {
   if (!order.value?.statuses || order.value.statuses.length === 0) {
-    return null;
+    return null
   }
-  const lastStatus = order.value.statuses[order.value.statuses.length - 1];
-  return String(lastStatus.status);
-});
-
+  const lastStatus = order.value.statuses[order.value.statuses.length - 1]
+  return String(lastStatus.status)
+})
 </script>
 
 <template>
@@ -68,30 +69,31 @@ const currentStatus = computed(() => {
       />
       <div v-if="currentStatus == 'CREATED'">
         <Button
-          label="Отправить на проценку"
+          :label="t('order.SendForPercentage')"
           @click="statusEdit('REQUEST')"
         />
       </div>
-      <div v-if="authStore.userRole == 'ADMIN'">
+      <div v-if="authStore.hasPermission('order_manipulation')">
         <div
           v-if="currentStatus == 'REQUEST'"
         >
-          >
           <Button
-            label="Принять"
+            :label="t('order.Accept')"
             @click="statusEdit('ADOPTED')"
           />
         </div>
+      </div>
+      <div v-if="authStore.hasPermission('percentage')">
         <div
           v-if="currentStatus == 'ADOPTED'"
         >
           <Button
-            label="Проценить"
+            :label="t('order.RecountPrices')"
             @click="recountPrices"
           />
           <Button
             class="ml-2 gap-2"
-            label="Утвердить цены"
+            :label="t('order.ApprovePrices')"
             @click="statusEdit('PRICED')"
           />
         </div>

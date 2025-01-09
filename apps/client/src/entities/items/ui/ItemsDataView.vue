@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
-const { t } = useI18n()
-const { date } = useFilters()
+const { t } = useI18n();
+const { date } = useFilters();
 const props = defineProps<{
   currentStatus: string | null,
   items: Item[],
   orderId: string,
   refetch: () => void
-}>()
-const authStore = useAuthStore()
+}>();
+const authStore = useAuthStore();
 
-const { mutate } = useChangeQuantityItemMutation()
-const { mutate: deleteMutate, onDone } = useDeleteOrderItemsMutation()
-const { mutate: changeSellingPriceMutate, onDone: changeSellingPriceDone} = useChangeSellingPriceItemMutation();
+const { mutate } = useChangeQuantityItemMutation();
+const { mutate: deleteMutate, onDone } = useDeleteOrderItemsMutation();
+const { mutate: changeSellingPriceMutate, onDone: changeSellingPriceDone } = useChangeSellingPriceItemMutation();
 
 const toast = useToast();
 const confirm = useConfirm();
-const inputValues = ref<Record<string, string>>({})
+const inputValues = ref<Record<string, string>>({});
 
 onMounted(() => {
   props.items.forEach((item) => {
@@ -26,78 +26,83 @@ onMounted(() => {
 
 const onPriceBlur = (item: Item) => {
   const newPrice = Number(inputValues.value[item.id]);
-  if(newPrice > 0){
-    if ((newPrice != item.salePrice)) {
+  if (newPrice > 0) {
+    if (newPrice != item.salePrice) {
       changeSellingPriceMutate({
         itemId: item.id,
         price: newPrice
-      })
-  }}else{
+      });
+    }
+  } else {
     toast.add({ severity: 'error', summary: t('price.invalid'), life: 3000 });
-    inputValues.value[item.id] = String(item.salePrice)
+    inputValues.value[item.id] = String(item.salePrice);
   }
-}
-changeSellingPriceDone(() =>{
-  toast.add({ severity: 'success', summary: t('price.changeSuccess'), life: 3000 });
-})
+};
+
+changeSellingPriceDone(() => {
+  toast.add({ severity: 'success', summary: t('prices.changeSuccess'), life: 3000 });
+});
+
 const increaseQuantity = (item: Item) => {
   mutate({
     itemId: item.id,
-    quantity: item.quantity + 1 
-  })
-}
+    quantity: item.quantity + 1
+  });
+};
 
 const decreaseQuantity = (item: Item) => {
   if (item.quantity > 1) {
     mutate({
       itemId: item.id,
-      quantity: item.quantity - 1 
-    })
+      quantity: item.quantity - 1
+    });
   } else {
-    confirmDeletion(item)
+    confirmDeletion(item);
   }
-}
+};
+
 const confirmDeletion = (item: Item) => {
   confirm.require({
-        message: t('delete.confirm'),
-        header: t('delete.item'),
-        icon: 'pi pi-info-circle',
-        rejectLabel: t('cancel'),
-        rejectProps: {
-            label: 'Cancel',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptProps: {
-            label: t('delete.delete'),
-            severity: 'danger'
-        },
-        accept: () => {
-          deleteMutate({
-          orderId: props.orderId,
-          where: {
-            id: {
-              in: [item.id],
-            },
-          }
-          })
-          toast.add({ severity: 'success', summary: t('delete.success'), life: 3000 });
-          confirm.close()
-        },
-        reject: () => {
-          confirm.close()
+    message: t('delete.confirm'),
+    header: t('delete.item'),
+    icon: 'pi pi-info-circle',
+    rejectLabel: t('cancel'),
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: t('delete.delete'),
+      severity: 'danger'
+    },
+    accept: () => {
+      deleteMutate({
+        orderId: props.orderId,
+        where: {
+          id: {
+            in: [item.id],
+          },
         }
-    });
-}
+      });
+      toast.add({ severity: 'success', summary: t('delete.success'), life: 3000 });
+      confirm.close();
+    },
+    reject: () => {
+      confirm.close();
+    }
+  });
+};
+
 onDone(async ({ data }) => {
   if (data) {
-    await props.refetch()
+    await props.refetch();
   }
 });
-const deleteItem = (item: Item) => {
-    confirmDeletion(item)
-}
 
+const deleteItem = (item: Item) => {
+  confirmDeletion(item);
+};
 </script>
 
 <template>
@@ -150,7 +155,7 @@ const deleteItem = (item: Item) => {
       </template>
     </Column>
     <Column
-      v-if="authStore.userRole == 'ADMIN'"
+      v-if="authStore.hasPermission('percentage')"
       :header="t('purchasePrices.name')"
       field="price"
     >
@@ -172,7 +177,7 @@ const deleteItem = (item: Item) => {
       </template>
     </Column>
     <Column
-      v-if="authStore.userRole == 'ADMIN' && currentStatus =='ADOPTED'"
+      v-if="authStore.hasPermission('percentage') && currentStatus == 'ADOPTED'"
       :header="t('pricesSells.name')"
     >
       <template #body="{ data }">
@@ -186,10 +191,9 @@ const deleteItem = (item: Item) => {
                 class="input input-sm"
                 @blur="onPriceBlur(data)"
               >
-                <Tag
-                  icon="pi pi-euro"
-                />
-              </inputtext></div>
+                <Tag icon="pi pi-euro" />
+              </InputText>
+            </div>
           </span>
         </div>
       </template>
@@ -218,7 +222,7 @@ const deleteItem = (item: Item) => {
       <template #body="{ data }">
         <Button
           severity="danger"
-          icon=" pi pi-trash"
+          icon="pi pi-trash"
           @click="deleteItem(data)"
         />
       </template>
