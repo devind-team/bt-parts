@@ -8,6 +8,7 @@ import { ExcelReader } from '@common/utils/readers/excel.reader'
 import { File as FileType } from '@generated/file'
 import { User } from '@generated/user'
 import { FileInputType } from '@s3/s3.interfaces'
+import { FileUploadOutput } from './dto/file-upload.output'
 
 @Injectable()
 export class FilesService {
@@ -30,7 +31,7 @@ export class FilesService {
   async add(uploadFile: FileInputType, user: User): Promise<FileType> {
     const key = await this.s3Service.uploadObject(uploadFile, user.id)
     const name = Buffer.from(uploadFile.originalname, 'ascii').toString('utf-8')
-    return this.prismaService.file.create({
+    const newFile = await this.prismaService.file.create({
       data: {
         name,
         key,
@@ -38,6 +39,10 @@ export class FilesService {
         userId: user.id,
       },
     })
+    const { serverUrl, bucket } = await this.storageInfo()
+    const url = new URL(`${bucket}/${key}`, serverUrl)
+    console.log(url)
+    return newFile
   }
 
   async getFileStreamById(fileId: string): Promise<ReadableStream> {
@@ -103,11 +108,12 @@ export class FilesService {
     headers: Record<string, string>,
     values: Array<Record<string, unknown>>,
     user: User,
-  ): Promise<FileType> {
+  ): Promise<FileUploadOutput> {
     const workbook = await this.createAndFillWorkbook(sheetName, headers, values)
     const fileName = `UnloadOrder_${new Date().toJSON().slice(0, 10)}.xlsx`
     const buffer = await workbook.xlsx.writeBuffer()
-    return this.add(
+    const { serverUrl } = await this.storageInfo()
+    const newFile = await this.add(
       {
         originalname: fileName,
         mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -116,6 +122,7 @@ export class FilesService {
       },
       user,
     )
+    return { newFile, serverUrl }
   }
 
   async createAndFillWorkbook(

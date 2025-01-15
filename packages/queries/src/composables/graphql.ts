@@ -525,6 +525,12 @@ export type FileOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
 
+export type FileUploadOutput = {
+  __typename?: 'FileUploadOutput';
+  newFile: File;
+  serverUrl: Scalars['String']['output'];
+};
+
 export type FileWhereInput = {
   AND?: InputMaybe<Array<FileWhereInput>>;
   NOT?: InputMaybe<Array<FileWhereInput>>;
@@ -874,7 +880,7 @@ export type Mutation = {
   login: UserLoginType;
   recountPrices: Array<Item>;
   register?: Maybe<UserLoginType>;
-  unloadOrder: File;
+  unloadOrder: FileUploadOutput;
   updateUser: User;
   uploadAvatar: User;
   uploadPricesFromExcel: CreateUploadPricesType;
@@ -2416,6 +2422,13 @@ export type DeleteOrderMutationVariables = Exact<{
 
 export type DeleteOrderMutation = { __typename?: 'Mutation', deleteOrder: { __typename: 'DeleteOrderType', id: string } };
 
+export type UnloadOrderMutationVariables = Exact<{
+  orderId: Scalars['String']['input'];
+}>;
+
+
+export type UnloadOrderMutation = { __typename?: 'Mutation', unloadOrder: { __typename: 'FileUploadOutput', serverUrl: string, newFile: { __typename: 'File', name: string, bucket: string, key: string } } };
+
 export type OrderQueryVariables = Exact<{
   orderId: Scalars['String']['input'];
 }>;
@@ -3176,6 +3189,42 @@ export function useDeleteOrderMutation(options: VueApolloComposable.UseMutationO
   return VueApolloComposable.useMutation<DeleteOrderMutation, DeleteOrderMutationVariables>(DeleteOrderDocument, options);
 }
 export type DeleteOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteOrderMutation, DeleteOrderMutationVariables>;
+export const UnloadOrderDocument = gql`
+    mutation UnloadOrder($orderId: String!) {
+  unloadOrder(orderId: $orderId) {
+    newFile {
+      name
+      bucket
+      key
+      __typename
+    }
+    serverUrl
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useUnloadOrderMutation__
+ *
+ * To run a mutation, you first call `useUnloadOrderMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUnloadOrderMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUnloadOrderMutation({
+ *   variables: {
+ *     orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useUnloadOrderMutation(options: VueApolloComposable.UseMutationOptions<UnloadOrderMutation, UnloadOrderMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UnloadOrderMutation, UnloadOrderMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UnloadOrderMutation, UnloadOrderMutationVariables>(UnloadOrderDocument, options);
+}
+export type UnloadOrderMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UnloadOrderMutation, UnloadOrderMutationVariables>;
 export const OrderDocument = gql`
     query Order($orderId: String!) {
   order(orderId: $orderId) {

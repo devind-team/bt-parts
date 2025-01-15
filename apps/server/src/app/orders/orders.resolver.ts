@@ -15,6 +15,7 @@ import { Order } from '@generated/order'
 import { Status } from '@generated/status'
 import { OrderStatus } from '@generated/prisma'
 import { AddNewProductInput } from '@orders/dto/add-new-product.input'
+import { FileUploadOutput } from '@files/dto/file-upload.output'
 
 @UseGuards(GqlAuthGuard)
 @Resolver()
@@ -140,11 +141,11 @@ export class OrdersResolver {
    * @param user
    * @param orderId
    */
-  @Mutation(() => File)
+  @Mutation(() => FileUploadOutput)
   async unloadOrder(
     @CurrentUser() user: User,
     @Args({ type: () => String, name: 'orderId', description: 'Идентификатор заказа' }) orderId: string,
-  ): Promise<File> {
+  ): Promise<FileUploadOutput> {
     return this.ordersService.unloadOrder(user, orderId)
   }
 }

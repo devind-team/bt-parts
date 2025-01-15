@@ -17,6 +17,7 @@ import { File } from '@generated/file'
 import { Status } from '@generated/status'
 import { ItemsService } from '@items/items.service'
 import { AddNewProductInput } from '@orders/dto/add-new-product.input'
+import { FileUploadOutput } from '@files/dto/file-upload.output'
 
 @Injectable()
 export class OrdersService {
@@ -251,7 +252,7 @@ export class OrdersService {
    * @param user
    * @param orderId
    */
-  async unloadOrder(user: User, orderId: string): Promise<File> {
+  async unloadOrder(user: User, orderId: string): Promise<FileUploadOutput> {
     const headers: Record<string, string> = {
       id: '#',
       'product.vendorCode': 'Артикул',
@@ -265,11 +266,12 @@ export class OrdersService {
         quantity: true,
         price: true,
         product: {
-          select: { vendorCode: true, manufacturer: true },
+          select: { vendorCode: true, manufacturer: { select: { name: true } } },
         },
       },
       where: { orderId },
     })
+    console.log(orderItems)
     return await this.fileService.getExcelFile(
       `order#${orderId}`,
       headers,
