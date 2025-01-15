@@ -255,11 +255,11 @@ export class OrdersService {
   async unloadOrder(user: User, orderId: string): Promise<FileUploadOutput> {
     const headers: Record<string, string> = {
       id: '#',
-      'product.vendorCode': 'Артикул',
-      'product.manufacturer': 'Производитель',
+      vendorCode: 'vendorCode',
+      manufacturer: 'Brand',
       quantity: 'Количество',
-      price: 'Цена Евро без НДС',
-      bill: 'Сумма Евро без НДС',
+      price: 'price euro',
+      bill: 'Sum price',
     }
     const orderItems = await this.prismaService.item.findMany({
       select: {
@@ -277,6 +277,8 @@ export class OrdersService {
       headers,
       orderItems.map((item, index) => ({
         ...item,
+        manufacturer: item.product.manufacturer.name,
+        vendorCode: item.product.vendorCode,
         price: Number(item.price.price),
         bill: Number(item.price.price) * item.quantity,
         id: index + 1,
