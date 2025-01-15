@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Item, OrderQuery, OrderQueryVariables, OrderStatus } from '@repo/queries/composables/graphql.js'
-import { useAddStatusOrderMutation, useRecountPricesMutation } from '@repo/queries/composables/graphql.js'
+import { useAddStatusOrderMutation, useRecountPricesMutation, useUnloadOrderForAppraiseMutation } from '@repo/queries/composables/graphql.js'
 import ItemsDataView from '@/entities/items/ui/ItemsDataView.vue'
 import orderQuery from '@repo/queries/graphql/orders/queries/order.graphql'
 
@@ -11,16 +11,24 @@ const authStore = useAuthStore()
 const props = defineProps<{
   orderId: string
 }>()
-
 const { mutate } = useAddStatusOrderMutation()
 const { mutate: recountPricesMutate } = useRecountPricesMutation()
+const { mutate: unloadOrderMutate } = useUnloadOrderForAppraiseMutation()
 const { data: order, loading, refetch } = useCommonQuery<OrderQuery, OrderQueryVariables>({
   document: orderQuery,
   variables: {
     orderId: props.orderId
   }
 })
-
+const unloadOrder = async () => {
+  const orderId = props.orderId
+  const data  = await unloadOrderMutate({ orderId })
+  console.log(data)
+  const newFile = data?.data?.unloadOrderForAppraise.newFile
+  const serverUrl = data?.data?.unloadOrderForAppraise.serverUrl
+  const url = new URL(`${newFile?.bucket}/${newFile?.key}`, serverUrl)
+  window.location.href = url.href
+}
 const statusEdit = async (newStatus: OrderStatus) => {
   const orderId = props.orderId 
   const status = newStatus
@@ -90,6 +98,11 @@ const currentStatus = computed(() => {
           <Button
             :label="t('order.RecountPrices')"
             @click="recountPrices"
+          />
+          <Button
+            class="ml-2 gap-2"
+            :label="t('orders.unload')"
+            @click="unloadOrder"
           />
           <Button
             class="ml-2 gap-2"

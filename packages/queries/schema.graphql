@@ -841,6 +841,31 @@ type DeleteOrderType {
   id: String!
 }
 
+type StatusCountAggregate {
+  id: Int!
+  status: Int!
+  createdAt: Int!
+  orderId: Int!
+  userId: Int!
+  _all: Int!
+}
+
+type StatusMinAggregate {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  orderId: String
+  userId: String
+}
+
+type StatusMaxAggregate {
+  id: String
+  status: OrderStatus
+  createdAt: DateTime
+  orderId: String
+  userId: String
+}
+
 type FileCountAggregate {
   id: Int!
   name: Int!
@@ -872,29 +897,9 @@ type FileMaxAggregate {
   userId: String
 }
 
-type StatusCountAggregate {
-  id: Int!
-  status: Int!
-  createdAt: Int!
-  orderId: Int!
-  userId: Int!
-  _all: Int!
-}
-
-type StatusMinAggregate {
-  id: String
-  status: OrderStatus
-  createdAt: DateTime
-  orderId: String
-  userId: String
-}
-
-type StatusMaxAggregate {
-  id: String
-  status: OrderStatus
-  createdAt: DateTime
-  orderId: String
-  userId: String
+type FileUploadOutput {
+  newFile: File!
+  serverUrl: String!
 }
 
 type PriceCountAggregate {
@@ -2120,7 +2125,11 @@ type Mutation {
   unloadOrder(
     """Идентификатор заказа"""
     orderId: String!
-  ): File!
+  ): FileUploadOutput!
+  unloadOrderForAppraise(
+    """Идентификатор заказа"""
+    orderId: String!
+  ): FileUploadOutput!
   createPrice(price: CreatePriceInput!): CreatePriceType!
   uploadPricesFromExcel(
     """Идентификатор файла"""

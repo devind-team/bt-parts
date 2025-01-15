@@ -13,10 +13,10 @@ import { orderItemValidator } from '@items/validators'
 import { Order } from '@generated/order'
 import { ItemStatus, OrderStatus, Role } from '@generated/prisma'
 import { User } from '@generated/user'
-import { File } from '@generated/file'
 import { Status } from '@generated/status'
 import { ItemsService } from '@items/items.service'
 import { AddNewProductInput } from '@orders/dto/add-new-product.input'
+import { FileUploadOutput } from '@files/dto/file-upload.output'
 
 @Injectable()
 export class OrdersService {
@@ -251,21 +251,21 @@ export class OrdersService {
    * @param user
    * @param orderId
    */
-  async unloadOrder(user: User, orderId: string): Promise<File> {
+  async unloadOrder(user: User, orderId: string): Promise<FileUploadOutput> {
     const headers: Record<string, string> = {
       id: '#',
-      'product.vendorCode': 'Артикул',
-      'product.manufacturer': 'Производитель',
+      vendorCode: 'vendorCode',
+      manufacturer: 'Brand',
       quantity: 'Количество',
-      price: 'Цена Евро без НДС',
-      bill: 'Сумма Евро без НДС',
+      price: 'price euro',
+      bill: 'Sum price',
     }
     const orderItems = await this.prismaService.item.findMany({
       select: {
         quantity: true,
         price: true,
         product: {
-          select: { vendorCode: true, manufacturer: true },
+          select: { vendorCode: true, manufacturer: { select: { name: true } } },
         },
       },
       where: { orderId },
@@ -275,6 +275,8 @@ export class OrdersService {
       headers,
       orderItems.map((item, index) => ({
         ...item,
+        manufacturer: item.product.manufacturer.name,
+        vendorCode: item.product.vendorCode,
         price: Number(item.price.price),
         bill: Number(item.price.price) * item.quantity,
         id: index + 1,
@@ -282,7 +284,41 @@ export class OrdersService {
       user,
     )
   }
-
+  /**
+   * Выгрузка заказа
+   * @param user
+   * @param orderId
+   */
+  async unloadOrderForAppraise(user: User, orderId: string): Promise<FileUploadOutput> {
+    const headers: Record<string, string> = {
+      id: '#',
+      vendorCode: 'vendorCode',
+      manufacturer: 'Brand',
+      quantity: 'quantity',
+      price: 'price euro',
+      bill: 'Sum price',
+    }
+    const orderItems = await this.prismaService.item.findMany({
+      select: {
+        quantity: true,
+        product: {
+          select: { vendorCode: true, manufacturer: { select: { name: true } } },
+        },
+      },
+      where: { orderId },
+    })
+    return await this.fileService.getExcelFile(
+      `order#${orderId}`,
+      headers,
+      orderItems.map((item, index) => ({
+        ...item,
+        manufacturer: item.product.manufacturer.name,
+        vendorCode: item.product.vendorCode,
+        id: index + 1,
+      })),
+      user,
+    )
+  }
   /**
    * /**
    * Мутация для добавления заказа из файла

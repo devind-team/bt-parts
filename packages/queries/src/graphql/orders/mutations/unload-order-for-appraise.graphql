@@ -1,0 +1,12 @@
+mutation UnloadOrderForAppraise($orderId: String!) {
+  unloadOrderForAppraise(orderId: $orderId) {
+    newFile{
+      name,
+      bucket,
+      key,
+      __typename
+    },
+    serverUrl,
+    __typename
+  }
+}
