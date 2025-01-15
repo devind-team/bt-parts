@@ -14,7 +14,7 @@ const authStore = useAuthStore()
         <AddOrderFromExel />
       </div>
       <div
-        v-if="authStore.hasPermission('percentage')"
+        v-if="authStore.hasPermission('appraise')"
         class="flex ml-3"
       >
         <AddPricesFromExel />

@@ -1,6 +1,7 @@
 #import "../../auth/fragments/user-fields.graphql"
 #import "../../prices/fragments/price-fields.graphql"
 #import "../../products/fragments/product-fields.graphql"
+#import "../../products/fragments/manufacturer-fields.graphql"
 #import "../../items/fragments/item-fields.graphql"
 #import "../../items/fragments/status-item-fields.graphql"
 #import "../fragments/order-fields.graphql"
@@ -25,7 +26,7 @@ query Order($orderId: String!) {
         ...UserFields
       }
       product {
-        ...ProductFields
+        ...ProductFields,
       }
       statuses {
         ...StatusItemFields

@@ -42,7 +42,11 @@ export class OrdersService {
         items: {
           include: {
             user: true,
-            product: true,
+            product: {
+              include: {
+                manufacturer: true,
+              },
+            },
             price: true,
             statuses: {
               include: { user: true },
@@ -332,11 +336,11 @@ export class OrdersService {
 
     for (const value of file.values) {
       const vendorCode = value.get('VendorCode')
-      const manufacturer = value.get('Manufacturer')
+      const manufacturer = value.get('Brand')
       const quantity = value.get('Quantity')
       console.log(vendorCode)
 
-      if (!vendorCode || !quantity) {
+      if (!vendorCode || !quantity || !manufacturer) {
         console.error('Неполные данные в строке:', value)
         continue
       }
