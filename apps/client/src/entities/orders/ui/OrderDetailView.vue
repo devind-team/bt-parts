@@ -91,24 +91,27 @@ const currentStatus = computed(() => {
           />
         </div>
       </div>
-      <div v-if="authStore.hasPermission('percentage')">
+      <div v-if="authStore.hasPermission('appraise')">
         <div
           v-if="currentStatus == 'ADOPTED'"
+          class="flex gap-2"
         >
           <Button
             :label="t('order.RecountPrices')"
             @click="recountPrices"
           />
           <Button
-            class="ml-2 gap-2"
+            class="gap-2"
             :label="t('orders.unload')"
             @click="unloadOrder"
           />
-          <Button
-            class="ml-2 gap-2"
-            :label="t('order.ApprovePrices')"
-            @click="statusEdit('PRICED')"
-          />
+          <div class="ml-auto">
+            <Button
+              class="gap-2"
+              :label="t('order.ApprovePrices')"
+              @click="statusEdit('PRICED')"
+            />
+          </div>
         </div>
       </div>
     </div>

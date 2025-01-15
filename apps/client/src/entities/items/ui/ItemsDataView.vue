@@ -9,7 +9,7 @@ const props = defineProps<{
   refetch: () => void
 }>();
 const authStore = useAuthStore();
-
+console.log (props.items)
 const { mutate } = useChangeQuantityItemMutation();
 const { mutate: deleteMutate, onDone } = useDeleteOrderItemsMutation();
 const { mutate: changeSellingPriceMutate, onDone: changeSellingPriceDone } = useChangeSellingPriceItemMutation();
@@ -114,6 +114,13 @@ const deleteItem = (item: Item) => {
         {{ data.product.vendorCode }}
       </template>
     </Column>
+    <Column :header="t('products.brand')">
+      <template #body="{ data }">
+        <div class="flex flex-wrap gap-2">
+          {{ data.product.manufacturer.name }}
+        </div>
+      </template>
+    </Column>
     <Column :header="t('products.quantity')">
       <template #body="{ data }">
         <div class="flex items-center gap-3">
@@ -155,7 +162,7 @@ const deleteItem = (item: Item) => {
       </template>
     </Column>
     <Column
-      v-if="authStore.hasPermission('percentage')"
+      v-if="authStore.hasPermission('appraise')"
       :header="t('purchasePrices.name')"
       field="price"
     >
@@ -177,7 +184,7 @@ const deleteItem = (item: Item) => {
       </template>
     </Column>
     <Column
-      v-if="authStore.hasPermission('percentage') && currentStatus == 'ADOPTED'"
+      v-if="authStore.hasPermission('appraise') && currentStatus == 'ADOPTED'"
       :header="t('pricesSells.name')"
     >
       <template #body="{ data }">
