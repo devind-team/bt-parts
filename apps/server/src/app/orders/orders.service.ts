@@ -13,7 +13,6 @@ import { orderItemValidator } from '@items/validators'
 import { Order } from '@generated/order'
 import { ItemStatus, OrderStatus, Role } from '@generated/prisma'
 import { User } from '@generated/user'
-import { File } from '@generated/file'
 import { Status } from '@generated/status'
 import { ItemsService } from '@items/items.service'
 import { AddNewProductInput } from '@orders/dto/add-new-product.input'
@@ -271,7 +270,6 @@ export class OrdersService {
       },
       where: { orderId },
     })
-    console.log(orderItems)
     return await this.fileService.getExcelFile(
       `order#${orderId}`,
       headers,
@@ -286,7 +284,41 @@ export class OrdersService {
       user,
     )
   }
-
+  /**
+   * Выгрузка заказа
+   * @param user
+   * @param orderId
+   */
+  async unloadOrderForAppraise(user: User, orderId: string): Promise<FileUploadOutput> {
+    const headers: Record<string, string> = {
+      id: '#',
+      vendorCode: 'vendorCode',
+      manufacturer: 'Brand',
+      quantity: 'quantity',
+      price: 'price euro',
+      bill: 'Sum price',
+    }
+    const orderItems = await this.prismaService.item.findMany({
+      select: {
+        quantity: true,
+        product: {
+          select: { vendorCode: true, manufacturer: { select: { name: true } } },
+        },
+      },
+      where: { orderId },
+    })
+    return await this.fileService.getExcelFile(
+      `order#${orderId}`,
+      headers,
+      orderItems.map((item, index) => ({
+        ...item,
+        manufacturer: item.product.manufacturer.name,
+        vendorCode: item.product.vendorCode,
+        id: index + 1,
+      })),
+      user,
+    )
+  }
   /**
    * /**
    * Мутация для добавления заказа из файла

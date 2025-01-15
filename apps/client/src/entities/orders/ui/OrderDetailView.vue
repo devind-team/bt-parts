@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Item, OrderQuery, OrderQueryVariables, OrderStatus } from '@repo/queries/composables/graphql.js'
-import { useAddStatusOrderMutation, useRecountPricesMutation, useUnloadOrderMutation } from '@repo/queries/composables/graphql.js'
+import { useAddStatusOrderMutation, useRecountPricesMutation, useUnloadOrderForAppraiseMutation } from '@repo/queries/composables/graphql.js'
 import ItemsDataView from '@/entities/items/ui/ItemsDataView.vue'
 import orderQuery from '@repo/queries/graphql/orders/queries/order.graphql'
 
@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 const { mutate } = useAddStatusOrderMutation()
 const { mutate: recountPricesMutate } = useRecountPricesMutation()
-const { mutate: unloadOrderMutate } = useUnloadOrderMutation()
+const { mutate: unloadOrderMutate } = useUnloadOrderForAppraiseMutation()
 const { data: order, loading, refetch } = useCommonQuery<OrderQuery, OrderQueryVariables>({
   document: orderQuery,
   variables: {
@@ -24,8 +24,8 @@ const unloadOrder = async () => {
   const orderId = props.orderId
   const data  = await unloadOrderMutate({ orderId })
   console.log(data)
-  const newFile = data?.data?.unloadOrder.newFile
-  const serverUrl = data?.data?.unloadOrder.serverUrl
+  const newFile = data?.data?.unloadOrderForAppraise.newFile
+  const serverUrl = data?.data?.unloadOrderForAppraise.serverUrl
   const url = new URL(`${newFile?.bucket}/${newFile?.key}`, serverUrl)
   window.location.href = url.href
 }

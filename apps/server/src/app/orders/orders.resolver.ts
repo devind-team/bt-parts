@@ -10,7 +10,6 @@ import { OrderConnectionArgs } from '@orders/dto/order-connection.args'
 import { DeleteOrderType } from '@orders/dto/delete-order.type'
 import { AddProductInput } from '@orders/dto/add-product.input'
 import { User } from '@generated/user'
-import { File } from '@generated/file'
 import { Order } from '@generated/order'
 import { Status } from '@generated/status'
 import { OrderStatus } from '@generated/prisma'
@@ -147,5 +146,17 @@ export class OrdersResolver {
     @Args({ type: () => String, name: 'orderId', description: 'Идентификатор заказа' }) orderId: string,
   ): Promise<FileUploadOutput> {
     return this.ordersService.unloadOrder(user, orderId)
+  }
+  /**
+   * Выгрузка заказа для проценки ( с пустыми слотами для цен )
+   * @param user
+   * @param orderId
+   */
+  @Mutation(() => FileUploadOutput)
+  async unloadOrderForAppraise(
+    @CurrentUser() user: User,
+    @Args({ type: () => String, name: 'orderId', description: 'Идентификатор заказа' }) orderId: string,
+  ): Promise<FileUploadOutput> {
+    return this.ordersService.unloadOrderForAppraise(user, orderId)
   }
 }
