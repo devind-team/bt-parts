@@ -29,6 +29,9 @@ const unloadOrder = async () => {
   const url = new URL(`${newFile?.bucket}/${newFile?.key}`, serverUrl)
   window.location.href = url.href
 }
+const uploadOrderPrices = async () =>{
+  
+}
 const statusEdit = async (newStatus: OrderStatus) => {
   const orderId = props.orderId 
   const status = newStatus
@@ -107,6 +110,12 @@ const currentStatus = computed(() => {
           />
           <div class="ml-auto">
             <Button
+              class="gap-2"
+              :label="t('orders.priceUpload')"
+              @click="uploadOrderPrices"
+            />
+            <Button
+              v-if="authStore.hasPermission('change_status')"
               class="gap-2"
               :label="t('order.ApprovePrices')"
               @click="statusEdit('PRICED')"

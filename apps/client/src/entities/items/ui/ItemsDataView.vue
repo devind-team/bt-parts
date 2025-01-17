@@ -2,28 +2,39 @@
 import { useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
 const { t } = useI18n();
 const { date } = useFilters();
+
+// Определение пропсов компонента
 const props = defineProps<{
   currentStatus: string | null,
   items: Item[],
   orderId: string,
   refetch: () => void
 }>();
+
+// Использование хранилища авторизации
 const authStore = useAuthStore();
 console.log (props.items)
+
+// Мутации для изменения количества, удаления и изменения цены продажи
 const { mutate } = useChangeQuantityItemMutation();
 const { mutate: deleteMutate, onDone } = useDeleteOrderItemsMutation();
 const { mutate: changeSellingPriceMutate, onDone: changeSellingPriceDone } = useChangeSellingPriceItemMutation();
 
+// Использование уведомлений и подтверждений
 const toast = useToast();
 const confirm = useConfirm();
+
+// Объект для хранения значений полей ввода
 const inputValues = ref<Record<string, string>>({});
 
+// Заполнение начальных значений при монтировании компонента
 onMounted(() => {
   props.items.forEach((item) => {
     inputValues.value[item.id] = String(item.salePrice || 0);
   });
 });
 
+// Обработчик потери фокуса поля ввода цены
 const onPriceBlur = (item: Item) => {
   const newPrice = Number(inputValues.value[item.id]);
   if (newPrice > 0) {
@@ -39,10 +50,12 @@ const onPriceBlur = (item: Item) => {
   }
 };
 
+// Уведомление об успешном изменении цены
 changeSellingPriceDone(() => {
   toast.add({ severity: 'success', summary: t('prices.changeSuccess'), life: 3000 });
 });
 
+// Увеличение количества товара
 const increaseQuantity = (item: Item) => {
   mutate({
     itemId: item.id,
@@ -50,6 +63,7 @@ const increaseQuantity = (item: Item) => {
   });
 };
 
+// Уменьшение количества товара или запрос на удаление
 const decreaseQuantity = (item: Item) => {
   if (item.quantity > 1) {
     mutate({
@@ -61,6 +75,7 @@ const decreaseQuantity = (item: Item) => {
   }
 };
 
+// Подтверждение удаления товара
 const confirmDeletion = (item: Item) => {
   confirm.require({
     message: t('delete.confirm'),
@@ -73,7 +88,7 @@ const confirmDeletion = (item: Item) => {
       outlined: true
     },
     acceptProps: {
-      label: t('delete.delete'),
+      label: 'Delete',
       severity: 'danger'
     },
     accept: () => {
@@ -94,26 +109,32 @@ const confirmDeletion = (item: Item) => {
   });
 };
 
+// Обработка завершения операции удаления
 onDone(async ({ data }) => {
   if (data) {
     await props.refetch();
   }
 });
 
+// Удаление товара
 const deleteItem = (item: Item) => {
   confirmDeletion(item);
 };
 </script>
-
 <template>
   <Toast />
   <ConfirmDialog />
+  
+  <!-- Таблица данных с продуктами -->
   <DataTable :value="items">
+    <!-- Столбец с артикулом -->
     <Column :header="t('products.part')">
       <template #body="{ data }">
         {{ data.product.vendorCode }}
       </template>
     </Column>
+    
+    <!-- Столбец с брендом -->
     <Column :header="t('products.brand')">
       <template #body="{ data }">
         <div class="flex flex-wrap gap-2">
@@ -121,6 +142,8 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
+    
+    <!-- Столбец с количеством -->
     <Column :header="t('products.quantity')">
       <template #body="{ data }">
         <div class="flex items-center gap-3">
@@ -142,6 +165,8 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
+    
+    <!-- Столбец со статусом -->
     <Column :header="t('status')">
       <template #body="{ data }">
         <div class="flex flex-wrap gap-2">
@@ -153,7 +178,10 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
+    
+    <!-- Столбец с именем пользователя, если есть соответствующее разрешение -->
     <Column
+      v-if="authStore.hasPermission('view_name')"
       :header="t('users.name')"
       field="user"
     >
@@ -161,6 +189,19 @@ const deleteItem = (item: Item) => {
         {{ `${data.user.lastName} ${data.user.firstName} ${data.user.patronymic}` }}
       </template>
     </Column>
+    
+    <!-- Столбец с псевдонимом пользователя, если есть соответствующее разрешение -->
+    <Column
+      v-if="authStore.hasPermission('view_psevdonim')"
+      :header="t('users.name')"
+      field="user"
+    >
+      <template #body="{ data }">
+        {{ `${data.user.firstName}` }}
+      </template>
+    </Column>
+    
+    <!-- Столбец с ценой покупки, если есть соответствующее разрешение -->
     <Column
       v-if="authStore.hasPermission('appraise')"
       :header="t('purchasePrices.name')"
@@ -183,8 +224,10 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
+    
+    <!-- Столбец с ценой продажи, если есть соответствующее разрешение и текущий статус "ADOPTED" -->
     <Column
-      v-if="authStore.hasPermission('appraise') && currentStatus == 'ADOPTED'"
+      v-if="authStore.hasPermission('order_manipulation') && currentStatus == 'ADOPTED'"
       :header="t('pricesSells.name')"
     >
       <template #body="{ data }">
@@ -205,8 +248,10 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
+    
+    <!-- Столбец с текущей ценой продажи -->
     <Column
-      v-else
+      v-else-if="authStore.hasPermission('view_price')"
       :header="t('prices.name')"
     >
       <template #body="{ data }">
@@ -225,7 +270,11 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
-    <Column>
+    
+    <!-- Столбец с кнопкой удаления -->
+    <Column
+      v-if="authStore.hasPermission('can_delete_item')"
+    >
       <template #body="{ data }">
         <Button
           severity="danger"

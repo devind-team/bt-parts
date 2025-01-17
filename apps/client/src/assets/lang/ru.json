@@ -172,6 +172,7 @@
   "orders": {
     "name": "Заказ",
     "unload": "Выгрузить Excel",
+    "priceUpload": "Загрузить Excel",
     "title": "Заказы",
     "create": "Создать заказ",
     "detail": "Детализация заказа {orderId}",
