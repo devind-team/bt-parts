@@ -68,9 +68,24 @@ export class OrdersService {
    * @param params: параметры фильтрации
    */
   async getOrderConnection(user: User, params: OrderConnectionArgs): Promise<OrderConnectionType> {
-    const where = (
-      user.role === Role.USER ? { ...params.where, userId: user.id } : params.where
-    ) as Prisma.OrderWhereInput
+    let where
+    if (user.role === Role.USER) {
+      where = { ...params.where, userId: user.id } as Prisma.OrderWhereInput
+    } else if (user.role === Role.BUYER) {
+      where = {
+        ...params.where,
+        statuses: {
+          some: {
+            status: 'ADOPTED',
+          },
+          none: {
+            status: 'PRICED',
+          },
+        },
+      } as Prisma.OrderWhereInput
+    } else {
+      where = { ...params.where } as Prisma.OrderWhereInput
+    }
     return await findManyCursorConnection(
       (args) =>
         this.prismaService.order.findMany({
