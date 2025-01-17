@@ -148,6 +148,7 @@ const deleteItem = (item: Item) => {
       <template #body="{ data }">
         <div class="flex items-center gap-3">
           <button
+            v-if="authStore.hasPermission('edit_quantity')"
             icon="pi pi-minus"
             class=""
             @click="decreaseQuantity(data)"
@@ -156,6 +157,7 @@ const deleteItem = (item: Item) => {
           </button>
           <span class="">{{ data.quantity }}</span>
           <button
+            v-if="authStore.hasPermission('edit_quantity')"
             icon="pi pi-plus"
             class="btn btn-sm"
             @click="increaseQuantity(data)"
