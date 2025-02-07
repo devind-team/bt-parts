@@ -126,7 +126,7 @@ export class ItemsService {
       from (select pr.id,
                    pr.item_id,
                    pr.price,
-                   pr.product_id,
+                   pr.product_id, 
                    min(pr.price) over (partition by pr.product_id) as min_price
             from (select p.id,
                          i.id                                                                as item_id,
@@ -144,6 +144,7 @@ export class ItemsService {
               and pr.price = pr.price_min) pi
       where pi.price = pi.min_price
     `
+    console.log(itemPrices)
     await this.prismaService.$transaction(
       itemPrices.map(({ price, item }) =>
         this.prismaService.item.update({

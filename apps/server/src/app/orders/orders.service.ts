@@ -316,6 +316,8 @@ export class OrdersService {
       quantity: 'quantity',
       price: 'price euro',
       bill: 'Sum price',
+      duration: 'duration',
+      validAt: 'validAt',
     }
     const orderItems = await this.prismaService.item.findMany({
       select: {

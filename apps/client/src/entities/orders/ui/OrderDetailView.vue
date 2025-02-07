@@ -4,6 +4,8 @@ import { useAddStatusOrderMutation, useRecountPricesMutation, useUnloadOrderForA
 import ItemsDataView from '@/entities/items/ui/ItemsDataView.vue'
 import orderQuery from '@repo/queries/graphql/orders/queries/order.graphql'
 
+import AddPricesFromExel from '~/features/orders/ui/AddPricesFromExel.vue';
+
 const { dateTimeHM } = useFilters()
 const { t } = useI18n()
 const authStore = useAuthStore()
@@ -28,9 +30,6 @@ const unloadOrder = async () => {
   const serverUrl = data?.data?.unloadOrderForAppraise.serverUrl
   const url = new URL(`${newFile?.bucket}/${newFile?.key}`, serverUrl)
   window.location.href = url.href
-}
-const uploadOrderPrices = async () =>{
-  
 }
 const statusEdit = async (newStatus: OrderStatus) => {
   const orderId = props.orderId 
@@ -109,11 +108,7 @@ const currentStatus = computed(() => {
             @click="unloadOrder"
           />
           <div class="ml-auto">
-            <Button
-              class="gap-2"
-              :label="t('orders.priceUpload')"
-              @click="uploadOrderPrices"
-            />
+            <AddPricesFromExel />
             <Button
               v-if="authStore.hasPermission('change_status')"
               class="gap-2"

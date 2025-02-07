@@ -11,7 +11,6 @@ import { Price, PriceCreateManyInput } from '@generated/price'
 import { User } from '@generated/user'
 import { ProductsService } from '@products/products.service'
 import { priceValidator } from '@prices/validators'
-import { date } from 'zod'
 
 @Injectable()
 export class PricesService {
@@ -26,6 +25,9 @@ export class PricesService {
     return findManyCursorConnection(
       (args) =>
         this.prismaService.price.findMany({
+          include: {
+            supplier: true,
+          },
           where: params.where,
           orderBy: params.orderBy,
           ...args,
@@ -50,8 +52,14 @@ export class PricesService {
    * @param values: массив значений
    */
   async addPricesFromValues(headers: string[], values: Map<string, unknown>[]): Promise<CreateUploadPricesType> {
+    console.log(headers)
+    console.log(values)
     const { products, createdProducts } = await this.productsService.getOrCreateProducts(values)
+    console.log(products)
+    console.log(createdProducts)
     const { data, rows } = await this.#makePricesForWrite(values, products, createdProducts)
+    console.log(data)
+    console.log(rows)
     // Загрузка цен по частям (батчами)
     const BATCH_SIZE = 5000 // Размер батча
     let batchCount = 0
@@ -64,6 +72,7 @@ export class PricesService {
           productId: item.productId,
           validAt: item.validAt,
           price: item.price,
+          duration: item.duration,
           supplierId: item.supplierId,
         })),
       })
@@ -89,9 +98,10 @@ export class PricesService {
 
     // Получение всех имен поставщиков
     const supplierNames = values
-      .map((v) => v.get('supplierName'))
+      .map((v) => v.get('supplierName') || v.get('Brand'))
       .filter(Boolean)
       .map(String)
+    console.log(supplierNames)
     // Создаем или получаем поставщиков
     await this.prismaService.supplier.createMany({
       data: supplierNames.map((name) => ({ name })),
@@ -106,9 +116,9 @@ export class PricesService {
     for (const value of values) {
       const vendorCode = value.get('vendorCode')
       const productId = productsIndex.get(String(vendorCode)) || createdProductIndex.get(String(vendorCode))
-      const supplierName = String(value.get('supplierName') || '')
+      const supplierName = String(value.get('supplierName') || value.get('Brand') || '')
       const validAt = value.get('validAt')
-      const price = Number(value.get('price'))
+      const price = Number(value.get('price') || value.get('price euro'))
 
       if (productId) {
         const validatedPrice = await priceValidator.safeParseAsync({

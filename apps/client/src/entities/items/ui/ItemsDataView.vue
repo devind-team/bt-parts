@@ -1,7 +1,55 @@
 <script setup lang="ts">
-import { useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
+import { type GetItemPricesQuery, type GetItemPricesQueryVariables, useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
+import getItemPricesQuery from '@repo/queries/graphql/prices/queries/get-item-prices.graphql'
 const { t } = useI18n();
 const { date } = useFilters();
+
+interface Price {
+  id: string;
+  price: string;
+  duration: number;
+  createdAt: string;
+  validAt: string;
+  supplier?: {
+    name?: string;
+  };
+}
+
+interface GetItemPricesQueryResult {
+  prices: {
+    edges: { node: Price }[];
+  };
+}
+
+// Храним цены закупки для каждого товара
+const itemPrices = ref<Record<string, Price[]>>({});
+
+// Загружаем цены для каждого товара в заказе
+const loadPrices = (productId: string, itemId: string) => {
+  const { data: prices, loading, error } = useQueryRelay<GetItemPricesQuery, GetItemPricesQueryVariables>({
+    document: getItemPricesQuery,
+    variables: () => ({
+    productId: productId
+  })
+  })
+  watchEffect(() => {
+  console.log('Prices response:', prices.value);
+  if (error.value) {
+    console.error('GraphQL Error:', error.value);
+  }
+});
+}
+
+// Вызываем загрузку цен при монтировании
+onMounted(() => {
+  props.items.forEach((item) => {
+    loadPrices(item.product.id, item.id)
+  })
+})
+
+// Храним выбранную цену
+const selectedPrice = ref<Record<string, string>>({})
+
 
 // Определение пропсов компонента
 const props = defineProps<{
@@ -10,7 +58,7 @@ const props = defineProps<{
   orderId: string,
   refetch: () => void
 }>();
-
+console.log(props.items)
 // Использование хранилища авторизации
 const authStore = useAuthStore();
 console.log (props.items)
@@ -214,7 +262,7 @@ const deleteItem = (item: Item) => {
           <span v-if="data.price">
             <div class="flex gap-2">
               <Tag
-                v-tooltip="date(data.price.validAt)"
+                v-tooltip="`Срок доставки: ${data.price.duration} дней`"
                 :value="data.price.price * 1"
                 icon="pi pi-euro"
               />

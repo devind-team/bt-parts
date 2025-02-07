@@ -2459,12 +2459,21 @@ export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderC
 
 export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
 
+export type SupplierFieldsFragment = { __typename: 'Supplier', id: string, name: string, location: Location };
+
 export type UploadPricesFromExcelMutationVariables = Exact<{
   fileId: Scalars['String']['input'];
 }>;
 
 
 export type UploadPricesFromExcelMutation = { __typename?: 'Mutation', uploadPricesFromExcel: { __typename?: 'CreateUploadPricesType', headers?: Array<string> | null, rows: Array<{ __typename?: 'CreateUploadPriceRowType', success: boolean, productCreate: boolean, data: any, error?: any | null }> } };
+
+export type GetItemPricesQueryVariables = Exact<{
+  productId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetItemPricesQuery = { __typename?: 'Query', prices: { __typename?: 'PriceConnectionType', edges?: Array<{ __typename?: 'PriceEdge', node: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, supplier?: { __typename: 'Supplier', id: string, name: string, location: Location } | null } }> | null } };
 
 export type ManufacturerFieldsFragment = { __typename: 'Manufacturer', id: string, name: string };
 
@@ -2562,6 +2571,14 @@ export const PriceFieldsFragmentDoc = gql`
   comment
   createdAt
   validAt
+  __typename
+}
+    `;
+export const SupplierFieldsFragmentDoc = gql`
+    fragment SupplierFields on Supplier {
+  id
+  name
+  location
   __typename
 }
     `;
@@ -3440,6 +3457,44 @@ export function useUploadPricesFromExcelMutation(options: VueApolloComposable.Us
   return VueApolloComposable.useMutation<UploadPricesFromExcelMutation, UploadPricesFromExcelMutationVariables>(UploadPricesFromExcelDocument, options);
 }
 export type UploadPricesFromExcelMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UploadPricesFromExcelMutation, UploadPricesFromExcelMutationVariables>;
+export const GetItemPricesDocument = gql`
+    query GetItemPrices($productId: String) {
+  prices(where: {product: {is: {id: {contains: $productId}}}}) {
+    edges {
+      node {
+        ...PriceFields
+        supplier {
+          ...SupplierFields
+        }
+      }
+    }
+  }
+}
+    ${PriceFieldsFragmentDoc}
+${SupplierFieldsFragmentDoc}`;
+
+/**
+ * __useGetItemPricesQuery__
+ *
+ * To run a query within a Vue component, call `useGetItemPricesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetItemPricesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetItemPricesQuery({
+ *   productId: // value for 'productId'
+ * });
+ */
+export function useGetItemPricesQuery(variables: GetItemPricesQueryVariables | VueCompositionApi.Ref<GetItemPricesQueryVariables> | ReactiveFunction<GetItemPricesQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<GetItemPricesQuery, GetItemPricesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetItemPricesQuery, GetItemPricesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetItemPricesQuery, GetItemPricesQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetItemPricesQuery, GetItemPricesQueryVariables>(GetItemPricesDocument, variables, options);
+}
+export function useGetItemPricesLazyQuery(variables: GetItemPricesQueryVariables | VueCompositionApi.Ref<GetItemPricesQueryVariables> | ReactiveFunction<GetItemPricesQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<GetItemPricesQuery, GetItemPricesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetItemPricesQuery, GetItemPricesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetItemPricesQuery, GetItemPricesQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetItemPricesQuery, GetItemPricesQueryVariables>(GetItemPricesDocument, variables, options);
+}
+export type GetItemPricesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetItemPricesQuery, GetItemPricesQueryVariables>;
 export const SearchProductsDocument = gql`
     query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
   products(

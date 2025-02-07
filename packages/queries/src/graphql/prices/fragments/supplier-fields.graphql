@@ -1,0 +1,6 @@
+fragment SupplierFields on Supplier {
+  id
+  name
+  location
+  __typename
+}

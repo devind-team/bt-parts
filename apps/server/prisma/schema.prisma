@@ -256,12 +256,11 @@ enum ProductStatus {
 /// Products prices model
 model Price {
   /// Price ID
-  id       String  @id @default(uuid())
+  id       String   @id @default(uuid())
   /// Purchase Price per unit/piece
-  price    Decimal @db.Decimal(9, 2)
+  price    Decimal  @db.Decimal(9, 2)
   /// Delivery time in days to the warehouse
-  duration Int?    @default(0)
-
+  duration Int?     @default(0)
   /// Site
   site     String?  @db.VarChar(128)
   /// Comment
@@ -270,12 +269,11 @@ model Price {
   relevant Boolean? @default(true)
 
   /// Created date
-  createdAt DateTime  @default(now()) @map("created_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
   /// Updated date
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at")
   /// Price validity date
-  validAt   DateTime? @map("valid_at")
-
+  validAt    DateTime? @map("valid_at")
   /// Product
   product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  String    @map("product_id")
