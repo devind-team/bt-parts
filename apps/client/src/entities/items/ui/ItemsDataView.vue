@@ -4,7 +4,7 @@ import getItemPricesQuery from '@repo/queries/graphql/prices/queries/get-item-pr
 const { t } = useI18n();
 const { date } = useFilters();
 
-// Интерфейс для цены (соответствует данным из консоли)
+// Интерфейс для цены
 interface Price {
   id: string;
   price: string;
@@ -18,10 +18,10 @@ interface Price {
   };
   site?: string | null;
   comment?: string | null;
-  __typename?: string; // Добавляем для совместимости с GraphQL
+  __typename?: string;
 }
 
-// Переопределяем GetItemPricesQuery как массив Price[]
+
 type GetItemPricesQuery = Price[];
 const expandedRows = ref<Record<string, boolean>>({});
 
