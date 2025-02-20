@@ -182,12 +182,24 @@
   "pricesSells": {
     "name": "Цена продажи"
   },
+  "expandAll": "Развернуть все",
+  "collapseAll": "Свернуть все",
   "prices": {
     "name": "Цена",
     "none": "Товар еще не проценен",
-    "changeSuccess": "Цена успешно изменена"
+    "changeSuccess": "Цена успешно изменена",
+    "expanded": "Цены раскрыты",
+    "collapsed": "Цены свернуты",
+    "days": "дней"
   },
   "purchasePrices": {
-    "name": "Цена закупки"
+    "name": "Цена закупки",
+    "for": "Цены закупки для",
+    "price": "Цена",
+    "duration": "Срок доставки",
+    "supplier": "Поставщик",
+    "validAt": "Действительна с",
+    "createdAt": "Создана"
   }
+  
 }

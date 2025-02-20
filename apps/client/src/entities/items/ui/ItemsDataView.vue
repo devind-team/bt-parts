@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { type GetItemPricesQuery, type GetItemPricesQueryVariables, useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
+import { type GetItemPricesQueryVariables, useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
 import getItemPricesQuery from '@repo/queries/graphql/prices/queries/get-item-prices.graphql'
 const { t } = useI18n();
 const { date } = useFilters();
 
+// Интерфейс для цены (соответствует данным из консоли)
 interface Price {
   id: string;
   price: string;
@@ -11,15 +12,47 @@ interface Price {
   createdAt: string;
   validAt: string;
   supplier?: {
+    id: string;
     name?: string;
+    location?: string;
   };
+  site?: string | null;
+  comment?: string | null;
+  __typename?: string; // Добавляем для совместимости с GraphQL
 }
 
-interface GetItemPricesQueryResult {
-  prices: {
-    edges: { node: Price }[];
-  };
-}
+// Переопределяем GetItemPricesQuery как массив Price[]
+type GetItemPricesQuery = Price[];
+const expandedRows = ref<Record<string, boolean>>({});
+
+const expandAll = () => {
+  expandedRows.value = props.items.reduce((acc, item) => {
+    acc[item.id] = true;
+    return acc;
+  }, {} as Record<string, boolean>);
+};
+
+const collapseAll = () => {
+  expandedRows.value = {};
+};
+
+const onRowExpand = (event: { data: Item }) => {
+  toast.add({ 
+    severity: 'info', 
+    summary: t('prices.expanded'), 
+    detail: event.data.product.vendorCode, 
+    life: 3000 
+  });
+};
+
+const onRowCollapse = (event: { data: Item }) => {
+  toast.add({ 
+    severity: 'success', 
+    summary: t('prices.collapsed'), 
+    detail: event.data.product.vendorCode, 
+    life: 3000 
+  });
+};
 
 // Храним цены закупки для каждого товара
 const itemPrices = ref<Record<string, Price[]>>({});
@@ -33,12 +66,21 @@ const loadPrices = (productId: string, itemId: string) => {
   })
   })
   watchEffect(() => {
-  console.log('Prices response:', prices.value);
-  if (error.value) {
-    console.error('GraphQL Error:', error.value);
-  }
-});
-}
+    if (prices.value) {
+      console.log('Prices response:', prices.value);
+      // Так как prices.value уже массив Price[], просто присваиваем его
+      itemPrices.value[itemId] = prices.value;
+    }
+    if (error.value) {
+      console.error('GraphQL Error:', error.value);
+      itemPrices.value[itemId] = [];
+    }
+    if (!loading.value && !prices.value && !error.value) {
+      console.warn(`No prices data for item ${itemId}`);
+      itemPrices.value[itemId] = [];
+    }
+  });
+};
 
 // Вызываем загрузку цен при монтировании
 onMounted(() => {
@@ -174,7 +216,36 @@ const deleteItem = (item: Item) => {
   <ConfirmDialog />
   
   <!-- Таблица данных с продуктами -->
-  <DataTable :value="items">
+  <DataTable
+    v-model:expandedRows="expandedRows" 
+    :value="items"
+    data-key="id"
+    @row-expand="onRowExpand" 
+    @row-collapse="onRowCollapse"
+  >
+    <!-- Добавляем кнопку управления в заголовок -->
+    <template #header>
+      <div class="flex flex-wrap justify-end gap-2">
+        <Button
+          text
+          icon="pi pi-plus"
+          :label="t('expandAll')"
+          @click="expandAll"
+        />
+        <Button
+          text
+          icon="pi pi-minus"
+          :label="t('collapseAll')"
+          @click="collapseAll"
+        />
+      </div>
+    </template>
+
+    <!-- Добавляем колонку-расширитель -->
+    <Column
+      expander
+      style="width: 5rem"
+    />
     <!-- Столбец с артикулом -->
     <Column :header="t('products.part')">
       <template #body="{ data }">
@@ -252,28 +323,49 @@ const deleteItem = (item: Item) => {
     </Column>
     
     <!-- Столбец с ценой покупки, если есть соответствующее разрешение -->
-    <Column
-      v-if="authStore.hasPermission('appraise')"
-      :header="t('purchasePrices.name')"
-      field="price"
-    >
-      <template #body="{ data }">
-        <div>
-          <span v-if="data.price">
-            <div class="flex gap-2">
-              <Tag
-                v-tooltip="`Срок доставки: ${data.price.duration} дней`"
-                :value="data.price.price * 1"
-                icon="pi pi-euro"
-              />
-            </div>
-          </span>
-          <span v-else>
-            {{ t('prices.none') }}
-          </span>
-        </div>
-      </template>
-    </Column>
+    <template #expansion="{ data }">
+      <div class="p-4">
+        <h5>{{ t('purchasePrices.for') }} {{ data.product.vendorCode }}</h5>
+        <DataTable :value="itemPrices[data.id] || []">
+          <Column
+            field="price"
+            :header="t('purchasePrices.price')"
+          >
+            <template #body="slotProps">
+              {{ (Number(slotProps.data.price)) }}
+            </template>
+          </Column>
+          <Column
+            field="duration"
+            :header="t('purchasePrices.duration')"
+          >
+            <template #body="slotProps">
+              {{ slotProps.data.duration }} {{ t('days') }}
+            </template>
+          </Column>
+          <Column
+            field="supplier.name"
+            :header="t('purchasePrices.supplier')"
+          />
+          <Column
+            field="validAt"
+            :header="t('purchasePrices.validAt')"
+          >
+            <template #body="slotProps">
+              {{ date(slotProps.data.validAt) }}
+            </template>
+          </Column>
+          <Column
+            field="createdAt"
+            :header="t('purchasePrices.createdAt')"
+          >
+            <template #body="slotProps">
+              {{ date(slotProps.data.createdAt) }}
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+    </template>
     
     <!-- Столбец с ценой продажи, если есть соответствующее разрешение и текущий статус "ADOPTED" -->
     <Column
