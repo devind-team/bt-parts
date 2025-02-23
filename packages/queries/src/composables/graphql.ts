@@ -2349,7 +2349,7 @@ export type RecountPricesMutationVariables = Exact<{
 }>;
 
 
-export type RecountPricesMutation = { __typename?: 'Mutation', recountPrices: Array<{ __typename?: 'Item', id: string, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null }> };
+export type RecountPricesMutation = { __typename?: 'Mutation', recountPrices: Array<{ __typename?: 'Item', id: string, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string } | null }> };
 
 export type ItemsQueryVariables = Exact<{
   filter?: InputMaybe<Array<ItemStatus> | ItemStatus>;
@@ -2360,7 +2360,7 @@ export type ItemsQueryVariables = Exact<{
 }>;
 
 
-export type ItemsQuery = { __typename?: 'Query', items: { __typename: 'ItemConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename: 'ItemEdge', node: { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, order: { __typename: 'Order', id: string, address?: string | null, createdAt: any }, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, commentItem?: Array<{ __typename: 'CommentItem', id: string, text: string, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
+export type ItemsQuery = { __typename?: 'Query', items: { __typename: 'ItemConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename: 'ItemEdge', node: { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, order: { __typename: 'Order', id: string, address?: string | null, createdAt: any }, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string } | null, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, commentItem?: Array<{ __typename: 'CommentItem', id: string, text: string, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
 
 export type CommentFieldsFragment = { __typename: 'Comment', id: string, text: string, createdAt: any };
 
@@ -2447,7 +2447,7 @@ export type OrderQueryVariables = Exact<{
 }>;
 
 
-export type OrderQuery = { __typename?: 'Query', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, comments?: Array<{ __typename: 'Comment', id: string, text: string, createdAt: any }> | null, items?: Array<{ __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null } | null }> | null, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } } };
+export type OrderQuery = { __typename?: 'Query', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, comments?: Array<{ __typename: 'Comment', id: string, text: string, createdAt: any }> | null, items?: Array<{ __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string } | null }> | null, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } } };
 
 export type OrdersQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -2457,7 +2457,7 @@ export type OrdersQueryVariables = Exact<{
 
 export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean }, edges?: Array<{ __typename: 'OrderEdge', node: { __typename: 'Order', id: string, address?: string | null, createdAt: any, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string }, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
 
-export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null };
+export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string };
 
 export type SupplierFieldsFragment = { __typename: 'Supplier', id: string, name: string, location: Location };
 
@@ -2473,7 +2473,14 @@ export type GetItemPricesQueryVariables = Exact<{
 }>;
 
 
-export type GetItemPricesQuery = { __typename?: 'Query', prices: { __typename?: 'PriceConnectionType', edges?: Array<{ __typename?: 'PriceEdge', node: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, supplier?: { __typename: 'Supplier', id: string, name: string, location: Location } | null } }> | null } };
+export type GetItemPricesQuery = { __typename?: 'Query', prices: { __typename?: 'PriceConnectionType', edges?: Array<{ __typename?: 'PriceEdge', node: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string, location: Location } | null } }> | null } };
+
+export type GetItemsPricesQueryVariables = Exact<{
+  productIds?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type GetItemsPricesQuery = { __typename?: 'Query', prices: { __typename?: 'PriceConnectionType', edges?: Array<{ __typename?: 'PriceEdge', node: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string, location: Location } | null } }> | null } };
 
 export type ManufacturerFieldsFragment = { __typename: 'Manufacturer', id: string, name: string };
 
@@ -2487,7 +2494,7 @@ export type SearchProductsQueryVariables = Exact<{
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null }> | null } }> | null } };
+export type SearchProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string }> | null } }> | null } };
 
 export const UserFieldsFragmentDoc = gql`
     fragment UserFields on User {
@@ -2571,6 +2578,7 @@ export const PriceFieldsFragmentDoc = gql`
   comment
   createdAt
   validAt
+  productId
   __typename
 }
     `;
@@ -3495,6 +3503,44 @@ export function useGetItemPricesLazyQuery(variables: GetItemPricesQueryVariables
   return VueApolloComposable.useLazyQuery<GetItemPricesQuery, GetItemPricesQueryVariables>(GetItemPricesDocument, variables, options);
 }
 export type GetItemPricesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetItemPricesQuery, GetItemPricesQueryVariables>;
+export const GetItemsPricesDocument = gql`
+    query GetItemsPrices($productIds: [String!]) {
+  prices(where: {product: {is: {id: {in: $productIds}}}}) {
+    edges {
+      node {
+        ...PriceFields
+        supplier {
+          ...SupplierFields
+        }
+      }
+    }
+  }
+}
+    ${PriceFieldsFragmentDoc}
+${SupplierFieldsFragmentDoc}`;
+
+/**
+ * __useGetItemsPricesQuery__
+ *
+ * To run a query within a Vue component, call `useGetItemsPricesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetItemsPricesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetItemsPricesQuery({
+ *   productIds: // value for 'productIds'
+ * });
+ */
+export function useGetItemsPricesQuery(variables: GetItemsPricesQueryVariables | VueCompositionApi.Ref<GetItemsPricesQueryVariables> | ReactiveFunction<GetItemsPricesQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<GetItemsPricesQuery, GetItemsPricesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetItemsPricesQuery, GetItemsPricesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetItemsPricesQuery, GetItemsPricesQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetItemsPricesQuery, GetItemsPricesQueryVariables>(GetItemsPricesDocument, variables, options);
+}
+export function useGetItemsPricesLazyQuery(variables: GetItemsPricesQueryVariables | VueCompositionApi.Ref<GetItemsPricesQueryVariables> | ReactiveFunction<GetItemsPricesQueryVariables> = {}, options: VueApolloComposable.UseQueryOptions<GetItemsPricesQuery, GetItemsPricesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetItemsPricesQuery, GetItemsPricesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetItemsPricesQuery, GetItemsPricesQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetItemsPricesQuery, GetItemsPricesQueryVariables>(GetItemsPricesDocument, variables, options);
+}
+export type GetItemsPricesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetItemsPricesQuery, GetItemsPricesQueryVariables>;
 export const SearchProductsDocument = gql`
     query SearchProducts($search: String, $first: Int, $after: String, $skip: Int) {
   products(

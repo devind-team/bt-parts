@@ -1,0 +1,14 @@
+#import "../fragments/price-fields.graphql"
+#import "../fragments/supplier-fields.graphql"
+query GetItemsPrices($productIds: [String!]) {
+  prices(where: { product: { is: { id: { in: $productIds } } } }) {
+    edges {
+      node {
+        ...PriceFields
+        supplier {
+          ...SupplierFields
+        }
+      }
+    }
+  }
+}

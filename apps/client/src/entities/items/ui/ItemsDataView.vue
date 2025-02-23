@@ -1,28 +1,10 @@
 <script setup lang="ts">
-import { type GetItemPricesQueryVariables, useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
+import { type GetItemsPricesQueryVariables, type GetItemsPricesQuery, useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
 import getItemPricesQuery from '@repo/queries/graphql/prices/queries/get-item-prices.graphql'
+import Checkbox from 'primevue/checkbox';
 const { t } = useI18n();
 const { date } = useFilters();
 
-// Интерфейс для цены
-interface Price {
-  id: string;
-  price: string;
-  duration: number;
-  createdAt: string;
-  validAt: string;
-  supplier?: {
-    id: string;
-    name?: string;
-    location?: string;
-  };
-  site?: string | null;
-  comment?: string | null;
-  __typename?: string;
-}
-
-
-type GetItemPricesQuery = Price[];
 const expandedRows = ref<Record<string, boolean>>({});
 
 const expandAll = () => {
@@ -53,46 +35,65 @@ const onRowCollapse = (event: { data: Item }) => {
     life: 3000 
   });
 };
+interface Price {
+  id: string;
+  price: string | number;
+  duration: number | null;
+  createdAt: string;
+  validAt: string | null;
+  supplier?: {
+    id: string;
+    name: string;
+    location: string;
+  } | null;
+  site?: string | null;
+  comment?: string | null;
+  productId: string;
+}
 
-// Храним цены закупки для каждого товара
 const itemPrices = ref<Record<string, Price[]>>({});
-
-// Загружаем цены для каждого товара в заказе
-const loadPrices = (productId: string, itemId: string) => {
-  const { data: prices, loading, error } = useQueryRelay<GetItemPricesQuery, GetItemPricesQueryVariables>({
+// Храним цены закупки для каждого товара
+const loadPrices = () => {
+  const productIds = props.items.map(item => item.product.id);
+  const { data: dat, loading, error } = useQueryRelay<GetItemsPricesQuery, GetItemsPricesQueryVariables>({
     document: getItemPricesQuery,
-    variables: () => ({
-    productId: productId
-  })
-  })
-  watchEffect(() => {
-    if (prices.value) {
-      console.log('Prices response:', prices.value);
-      // Так как prices.value уже массив Price[], просто присваиваем его
-      itemPrices.value[itemId] = prices.value;
+    variables: () => ({ productIds })
+  });watch(dat, (pricesData: GetItemsPricesQuery | Price[]) => {
+  if (pricesData) {
+    let prices: Price[];
+    if (Array.isArray(pricesData)) {
+      prices = pricesData;
+    } else if ('prices' in pricesData && pricesData.prices && pricesData.prices.edges) {
+      const prices = pricesData.prices.edges.map(edge => edge.node);
+    } else {
+      console.error('Неизвестная структура данных:', pricesData);
+      return;
     }
-    if (error.value) {
-      console.error('GraphQL Error:', error.value);
-      itemPrices.value[itemId] = [];
-    }
-    if (!loading.value && !prices.value && !error.value) {
-      console.warn(`No prices data for item ${itemId}`);
-      itemPrices.value[itemId] = [];
-    }
+    itemPrices.value = props.items.reduce((acc, item) => {
+      acc[item.id] = prices.filter(price => price.productId === item.product.id);
+      return acc;
+    }, {} as Record<string, Price[]>);
+
+    console.log('pricesData value: ', pricesData);
+    console.log('dat value: ', dat.value);
+    console.log('itemPrices1: ', itemPrices.value);
+  }
   });
+  
+  console.log('productIds: ', productIds);
+  console.log('raw data: ', dat.value);
+  console.log('itemPrices: ', itemPrices.value); // Для отладки
 };
 
-// Вызываем загрузку цен при монтировании
-onMounted(() => {
-  props.items.forEach((item) => {
-    loadPrices(item.product.id, item.id)
-  })
-})
 
+onMounted(loadPrices);
 // Храним выбранную цену
-const selectedPrice = ref<Record<string, string>>({})
-
-
+const selectedPrices = ref<Record<string, string>>({});
+// Обработчик выбора цены
+const selectPrice = (itemId: string, priceId: string) => {
+  selectedPrices.value[itemId] = priceId; // Устанавливаем выбранную цену для item
+  console.log('Selected prices:', selectedPrices.value);
+};
 // Определение пропсов компонента
 const props = defineProps<{
   currentStatus: string | null,
