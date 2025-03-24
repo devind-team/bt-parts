@@ -99,16 +99,14 @@ const currentStatus = computed(() => {
           class="flex gap-2"
         >
           <Button
-            :label="t('order.RecountPrices')"
-            @click="recountPrices"
-          />
-          <Button
             class="gap-2"
             :label="t('orders.unload')"
             @click="unloadOrder"
           />
           <div class="ml-auto">
             <AddPricesFromExel />
+          </div>
+          <div class="ml-auto">
             <Button
               v-if="authStore.hasPermission('change_status')"
               class="gap-2"

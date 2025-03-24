@@ -19,21 +19,11 @@ const collapseAll = () => {
 };
 
 const onRowExpand = (event: { data: Item }) => {
-  toast.add({ 
-    severity: 'info', 
-    summary: t('prices.expanded'), 
-    detail: event.data.product.vendorCode, 
-    life: 3000 
-  });
+
 };
 
 const onRowCollapse = (event: { data: Item }) => {
-  toast.add({ 
-    severity: 'success', 
-    summary: t('prices.collapsed'), 
-    detail: event.data.product.vendorCode, 
-    life: 3000 
-  });
+
 };
 interface Price {
   id: string;
@@ -91,7 +81,13 @@ onMounted(loadPrices);
 const selectedPrices = ref<Record<string, string>>({});
 // Обработчик выбора цены
 const selectPrice = (itemId: string, priceId: string) => {
-  selectedPrices.value[itemId] = priceId; // Устанавливаем выбранную цену для item
+  if (selectedPrices.value[itemId] === priceId) {
+    // Если цена уже выбрана, снимаем выбор
+    delete selectedPrices.value[itemId];
+  } else {
+    // Устанавливаем новую выбранную цену
+    selectedPrices.value[itemId] = priceId;
+  }
   console.log('Selected prices:', selectedPrices.value);
 };
 // Определение пропсов компонента
@@ -333,7 +329,7 @@ const deleteItem = (item: Item) => {
             :header="t('purchasePrices.price')"
           >
             <template #body="slotProps">
-              {{ (Number(slotProps.data.price)) }}
+              {{ Number(slotProps.data.price) }}
             </template>
           </Column>
           <Column
@@ -362,6 +358,15 @@ const deleteItem = (item: Item) => {
           >
             <template #body="slotProps">
               {{ date(slotProps.data.createdAt) }}
+            </template>
+          </Column>
+          <Column :header="t('purchasePrices.select')">
+            <template #body="slotProps">
+              <Checkbox
+                :model-value="selectedPrices[data.id] === slotProps.data.id"
+                :binary="true"
+                @change="selectPrice(data.id, slotProps.data.id)"
+              />
             </template>
           </Column>
         </DataTable>
