@@ -35,7 +35,9 @@
   "users": {
     "name": "Пользователь"
   },
+  "days": "дней",
   "order": {
+    "order": "Заказать",
     "SendForPercentage": "Отправить на проценку",
     "Accept": "Принять",
     "RecountPrices": "Проценить",
@@ -199,7 +201,8 @@
     "duration": "Срок доставки",
     "supplier": "Поставщик",
     "validAt": "Действительна с",
-    "createdAt": "Создана"
+    "createdAt": "Создана",
+    "select": "Выбрана"
   }
   
 }

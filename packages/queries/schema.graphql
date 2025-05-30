@@ -305,6 +305,12 @@ type Item {
   """Flight number"""
   routeNo: String
 
+  """Proforma number"""
+  proformaNumber: String
+
+  """Ordered status"""
+  ordered: Boolean!
+
   """Purchase Price per unit/piece"""
   salePrice: Decimal
 
@@ -648,6 +654,8 @@ type ItemCountAggregate {
   coefficient: Int!
   carNo: Int!
   routeNo: Int!
+  proformaNumber: Int!
+  ordered: Int!
   salePrice: Int!
   createdAt: Int!
   updatedAt: Int!
@@ -676,6 +684,8 @@ type ItemMinAggregate {
   coefficient: Float
   carNo: String
   routeNo: String
+  proformaNumber: String
+  ordered: Boolean
   salePrice: Decimal
   createdAt: DateTime
   updatedAt: DateTime
@@ -691,6 +701,8 @@ type ItemMaxAggregate {
   coefficient: Float
   carNo: String
   routeNo: String
+  proformaNumber: String
+  ordered: Boolean
   salePrice: Decimal
   createdAt: DateTime
   updatedAt: DateTime
@@ -1029,6 +1041,8 @@ input ItemWhereInput {
   coefficient: FloatFilter
   carNo: StringNullableFilter
   routeNo: StringNullableFilter
+  proformaNumber: StringNullableFilter
+  ordered: BoolFilter
   salePrice: DecimalNullableFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1151,6 +1165,16 @@ input NestedStringNullableFilter {
   not: NestedStringNullableFilter
 }
 
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
 input DecimalNullableFilter {
   equals: Decimal
   in: [Decimal!]
@@ -1252,16 +1276,6 @@ input UserWhereInput {
   statusItem: StatusItemListRelationFilter
   comment: CommentListRelationFilter
   commentItem: CommentItemListRelationFilter
-}
-
-input BoolFilter {
-  equals: Boolean
-  not: NestedBoolFilter
-}
-
-input NestedBoolFilter {
-  equals: Boolean
-  not: NestedBoolFilter
 }
 
 input DateTimeNullableFilter {
@@ -1718,6 +1732,8 @@ input ItemOrderByWithRelationInput {
   coefficient: SortOrder
   carNo: SortOrderInput
   routeNo: SortOrderInput
+  proformaNumber: SortOrderInput
+  ordered: SortOrder
   salePrice: SortOrderInput
   createdAt: SortOrder
   updatedAt: SortOrder
@@ -1906,6 +1922,8 @@ input ItemWhereUniqueInput {
   coefficient: FloatFilter
   carNo: StringNullableFilter
   routeNo: StringNullableFilter
+  proformaNumber: StringNullableFilter
+  ordered: BoolFilter
   salePrice: DecimalNullableFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1933,6 +1951,8 @@ enum ItemScalarFieldEnum {
   coefficient
   carNo
   routeNo
+  proformaNumber
+  ordered
   salePrice
   createdAt
   updatedAt
@@ -2049,6 +2069,8 @@ type Mutation {
   register(userRegisterInput: UserRegisterInput!, companyInput: CompanyInput): UserLoginType
   uploadAvatar(fileId: String!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  assignPriceToItem(itemId: String!, priceId: String): Item!
+  changeItemOrdered(itemId: String!, ordered: Boolean!): Item!
   addStatusItems(
     """Идентификатор заказа"""
     orderId: String!
@@ -2059,6 +2081,7 @@ type Mutation {
     """Статус позиции заказа"""
     status: ItemStatus!
   ): [Item!]!
+  changeItemProforma(itemId: String!, proformaNumber: String): Item!
   recountPrices(
     """Идентификатор заказа"""
     orderId: String!

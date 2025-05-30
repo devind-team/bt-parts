@@ -48,7 +48,18 @@ export class ItemsService {
       params,
     )
   }
-
+  async changeItemProforma(itemId: string, proformaNumber: string | null): Promise<Item> {
+    return this.prismaService.item.update({
+      where: { id: itemId },
+      data: { proformaNumber },
+    })
+  }
+  async changeItemOrdered(itemId: string, ordered: boolean): Promise<Item> {
+    return this.prismaService.item.update({
+      where: { id: itemId },
+      data: { ordered },
+    })
+  }
   /**
    * Получение позиций по последнему статусу
    * @param status: последний установленный статус
@@ -96,6 +107,18 @@ export class ItemsService {
       },
     })
     return items.map((item) => item.id)
+  }
+  /**
+   * Измениние цены закупки у итема
+   * @param itemId
+   * @param priceId
+   */
+  async assignPriceToItem(itemId: string, priceId: string | null): Promise<Item> {
+    return this.prismaService.item.update({
+      where: { id: itemId },
+      data: { priceId },
+      include: { price: true, product: true },
+    })
   }
 
   /**

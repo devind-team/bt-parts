@@ -19,7 +19,6 @@ export class ItemsResolver {
   async items(@Args() params: ItemConnectionArgs): Promise<ItemConnectionType> {
     return await this.itemsService.getItemConnection(params)
   }
-
   /**
    * Получение позиций по последнему статусу
    * @param status: последний установленный статус
@@ -31,6 +30,23 @@ export class ItemsResolver {
     @Args() params: ItemConnectionArgs,
   ): Promise<ItemConnectionType> {
     return await this.itemsService.getItemsByLastStatusConnection(status, params)
+  }
+  /**
+   * Выбор цены закупки для итема
+   */
+  @Mutation(() => Item)
+  async assignPriceToItem(
+    @Args('itemId', { type: () => String }) itemId: string,
+    @Args('priceId', { type: () => String, nullable: true }) priceId: string | null,
+  ): Promise<Item> {
+    return this.itemsService.assignPriceToItem(itemId, priceId)
+  }
+  /**
+   * Изменение статуса заказанно для итема
+   */
+  @Mutation(() => Item)
+  async changeItemOrdered(@Args('itemId') itemId: string, @Args('ordered') ordered: boolean) {
+    return this.itemsService.changeItemOrdered(itemId, ordered)
   }
   /**
    * Добавление статуса к заказу
@@ -48,6 +64,13 @@ export class ItemsResolver {
   ): Promise<Item[]> {
     await this.itemsService.addStatuses(user, await this.itemsService.getOrderItems(orderId, itemIds), status)
     return await this.itemsService.getItems(orderId, { statuses: { include: { user: true } } })
+  }
+  @Mutation(() => Item)
+  async changeItemProforma(
+    @Args('itemId') itemId: string,
+    @Args('proformaNumber', { nullable: true }) proformaNumber: string | null,
+  ) {
+    return this.itemsService.changeItemProforma(itemId, proformaNumber)
   }
   /**
    * Мутация для автоматического проценивания

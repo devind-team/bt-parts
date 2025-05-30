@@ -1,0 +1,7 @@
+#import "../fragments/item-fields.graphql"
+mutation AssignPriceToItem($itemId: String!, $priceId: String) {
+  assignPriceToItem(itemId: $itemId, priceId: $priceId) {
+    ...ItemFields
+    __typename
+  }
+}

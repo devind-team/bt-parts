@@ -1,6 +1,11 @@
 fragment PriceFields on Price {
   id
   price
+  supplier {
+    id
+    name
+    __typename
+  }
   duration
   site
   comment

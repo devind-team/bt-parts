@@ -52,6 +52,15 @@ const currentStatus = computed(() => {
   const lastStatus = order.value.statuses[order.value.statuses.length - 1]
   return String(lastStatus.status)
 })
+const canOrder = computed(() => {
+  if (!order.value?.items || order.value.items.length === 0) {
+    return false;
+  }
+  return order.value.items.every(item => 
+    item.price != null && item.price.price != null && // Проверка цены закупки
+    item.salePrice != null && item.salePrice > 0     // Проверка цены продажи
+  );
+});
 </script>
 
 <template>
@@ -108,10 +117,19 @@ const currentStatus = computed(() => {
           </div>
           <div class="ml-auto">
             <Button
-              v-if="authStore.hasPermission('change_status')"
               class="gap-2"
               :label="t('order.ApprovePrices')"
               @click="statusEdit('PRICED')"
+            />
+          </div>
+        </div>
+        <div v-if="authStore.hasPermission('assignPrice')">
+          <div
+            v-if="currentStatus == 'PRICED'"
+          >
+            <Button
+              :label="t('order.order')"
+              @click="statusEdit('APPROVED')"
             />
           </div>
         </div>

@@ -1,0 +1,7 @@
+mutation ChangeItemProforma($itemId: String!, $proformaNumber: String) {
+  changeItemProforma(itemId: $itemId, proformaNumber: $proformaNumber ) {
+    id
+    proformaNumber
+    __typename
+  }
+}

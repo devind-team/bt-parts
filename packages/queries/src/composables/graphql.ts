@@ -600,12 +600,16 @@ export type Item = {
   /** Order */
   order: Order;
   orderId: Scalars['String']['output'];
+  /** Ordered status */
+  ordered: Scalars['Boolean']['output'];
   /** Product price */
   price?: Maybe<Price>;
   priceId?: Maybe<Scalars['String']['output']>;
   /** Product */
   product: Product;
   productId: Scalars['String']['output'];
+  /** Proforma number */
+  proformaNumber?: Maybe<Scalars['String']['output']>;
   /** Quantity */
   quantity: Scalars['Int']['output'];
   /** Flight number */
@@ -649,8 +653,10 @@ export type ItemCountAggregate = {
   createdAt: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   orderId: Scalars['Int']['output'];
+  ordered: Scalars['Int']['output'];
   priceId: Scalars['Int']['output'];
   productId: Scalars['Int']['output'];
+  proformaNumber: Scalars['Int']['output'];
   quantity: Scalars['Int']['output'];
   routeNo: Scalars['Int']['output'];
   salePrice: Scalars['Int']['output'];
@@ -677,8 +683,10 @@ export type ItemMaxAggregate = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   orderId?: Maybe<Scalars['String']['output']>;
+  ordered?: Maybe<Scalars['Boolean']['output']>;
   priceId?: Maybe<Scalars['String']['output']>;
   productId?: Maybe<Scalars['String']['output']>;
+  proformaNumber?: Maybe<Scalars['String']['output']>;
   quantity?: Maybe<Scalars['Int']['output']>;
   routeNo?: Maybe<Scalars['String']['output']>;
   salePrice?: Maybe<Scalars['Decimal']['output']>;
@@ -693,8 +701,10 @@ export type ItemMinAggregate = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   orderId?: Maybe<Scalars['String']['output']>;
+  ordered?: Maybe<Scalars['Boolean']['output']>;
   priceId?: Maybe<Scalars['String']['output']>;
   productId?: Maybe<Scalars['String']['output']>;
+  proformaNumber?: Maybe<Scalars['String']['output']>;
   quantity?: Maybe<Scalars['Int']['output']>;
   routeNo?: Maybe<Scalars['String']['output']>;
   salePrice?: Maybe<Scalars['Decimal']['output']>;
@@ -714,10 +724,12 @@ export type ItemOrderByWithRelationInput = {
   id?: InputMaybe<SortOrder>;
   order?: InputMaybe<OrderOrderByWithRelationInput>;
   orderId?: InputMaybe<SortOrder>;
+  ordered?: InputMaybe<SortOrder>;
   price?: InputMaybe<PriceOrderByWithRelationInput>;
   priceId?: InputMaybe<SortOrderInput>;
   product?: InputMaybe<ProductOrderByWithRelationInput>;
   productId?: InputMaybe<SortOrder>;
+  proformaNumber?: InputMaybe<SortOrderInput>;
   quantity?: InputMaybe<SortOrder>;
   routeNo?: InputMaybe<SortOrderInput>;
   salePrice?: InputMaybe<SortOrderInput>;
@@ -744,8 +756,10 @@ export type ItemScalarFieldEnum =
   | 'createdAt'
   | 'id'
   | 'orderId'
+  | 'ordered'
   | 'priceId'
   | 'productId'
+  | 'proformaNumber'
   | 'quantity'
   | 'routeNo'
   | 'salePrice'
@@ -783,10 +797,12 @@ export type ItemWhereInput = {
   id?: InputMaybe<StringFilter>;
   order?: InputMaybe<OrderRelationFilter>;
   orderId?: InputMaybe<StringFilter>;
+  ordered?: InputMaybe<BoolFilter>;
   price?: InputMaybe<PriceNullableRelationFilter>;
   priceId?: InputMaybe<StringNullableFilter>;
   product?: InputMaybe<ProductRelationFilter>;
   productId?: InputMaybe<StringFilter>;
+  proformaNumber?: InputMaybe<StringNullableFilter>;
   quantity?: InputMaybe<IntFilter>;
   routeNo?: InputMaybe<StringNullableFilter>;
   salePrice?: InputMaybe<DecimalNullableFilter>;
@@ -808,10 +824,12 @@ export type ItemWhereUniqueInput = {
   order?: InputMaybe<OrderRelationFilter>;
   orderId?: InputMaybe<StringFilter>;
   orderId_productId_userId?: InputMaybe<ItemOrderIdProductIdUserIdCompoundUniqueInput>;
+  ordered?: InputMaybe<BoolFilter>;
   price?: InputMaybe<PriceNullableRelationFilter>;
   priceId?: InputMaybe<StringNullableFilter>;
   product?: InputMaybe<ProductRelationFilter>;
   productId?: InputMaybe<StringFilter>;
+  proformaNumber?: InputMaybe<StringNullableFilter>;
   quantity?: InputMaybe<IntFilter>;
   routeNo?: InputMaybe<StringNullableFilter>;
   salePrice?: InputMaybe<DecimalNullableFilter>;
@@ -868,7 +886,10 @@ export type Mutation = {
   addProductToOrder: CreateOrderType;
   addStatusItems: Array<Item>;
   addStatusOrder: Status;
+  assignPriceToItem: Item;
   changeCoefficientItems: Array<Item>;
+  changeItemOrdered: Item;
+  changeItemProforma: Item;
   changeQuantityItem: Item;
   changeSellingPriceItem: Item;
   checkOrderUpload: CreateOrderType;
@@ -912,10 +933,28 @@ export type MutationAddStatusOrderArgs = {
 };
 
 
+export type MutationAssignPriceToItemArgs = {
+  itemId: Scalars['String']['input'];
+  priceId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationChangeCoefficientItemsArgs = {
   coefficient: Scalars['Float']['input'];
   itemIds: Array<Scalars['String']['input']>;
   orderId: Scalars['String']['input'];
+};
+
+
+export type MutationChangeItemOrderedArgs = {
+  itemId: Scalars['String']['input'];
+  ordered: Scalars['Boolean']['input'];
+};
+
+
+export type MutationChangeItemProformaArgs = {
+  itemId: Scalars['String']['input'];
+  proformaNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2318,6 +2357,14 @@ export type ItemFieldsFragment = { __typename: 'Item', id: string, quantity: num
 
 export type StatusItemFieldsFragment = { __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any };
 
+export type AssignPriceToItemMutationVariables = Exact<{
+  itemId: Scalars['String']['input'];
+  priceId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type AssignPriceToItemMutation = { __typename?: 'Mutation', assignPriceToItem: { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null } };
+
 export type ChangeCoefficientItemsMutationVariables = Exact<{
   orderId: Scalars['String']['input'];
   itemIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -2326,6 +2373,22 @@ export type ChangeCoefficientItemsMutationVariables = Exact<{
 
 
 export type ChangeCoefficientItemsMutation = { __typename?: 'Mutation', changeCoefficientItems: Array<{ __typename: 'Item', id: string, coefficient: number }> };
+
+export type ChangeItemOrderedMutationVariables = Exact<{
+  itemId: Scalars['String']['input'];
+  ordered: Scalars['Boolean']['input'];
+}>;
+
+
+export type ChangeItemOrderedMutation = { __typename?: 'Mutation', changeItemOrdered: { __typename: 'Item', id: string, ordered: boolean } };
+
+export type ChangeItemProformaMutationVariables = Exact<{
+  itemId: Scalars['String']['input'];
+  proformaNumber?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ChangeItemProformaMutation = { __typename?: 'Mutation', changeItemProforma: { __typename: 'Item', id: string, proformaNumber?: string | null } };
 
 export type ChangeQuantityItemMutationVariables = Exact<{
   itemId: Scalars['String']['input'];
@@ -2349,7 +2412,7 @@ export type RecountPricesMutationVariables = Exact<{
 }>;
 
 
-export type RecountPricesMutation = { __typename?: 'Mutation', recountPrices: Array<{ __typename?: 'Item', id: string, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string } | null }> };
+export type RecountPricesMutation = { __typename?: 'Mutation', recountPrices: Array<{ __typename?: 'Item', id: string, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string } | null } | null }> };
 
 export type ItemsQueryVariables = Exact<{
   filter?: InputMaybe<Array<ItemStatus> | ItemStatus>;
@@ -2360,7 +2423,7 @@ export type ItemsQueryVariables = Exact<{
 }>;
 
 
-export type ItemsQuery = { __typename?: 'Query', items: { __typename: 'ItemConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename: 'ItemEdge', node: { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, order: { __typename: 'Order', id: string, address?: string | null, createdAt: any }, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string } | null, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, commentItem?: Array<{ __typename: 'CommentItem', id: string, text: string, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
+export type ItemsQuery = { __typename?: 'Query', items: { __typename: 'ItemConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename: 'ItemEdge', node: { __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, order: { __typename: 'Order', id: string, address?: string | null, createdAt: any }, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string } | null } | null, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, commentItem?: Array<{ __typename: 'CommentItem', id: string, text: string, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
 
 export type CommentFieldsFragment = { __typename: 'Comment', id: string, text: string, createdAt: any };
 
@@ -2447,7 +2510,7 @@ export type OrderQueryVariables = Exact<{
 }>;
 
 
-export type OrderQuery = { __typename?: 'Query', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, comments?: Array<{ __typename: 'Comment', id: string, text: string, createdAt: any }> | null, items?: Array<{ __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string } | null }> | null, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } } };
+export type OrderQuery = { __typename?: 'Query', order: { __typename: 'Order', id: string, address?: string | null, createdAt: any, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, comments?: Array<{ __typename: 'Comment', id: string, text: string, createdAt: any }> | null, items?: Array<{ __typename: 'Item', id: string, quantity: number, coefficient: number, carNo?: string | null, routeNo?: string | null, createdAt: any, salePrice?: any | null, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, product: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null }, statuses?: Array<{ __typename: 'StatusItem', id: string, status: ItemStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null, price?: { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string } | null } | null }> | null, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } } };
 
 export type OrdersQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -2457,7 +2520,7 @@ export type OrdersQueryVariables = Exact<{
 
 export type OrdersQuery = { __typename?: 'Query', orders: { __typename?: 'OrderConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean }, edges?: Array<{ __typename: 'OrderEdge', node: { __typename: 'Order', id: string, address?: string | null, createdAt: any, manager?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null, user: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string }, statuses?: Array<{ __typename: 'Status', id: string, status: OrderStatus, createdAt: any, user?: { __typename: 'User', id: string, username: string, avatar?: string | null, email: string, lastName: string, firstName: string, patronymic?: string | null, isActive: boolean, birthday?: any | null, phone: string, role: Role, gender: Gender, createdAt: any, updatedAt: any, companyName: string, tz: string } | null }> | null } }> | null } };
 
-export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string };
+export type PriceFieldsFragment = { __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string } | null };
 
 export type SupplierFieldsFragment = { __typename: 'Supplier', id: string, name: string, location: Location };
 
@@ -2494,7 +2557,7 @@ export type SearchProductsQueryVariables = Exact<{
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string }> | null } }> | null } };
+export type SearchProductsQuery = { __typename?: 'Query', products: { __typename?: 'ProductConnectionType', totalCount: number, pageInfo: { __typename: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'ProductEdge', node: { __typename: 'Product', id: string, vendorCode: string, nameEn?: string | null, nameRu?: string | null, aliases?: string | null, original: boolean, stock: number, manufacturerId?: string | null, manufacturer?: { __typename: 'Manufacturer', id: string, name: string } | null, prices?: Array<{ __typename: 'Price', id: string, price: any, duration?: number | null, site?: string | null, comment?: string | null, createdAt: any, validAt?: any | null, productId: string, supplier?: { __typename: 'Supplier', id: string, name: string } | null }> | null } }> | null } };
 
 export const UserFieldsFragmentDoc = gql`
     fragment UserFields on User {
@@ -2573,6 +2636,11 @@ export const PriceFieldsFragmentDoc = gql`
     fragment PriceFields on Price {
   id
   price
+  supplier {
+    id
+    name
+    __typename
+  }
   duration
   site
   comment
@@ -2763,6 +2831,37 @@ export function useMeLazyQuery(options: VueApolloComposable.UseQueryOptions<MeQu
   return VueApolloComposable.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, {}, options);
 }
 export type MeQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export const AssignPriceToItemDocument = gql`
+    mutation AssignPriceToItem($itemId: String!, $priceId: String) {
+  assignPriceToItem(itemId: $itemId, priceId: $priceId) {
+    ...ItemFields
+    __typename
+  }
+}
+    ${ItemFieldsFragmentDoc}`;
+
+/**
+ * __useAssignPriceToItemMutation__
+ *
+ * To run a mutation, you first call `useAssignPriceToItemMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useAssignPriceToItemMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useAssignPriceToItemMutation({
+ *   variables: {
+ *     itemId: // value for 'itemId'
+ *     priceId: // value for 'priceId'
+ *   },
+ * });
+ */
+export function useAssignPriceToItemMutation(options: VueApolloComposable.UseMutationOptions<AssignPriceToItemMutation, AssignPriceToItemMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<AssignPriceToItemMutation, AssignPriceToItemMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<AssignPriceToItemMutation, AssignPriceToItemMutationVariables>(AssignPriceToItemDocument, options);
+}
+export type AssignPriceToItemMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<AssignPriceToItemMutation, AssignPriceToItemMutationVariables>;
 export const ChangeCoefficientItemsDocument = gql`
     mutation ChangeCoefficientItems($orderId: String!, $itemIds: [String!]!, $coefficient: Float!) {
   changeCoefficientItems(
@@ -2800,6 +2899,70 @@ export function useChangeCoefficientItemsMutation(options: VueApolloComposable.U
   return VueApolloComposable.useMutation<ChangeCoefficientItemsMutation, ChangeCoefficientItemsMutationVariables>(ChangeCoefficientItemsDocument, options);
 }
 export type ChangeCoefficientItemsMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ChangeCoefficientItemsMutation, ChangeCoefficientItemsMutationVariables>;
+export const ChangeItemOrderedDocument = gql`
+    mutation ChangeItemOrdered($itemId: String!, $ordered: Boolean!) {
+  changeItemOrdered(itemId: $itemId, ordered: $ordered) {
+    id
+    ordered
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useChangeItemOrderedMutation__
+ *
+ * To run a mutation, you first call `useChangeItemOrderedMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useChangeItemOrderedMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useChangeItemOrderedMutation({
+ *   variables: {
+ *     itemId: // value for 'itemId'
+ *     ordered: // value for 'ordered'
+ *   },
+ * });
+ */
+export function useChangeItemOrderedMutation(options: VueApolloComposable.UseMutationOptions<ChangeItemOrderedMutation, ChangeItemOrderedMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<ChangeItemOrderedMutation, ChangeItemOrderedMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<ChangeItemOrderedMutation, ChangeItemOrderedMutationVariables>(ChangeItemOrderedDocument, options);
+}
+export type ChangeItemOrderedMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ChangeItemOrderedMutation, ChangeItemOrderedMutationVariables>;
+export const ChangeItemProformaDocument = gql`
+    mutation ChangeItemProforma($itemId: String!, $proformaNumber: String) {
+  changeItemProforma(itemId: $itemId, proformaNumber: $proformaNumber) {
+    id
+    proformaNumber
+    __typename
+  }
+}
+    `;
+
+/**
+ * __useChangeItemProformaMutation__
+ *
+ * To run a mutation, you first call `useChangeItemProformaMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useChangeItemProformaMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useChangeItemProformaMutation({
+ *   variables: {
+ *     itemId: // value for 'itemId'
+ *     proformaNumber: // value for 'proformaNumber'
+ *   },
+ * });
+ */
+export function useChangeItemProformaMutation(options: VueApolloComposable.UseMutationOptions<ChangeItemProformaMutation, ChangeItemProformaMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<ChangeItemProformaMutation, ChangeItemProformaMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<ChangeItemProformaMutation, ChangeItemProformaMutationVariables>(ChangeItemProformaDocument, options);
+}
+export type ChangeItemProformaMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<ChangeItemProformaMutation, ChangeItemProformaMutationVariables>;
 export const ChangeQuantityItemDocument = gql`
     mutation ChangeQuantityItem($itemId: String!, $quantity: Int!) {
   changeQuantityItem(itemId: $itemId, quantity: $quantity) {

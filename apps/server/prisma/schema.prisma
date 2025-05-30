@@ -418,18 +418,21 @@ model Comment {
 /// Item in order model
 model Item {
   /// ID of the order item
-  id          String  @id @default(uuid())
+  id             String   @id @default(uuid())
   /// Quantity
-  quantity    Int     @default(1)
+  quantity       Int      @default(1)
   /// Margin factor
-  coefficient Float   @default(2)
+  coefficient    Float    @default(2)
   /// Car number
-  carNo       String? @map("car_no") @db.VarChar(50)
+  carNo          String?  @map("car_no") @db.VarChar(50)
   /// Flight number
-  routeNo     String? @map("route_no") @db.VarChar(50)
-
+  routeNo        String?  @map("route_no") @db.VarChar(50)
+  /// Proforma number
+  proformaNumber String?  @map("proforma_number") @db.VarChar(300)
+  /// Ordered status
+  ordered        Boolean  @default(false) @map("ordered")
   /// Purchase Price per unit/piece
-  salePrice Decimal? @map("sale_price") @db.Decimal(9, 2)
+  salePrice      Decimal? @map("sale_price") @db.Decimal(9, 2)
 
   /// Created date
   createdAt DateTime @default(now()) @map("created_at")

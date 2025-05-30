@@ -1,0 +1,7 @@
+mutation ChangeItemOrdered($itemId: String!, $ordered: Boolean!) {
+  changeItemOrdered(itemId: $itemId, ordered: $ordered ) {
+    id
+    ordered
+    __typename
+  }
+}

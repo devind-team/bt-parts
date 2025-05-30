@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type GetItemsPricesQueryVariables, type GetItemsPricesQuery, useChangeQuantityItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
+import { type GetItemsPricesQueryVariables, type GetItemsPricesQuery, useChangeItemProformaMutation, useChangeItemOrderedMutation, useChangeQuantityItemMutation, useAssignPriceToItemMutation, useChangeSellingPriceItemMutation, useDeleteOrderItemsMutation, type Item } from '@repo/queries/composables/graphql.js'
 import getItemPricesQuery from '@repo/queries/graphql/prices/queries/get-item-prices.graphql'
 import Checkbox from 'primevue/checkbox';
 const { t } = useI18n();
@@ -25,12 +25,36 @@ const onRowExpand = (event: { data: Item }) => {
 const onRowCollapse = (event: { data: Item }) => {
 
 };
+// Мутация для номера проформы
+const { mutate: changeItemProformaMutate, onDone: changeItemProformaDone, onError: changeItemProformaError } = useChangeItemProformaMutation();
+
+changeItemProformaDone(() => {
+  toast.add({ severity: 'success', summary: t('proforma.updateSuccess'), life: 3000 });
+  props.refetch();
+});
+
+changeItemProformaError((error) => {
+  toast.add({ severity: 'error', summary: t('proforma.updateError'), detail: error.message, life: 3000 });
+});
+
+// Мутация для статуса "Заказано"
+const { mutate: changeeItemOrderedMutate, onDone: changeItemOrderedDone, onError: changeItemOrderedError } = useChangeItemOrderedMutation();
+
+changeItemOrderedDone(() => {
+  toast.add({ severity: 'success', summary: t('ordered.updateSuccess'), life: 3000 });
+  props.refetch();
+});
+
+changeItemOrderedError((error) => {
+  toast.add({ severity: 'error', summary: t('ordered.updateError'), detail: error.message, life: 3000 });
+});
 interface Price {
+  __typename?: string;
   id: string;
   price: string | number;
-  duration: number | null;
+  duration?: number | null | undefined; 
   createdAt: string;
-  validAt: string | null;
+  validAt?: string | null;
   supplier?: {
     id: string;
     name: string;
@@ -40,55 +64,35 @@ interface Price {
   comment?: string | null;
   productId: string;
 }
-
 const itemPrices = ref<Record<string, Price[]>>({});
 // Храним цены закупки для каждого товара
 const loadPrices = () => {
+  console.log('loadPrices called');
   const productIds = props.items.map(item => item.product.id);
-  const { data: dat, loading, error } = useQueryRelay<GetItemsPricesQuery, GetItemsPricesQueryVariables>({
+  const { onResult } = useQueryRelay<GetItemsPricesQuery, GetItemsPricesQueryVariables>({
     document: getItemPricesQuery,
-    variables: () => ({ productIds })
-  });watch(dat, (pricesData: GetItemsPricesQuery | Price[]) => {
-  if (pricesData) {
-    let prices: Price[];
-    if (Array.isArray(pricesData)) {
-      prices = pricesData;
-    } else if ('prices' in pricesData && pricesData.prices && pricesData.prices.edges) {
-      const prices = pricesData.prices.edges.map(edge => edge.node);
-    } else {
-      console.error('Неизвестная структура данных:', pricesData);
-      return;
-    }
-    itemPrices.value = props.items.reduce((acc, item) => {
-      acc[item.id] = prices.filter(price => price.productId === item.product.id);
-      return acc;
-    }, {} as Record<string, Price[]>);
-
-    console.log('pricesData value: ', pricesData);
-    console.log('dat value: ', dat.value);
-    console.log('itemPrices1: ', itemPrices.value);
-  }
+    variables: () => ({ productIds }),
   });
   
-  console.log('productIds: ', productIds);
-  console.log('raw data: ', dat.value);
-  console.log('itemPrices: ', itemPrices.value); // Для отладки
-};
-
-
-onMounted(loadPrices);
-// Храним выбранную цену
-const selectedPrices = ref<Record<string, string>>({});
-// Обработчик выбора цены
-const selectPrice = (itemId: string, priceId: string) => {
-  if (selectedPrices.value[itemId] === priceId) {
-    // Если цена уже выбрана, снимаем выбор
-    delete selectedPrices.value[itemId];
-  } else {
-    // Устанавливаем новую выбранную цену
-    selectedPrices.value[itemId] = priceId;
+  onResult((result) => {
+    const pricesData = result.data;
+    console.log('pricesData:', pricesData);
+    if (pricesData) {
+      let prices: Price[];
+      if (Array.isArray(pricesData)) {
+        prices = pricesData;
+      } else if ('prices' in pricesData && pricesData.prices && pricesData.prices.edges) {
+        prices = pricesData.prices.edges.map(edge => edge.node);
+      } else {
+        console.error('Неизвестная структура данных:', pricesData);
+        return;
+      }
+      itemPrices.value = props.items.reduce((acc, item) => {
+        acc[item.id] = prices.filter(price => price.productId === item.product.id);
+        return acc;
+      }, {} as Record<string, Price[]>);
   }
-  console.log('Selected prices:', selectedPrices.value);
+  });
 };
 // Определение пропсов компонента
 const props = defineProps<{
@@ -98,9 +102,42 @@ const props = defineProps<{
   refetch: () => void
 }>();
 console.log(props.items)
+const { mutate: assignPriceMutate, onDone: assignPriceDone, onError: assignError } = useAssignPriceToItemMutation();
+assignPriceDone(() => {
+  toast.add({ severity: 'success', summary: t('prices.assignSuccess'), life: 3000 });
+});
+// Обработка ошибок
+assignError((error) => {
+  toast.add({ severity: 'error', summary: t('prices.assignError'), detail: error.message, life: 3000 });
+});
+
+// Храним выбранную цену
+const selectedPrices = ref<Record<string, string>>({});
+// Обработчик выбора цены
+const selectPrice = (itemId: string, priceId: string) => {
+  if (selectedPrices.value[itemId] === priceId) {
+    // Если цена уже выбрана, снимаем выбор
+    delete selectedPrices.value[itemId];
+    assignPriceMutate({
+      itemId,
+      priceId: null, // Снимаем привязку цены
+    });
+  } else {
+    // Устанавливаем новую выбранную цену
+    selectedPrices.value[itemId] = priceId;
+    assignPriceMutate({
+      itemId,
+      priceId, // Привязываем выбранную цену
+    });
+  }
+  console.log('Selected prices:', selectedPrices.value);
+};
+
 // Использование хранилища авторизации
 const authStore = useAuthStore();
-console.log (props.items)
+// Локальное состояние для номера проформы и статуса "Заказано"
+const proformaNumbers = ref<Record<string, string>>({});
+const orderedStatuses = ref<Record<string, boolean>>({});
 
 // Мутации для изменения количества, удаления и изменения цены продажи
 const { mutate } = useChangeQuantityItemMutation();
@@ -118,7 +155,13 @@ const inputValues = ref<Record<string, string>>({});
 onMounted(() => {
   props.items.forEach((item) => {
     inputValues.value[item.id] = String(item.salePrice || 0);
+    if (item.price) {
+      selectedPrices.value[item.id] = item.price.id;
+    }
+    proformaNumbers.value[item.id] = item.proformaNumber || '';
+    orderedStatuses.value[item.id] = item.ordered || false;
   });
+  loadPrices();
 });
 
 // Обработчик потери фокуса поля ввода цены
@@ -207,22 +250,47 @@ onDone(async ({ data }) => {
 const deleteItem = (item: Item) => {
   confirmDeletion(item);
 };
+// Обработчики для номера проформы и статуса "Заказано"
+// Обработчик для номера проформы
+const onProformaBlur = (itemId: string) => {
+  const proformaNumber = proformaNumbers.value[itemId];
+  if (proformaNumber && proformaNumber.length > 50) {
+    toast.add({ severity: 'error', summary: t('proforma.invalid'), detail: t('proforma.tooLong'), life: 3000 });
+    proformaNumbers.value[itemId] = ''; // Сбрасываем некорректное значение
+    return;
+  }
+  changeItemProformaMutate({
+    itemId,
+    proformaNumber: proformaNumber || null,
+  });
+};
+
+// Обработчик для статуса "Заказано"
+const onOrderedChange = (itemId: string, isOrdered: boolean) => {
+  orderedStatuses.value[itemId] = isOrdered;
+  changeeItemOrderedMutate({
+    itemId,
+    ordered: isOrdered,
+  });
+};
 </script>
+
 <template>
   <Toast />
   <ConfirmDialog />
   
-  <!-- Таблица данных с продуктами -->
   <DataTable
-    v-model:expandedRows="expandedRows" 
+    v-model:expandedRows="expandedRows"
     :value="items"
     data-key="id"
-    @row-expand="onRowExpand" 
+    @row-expand="onRowExpand"
     @row-collapse="onRowCollapse"
   >
-    <!-- Добавляем кнопку управления в заголовок -->
     <template #header>
-      <div class="flex flex-wrap justify-end gap-2">
+      <div 
+        v-if="authStore.hasPermission('appraise')"
+        class="flex flex-wrap justify-end gap-2"
+      >
         <Button
           text
           icon="pi pi-plus"
@@ -238,19 +306,16 @@ const deleteItem = (item: Item) => {
       </div>
     </template>
 
-    <!-- Добавляем колонку-расширитель -->
     <Column
+      v-if="authStore.hasPermission('appraise')"
       expander
       style="width: 5rem"
     />
-    <!-- Столбец с артикулом -->
     <Column :header="t('products.part')">
       <template #body="{ data }">
         {{ data.product.vendorCode }}
       </template>
     </Column>
-    
-    <!-- Столбец с брендом -->
     <Column :header="t('products.brand')">
       <template #body="{ data }">
         <div class="flex flex-wrap gap-2">
@@ -258,22 +323,20 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
-    
-    <!-- Столбец с количеством -->
     <Column :header="t('products.quantity')">
       <template #body="{ data }">
-        <div class="flex items-center gap-3">
+        <div
+          v-if="authStore.hasPermission('edit_quantity') && currentStatus !== 'APPROVED'"
+          class="flex items-center gap-3"
+        >
           <button
-            v-if="authStore.hasPermission('edit_quantity')"
             icon="pi pi-minus"
-            class=""
             @click="decreaseQuantity(data)"
           >
             -
           </button>
-          <span class="">{{ data.quantity }}</span>
+          <span>{{ data.quantity }}</span>
           <button
-            v-if="authStore.hasPermission('edit_quantity')"
             icon="pi pi-plus"
             class="btn btn-sm"
             @click="increaseQuantity(data)"
@@ -281,11 +344,77 @@ const deleteItem = (item: Item) => {
             +
           </button>
         </div>
+        <span v-else>{{ data.quantity }}</span>
+      </template>
+    </Column>
+    <Column
+      v-if="authStore.hasPermission('purchase_control') && currentStatus === 'APPROVED'"
+      :header="t('purchasePrices.supplier')"
+    >
+      <template #body="{ data }">
+        {{ data.price?.supplier?.name }}
+      </template>
+    </Column>
+
+    <Column
+      v-if="authStore.hasPermission('view_price')"
+      :header="t('purchasePrices.name')"
+    >
+      <template #body="{ data }">
+        <div>
+          <span v-if="data.price">{{ Number(data.price.price) }}</span>
+          <span v-else>{{ t('prices.none') }}</span>
+        </div>
+      </template>
+    </Column>
+
+    <Column
+      v-if="authStore.hasPermission('purchase_control') && currentStatus === 'APPROVED'"
+      :header="t('purchasePrices.total')"
+    >
+      <template #body="{ data }">
+        {{ data.price ? Number(data.price.price) * data.quantity : t('prices.none') }}
+      </template>
+    </Column>
+
+    <Column
+      v-if="authStore.hasPermission('purchase_control') && currentStatus === 'APPROVED'"
+      :header="t('purchasePrices.duration')"
+    >
+      <template #body="{ data }">
+        {{ data.price?.duration ? `${data.price.duration} ${t('days')}` : t('prices.none') }}
       </template>
     </Column>
     
-    <!-- Столбец со статусом -->
-    <Column :header="t('status')">
+    <Column
+      v-if="authStore.hasPermission('purchase_control') && currentStatus === 'APPROVED'"
+      :header="t('purchasePrices.proformaNumber')"
+    >
+      <template #body="{ data }">
+        <InputText
+          v-model="proformaNumbers[data.id]"
+          placeholder="Enter proforma number"
+          class="input input-sm"
+          @blur="onProformaBlur(data.id)"
+        />
+      </template>
+    </Column>
+    <Column
+      v-if="authStore.hasPermission('purchase_control') && currentStatus === 'APPROVED'"
+      :header="t('purchasePrices.ordered')"
+    >
+      <template #body="{ data }">
+        <Checkbox
+          v-model="orderedStatuses[data.id]"
+          :binary="true"
+          @change="onOrderedChange(data.id, $event)"
+        />
+      </template>
+    </Column>
+    <Column
+      v-if="currentStatus !== 'APPROVED'"
+      :header="t('status')"
+    >
       <template #body="{ data }">
         <div class="flex flex-wrap gap-2">
           <Tag
@@ -296,8 +425,6 @@ const deleteItem = (item: Item) => {
         </div>
       </template>
     </Column>
-    
-    <!-- Столбец с именем пользователя, если есть соответствующее разрешение -->
     <Column
       v-if="authStore.hasPermission('view_name')"
       :header="t('users.name')"
@@ -307,8 +434,6 @@ const deleteItem = (item: Item) => {
         {{ `${data.user.lastName} ${data.user.firstName} ${data.user.patronymic}` }}
       </template>
     </Column>
-    
-    <!-- Столбец с псевдонимом пользователя, если есть соответствующее разрешение -->
     <Column
       v-if="authStore.hasPermission('view_psevdonim')"
       :header="t('users.name')"
@@ -318,9 +443,10 @@ const deleteItem = (item: Item) => {
         {{ `${data.user.firstName}` }}
       </template>
     </Column>
-    
-    <!-- Столбец с ценой покупки, если есть соответствующее разрешение -->
-    <template #expansion="{ data }">
+    <template
+      v-if="currentStatus !== 'APPROVED'"
+      #expansion="{ data }"
+    >
       <div class="p-4">
         <h5>{{ t('purchasePrices.for') }} {{ data.product.vendorCode }}</h5>
         <DataTable :value="itemPrices[data.id] || []">
@@ -360,7 +486,10 @@ const deleteItem = (item: Item) => {
               {{ date(slotProps.data.createdAt) }}
             </template>
           </Column>
-          <Column :header="t('purchasePrices.select')">
+          <Column
+            v-if="authStore.hasPermission('view_price')"
+            :header="t('purchasePrices.select')"
+          >
             <template #body="slotProps">
               <Checkbox
                 :model-value="selectedPrices[data.id] === slotProps.data.id"
@@ -372,39 +501,31 @@ const deleteItem = (item: Item) => {
         </DataTable>
       </div>
     </template>
-    
-    <!-- Столбец с ценой продажи, если есть соответствующее разрешение и текущий статус "ADOPTED" -->
     <Column
-      v-if="authStore.hasPermission('order_manipulation') && currentStatus == 'ADOPTED'"
+      v-if="authStore.hasPermission('order_manipulation') && currentStatus === 'PRICED'"
       :header="t('pricesSells.name')"
     >
       <template #body="{ data }">
-        <div>
-          <span>
-            <div class="flex gap-2">
-              <InputText
-                v-model="inputValues[data.id]"
-                type="string"
-                placeholder="Enter sale price"
-                class="input input-sm"
-                @blur="onPriceBlur(data)"
-              >
-                <Tag icon="pi pi-euro" />
-              </InputText>
-            </div>
-          </span>
+        <div class="flex gap-2">
+          <InputText
+            v-model="inputValues[data.id]"
+            type="string"
+            placeholder="Enter sale price"
+            class="input input-sm"
+            @blur="onPriceBlur(data)"
+          >
+            <Tag icon="pi pi-euro" />
+          </InputText>
         </div>
       </template>
     </Column>
-    
-    <!-- Столбец с текущей ценой продажи -->
     <Column
-      v-else-if="authStore.hasPermission('view_price')"
+      v-else-if="authStore.hasPermission('view_price') && currentStatus !== 'APPROVED'"
       :header="t('prices.name')"
     >
       <template #body="{ data }">
         <div>
-          <span v-if="currentStatus == 'PRICED'">
+          <span v-if="currentStatus === 'PRICED' && data.salePrice">
             <div class="flex gap-2">
               <Tag
                 :value="data.salePrice * 1"
@@ -412,17 +533,11 @@ const deleteItem = (item: Item) => {
               />
             </div>
           </span>
-          <span v-else>
-            {{ t('prices.none') }}
-          </span>
+          <span v-else>{{ t('prices.none') }}</span>
         </div>
       </template>
     </Column>
-    
-    <!-- Столбец с кнопкой удаления -->
-    <Column
-      v-if="authStore.hasPermission('can_delete_item')"
-    >
+    <Column v-if="authStore.hasPermission('can_delete_item') && currentStatus !== 'APPROVED'">
       <template #body="{ data }">
         <Button
           severity="danger"

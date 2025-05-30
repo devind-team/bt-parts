@@ -33,10 +33,10 @@ export const useAuthStore = defineStore<string, AuthStoreStateType, AuthStoreGet
       userPermissions: (state) => {
         const roleToPermissions: Record<string, string[]> = {
           USER: ['basic', 'view_name', 'can_delete_item', 'view_price', 'edit_quantity'],
-          BUYER: ['basic', 'appraise', 'view_psevdonim'],
-          SELLER: ['basic', 'appraise', 'change_status', 'order_manipulation', 'view_name', 'view_psevdonim', 'view_price'],
+          BUYER: ['basic', 'appraise', 'view_psevdonim', 'purchase_control'],
+          SELLER: ['basic', 'appraise','assignPrice', 'change_status', 'purchase_control', 'order_manipulation', 'view_name', 'view_psevdonim', 'view_price'],
           LOGIST: ['basic',],
-          ADMIN: ['basic', 'appraise', 'manage_products', 'manage_shipments', 'admin_panel', 'order_manipulation', 'view_name', 'view_psevdonim', 'can_delete_item', 'view_price', 'edit_quantity'],
+          ADMIN: ['basic', 'appraise','assignPrice', 'purchase_control', 'manage_products', 'manage_shipments', 'admin_panel', 'order_manipulation', 'view_name', 'view_psevdonim', 'can_delete_item', 'view_price', 'edit_quantity'],
         };
         return state.user ? roleToPermissions[state.user.role] || [] : [];
       },
